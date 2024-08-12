@@ -1,20 +1,37 @@
+.bg-tertiary {
+  background-color: #f1f1e6;
+}
+.text-primary-custom{
+color: #115982;
+}
+
+.button-gradient {
+  background: rgb(17, 89, 130);
+  background: linear-gradient(
+    94deg,
+    rgba(17, 89, 130, 1) 29%,
+    rgba(0, 156, 248, 1) 70%
+  );
+}
+* {
+  font-family: "Montserrat", sans-serif;
+}
 /* Fonts  */
-.normalFont{
+.normalFont {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
 }
-.semiBoldFont{
+.semiBoldFont {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 600;
   font-style: normal;
 }
-.boldFont{
+.boldFont {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 900;
   font-style: normal;
 }
-

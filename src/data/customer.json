@@ -1,0 +1,68 @@
+[
+    {
+      "dni": "12345678",
+      "name": "Juan",
+      "lastname": "Pérez",
+      "address": "Calle Falsa 456",
+      "email": "juan.perez@example.com",
+      "phone": "555-1234",
+      "birthdate": "1985-06-15T00:00:00Z",
+      "gender": "M",
+      "registrationdate": "2024-08-06T00:00:00Z",
+      "tipoCliente": "Regular",
+      "products": []
+    },
+    {
+      "dni": "23456789",
+      "name": "Ana",
+      "lastname": "García",
+      "address": "Avenida Siempre Viva 123",
+      "email": "ana.garcia@example.com",
+      "phone": "555-5678",
+      "birthdate": "1990-03-22T00:00:00Z",
+      "gender": "F",
+      "registrationdate": "2024-08-07T00:00:00Z",
+      "tipoCliente": "Premium",
+      "products": []
+    },
+    {
+      "dni": "34567890",
+      "name": "Carlos",
+      "lastname": "Lopez",
+      "address": "Calle del Sol 789",
+      "email": "carlos.lopez@example.com",
+      "phone": "555-9876",
+      "birthdate": "1982-11-05T00:00:00Z",
+      "gender": "M",
+      "registrationdate": "2024-08-08T00:00:00Z",
+      "tipoCliente": "Regular",
+      "products": []
+    },
+    {
+      "dni": "45678901",
+      "name": "Laura",
+      "lastname": "Martínez",
+      "address": "Calle del Agua 234",
+      "email": "laura.martinez@example.com",
+      "phone": "555-4567",
+      "birthdate": "1988-09-30T00:00:00Z",
+      "gender": "F",
+      "registrationdate": "2024-08-09T00:00:00Z",
+      "tipoCliente": "VIP",
+      "products": []
+    },
+    {
+      "dni": "56789012",
+      "name": "Jorge",
+      "lastname": "Hernández",
+      "address": "Plaza Mayor 345",
+      "email": "jorge.hernandez@example.com",
+      "phone": "555-3456",
+      "birthdate": "1975-12-12T00:00:00Z",
+      "gender": "M",
+      "registrationdate": "2024-08-10T00:00:00Z",
+      "tipoCliente": "Regular",
+      "products": []
+    }
+  ]
+  
