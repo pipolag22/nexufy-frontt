@@ -6,7 +6,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 const ProductCard = ({ name, description, price, category }) => {
   return (
     <>
-      <Card style={{ width: "16rem" ,height:"28rem", border:"none" }} className="shadow">
+      <Card style={{ height:"28rem", border:"none" }} className="shadow">
         <Card.Img variant="top" src={img} />
         <Card.Body className="bg-tertiary d-flex flex-column justify-content-around">
           <Card.Title className="fw-semibold">{name}</Card.Title>
