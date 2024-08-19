@@ -1,10 +1,13 @@
-import Header from "./components/Navbar";
+
 import FeaturedProduct from "./components/Products/FeaturedProduct";
+import Header from "./components/Headers/Header";
+import NavbarHome from "./components/Navbar";
 
 function App() {
   return (
     <>
-      <Header/>
+      <NavbarHome/>
+      <Header />
       <FeaturedProduct />
     </>
   );

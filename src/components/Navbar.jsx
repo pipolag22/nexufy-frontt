@@ -2,7 +2,7 @@ import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap';
 import img from "../assets/img/nexufy-horizontal-png.png";
 import { FaSearch, FaBars, FaUserCircle } from 'react-icons/fa';
 
-function Header() {
+function NavbarHome() {
  
 
   const handleSearch = (event) => {
@@ -43,4 +43,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default NavbarHome;
