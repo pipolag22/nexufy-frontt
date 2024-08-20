@@ -1,7 +1,12 @@
 * {
   font-family: "Montserrat", sans-serif;
 }
-
+body{
+  background-color: #f5f5f5;
+}
+.bg-secundario{
+background-color: #f1f1e6;
+}
 .bg-tertiary {
   background-color: #f1f1e6;
 }

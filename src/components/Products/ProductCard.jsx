@@ -8,7 +8,7 @@ const ProductCard = ({ name, description, price, category }) => {
     <>
       <Card style={{ height:"28rem", border:"none" }} className="shadow">
         <Card.Img variant="top" src={img} />
-        <Card.Body className="bg-tertiary d-flex flex-column justify-content-around">
+        <Card.Body className="bg-secundario d-flex flex-column justify-content-around">
           <Card.Title className="fw-semibold">{name}</Card.Title>
           <Card.Text className="text-secondary fw-medium lh-sm ">
             {description}

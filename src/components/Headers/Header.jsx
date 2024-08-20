@@ -3,7 +3,7 @@ import headerImage from "../../assets/img/home-removebg-preview.png";
 
 const Header = () => {
   return (
-    <header className="bg-light py-4">
+    <header className="bg-secundario py-4">
       <div className="container d-flex align-items-center">
         <img
           src={headerImage}

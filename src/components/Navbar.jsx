@@ -12,7 +12,7 @@ function NavbarHome() {
   };
 
   return (
-    <Navbar bg="light" expand="lg" className="py-2">
+    <Navbar  expand="lg" className="py-0 mb-4 bg-secundario" style={{height:"100px"}}>
       <div className="container d-flex justify-content-between align-items-center">
         <Navbar.Brand href="#">
           <img src={img} alt="Nexufy Logo" style={{ height: "120px" }} />
@@ -30,10 +30,10 @@ function NavbarHome() {
           </Button>
         </Form>
         <Nav className="d-flex align-items-center">
-          <Nav.Link href="#categories" className="d-flex align-items-center me-3">
+          <Nav.Link href="#" className="d-flex align-items-center me-3">
             <FaBars className="me-1" /> Categorías
           </Nav.Link>
-          <Nav.Link href="#login" className="d-flex align-items-center">
+          <Nav.Link href="#" className="d-flex align-items-center">
             <FaUserCircle className="me-1" /> Ingresar
           </Nav.Link>
         </Nav>
