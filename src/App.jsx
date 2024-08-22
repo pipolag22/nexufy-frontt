@@ -9,7 +9,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout />, // Usamos el Layout como contenedor
+      element: <Layout />,
       children: [
         {
           path: "/",
@@ -18,16 +18,17 @@ function App() {
         {
           path: "product",
           element: <ProductItem />,
-        }
-      ]},
-      {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "register",
-        element: <Register />,
-      },
+        },
+      ],
+    },
+    {
+      path: "login",
+      element: <Login />,
+    },
+    {
+      path: "register",
+      element: <Register />,
+    },
   ]);
   return (
     <>

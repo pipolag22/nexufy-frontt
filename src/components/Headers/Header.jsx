@@ -1,7 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import headerImage from "../../assets/img/home-removebg-preview.png";
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const handleRegisterClick = () => {
+    navigate("/register");
+  };
+
   return (
     <header className="bg-secundario py-4">
       <div className="container d-flex align-items-center">
@@ -17,7 +24,10 @@ const Header = () => {
             Nexufy.
           </h1>
           <div className="text-end mt-3">
-            <button className="btn btn-outline-primary btn-lg">
+            <button
+              className="btn btn-outline-primary btn-lg"
+              onClick={handleRegisterClick}
+            >
               ¡Registrarme!
             </button>
           </div>
