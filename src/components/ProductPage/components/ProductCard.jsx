@@ -1,5 +1,4 @@
-import React from "react";
-import Button from "react-bootstrap/Button";
+
 import Card from "react-bootstrap/Card";
 import img from "../../../assets/img/construccion.jpg";
 import { Col, Row } from "react-bootstrap";
