@@ -1,14 +1,29 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import PropTypes from "prop-types";
 
-const AuthForm = ({ title, fields, buttonText, linkText, linkAction }) => {
+const AuthForm = ({ title, fields, buttonText, linkText, linkAction, onSubmit }) => {
+  // Manejador del envío del formulario
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Previene la recarga de la página
+    const formData = new FormData(event.target);
+
+    // Convierte los datos del formulario en un objeto
+    const data = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+
+    // Llama la función onSubmit pasada como prop
+    onSubmit(data);
+  };
+
   return (
     <div className="d-flex align-items-center vh-100">
       <div className="container">
         <div className="row">
           <div className="col-md-6 d-flex flex-column justify-content-center bg-light p-5">
             <h2 className="mb-4">{title}</h2>
-            <form>
+            <form onSubmit={handleSubmit}>
               {fields.map((field, index) => (
                 <div className="mb-3" key={index}>
                   <label htmlFor={field.id} className="form-label">
@@ -18,6 +33,7 @@ const AuthForm = ({ title, fields, buttonText, linkText, linkAction }) => {
                     type={field.type}
                     className="form-control"
                     id={field.id}
+                    name={field.id} // Asegura que el name coincide con el id
                     placeholder={field.placeholder}
                   />
                 </div>
@@ -41,7 +57,7 @@ const AuthForm = ({ title, fields, buttonText, linkText, linkAction }) => {
   );
 };
 
-//  props
+//  PropTypes
 AuthForm.propTypes = {
   title: PropTypes.string.isRequired,
   fields: PropTypes.arrayOf(
@@ -56,6 +72,7 @@ AuthForm.propTypes = {
   buttonText: PropTypes.string.isRequired,
   linkText: PropTypes.string.isRequired,
   linkAction: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired, // Añadido onSubmit como requerido
 };
 
 export default AuthForm;
