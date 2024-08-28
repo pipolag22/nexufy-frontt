@@ -1,6 +1,21 @@
-const CategoryCard = ({ image, name, description }) => {
+import { useNavigate } from "react-router-dom";
+
+const CategoryCard = ({ id, image, name, description }) => {
+  const navigate = useNavigate();
+  const handleDetail=()=>{
+    navigate(`/product/category/${id}`,{
+      state:{
+        category:{
+          id:id,
+          name: name,
+          description: description
+        }
+      }
+    }
+    )
+  }
   return (
-    <div className="custom-card rounded-5">
+    <div className="custom-card rounded-5" onClick={handleDetail}>
     <img
       src={image}
       alt={name}

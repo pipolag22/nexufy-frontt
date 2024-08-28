@@ -1,45 +1,54 @@
 [
     {
+        "id":"001",
         "image":"image1",
         "name":"Metales y Minerales",
         "description":"Productos como acero, aluminio, cobre, hierro, y otros minerales."
     },
     {
+        "id":"002",
         "image":"image2",
         "name":"Plásticos y Polímeros",
         "description":"Diferentes tipos de plásticos y polímeros utilizados en la fabricación."
     },
     {
+        "id":"003",
         "image":"image3",
         "name":"Químicos y Reactivos",
         "description":"Productos químicos, reactivos, y compuestos industriales.        "
     }, 
     {
+        "id":"004",
         "image":"image4",
         "name":"Textiles y Fibras",
         "description":"Materiales textiles, fibras naturales y sintéticas."
     },
     {
+        "id":"005",
         "image":"image5",
         "name":"Maderas y Derivados",
         "description":"Diferentes tipos de madera, tableros, y productos derivados."
     },
     {
+        "id":"006",
         "image":"image6",
         "name":"Alimentos e Ingredientes",
         "description":"Materias primas para la industria alimentaria, como granos, aceites, y aditivos."
     },
     {
+        "id":"007",
         "image":"image7",
         "name":"Componentes Electrónicos",
         "description":"Circuitos, chips, y otros componentes electrónicos."
     },
     {
+        "id":"008",
         "image":"image8",
         "name":"Materiales de Construcción",
         "description":"Cemento, ladrillos, vidrio, y otros materiales de construcción." 
     },
     {
+        "id":"009",
         "image":"image9",
         "name":"Envases y Embalajes",
         "description":"Productos para embalaje, como cajas, botellas, y envolturas."
