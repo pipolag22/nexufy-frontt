@@ -15,6 +15,9 @@ function NavbarHome() {
   const handleLoginRedirect = () => {
     navigate("/login");
   };
+  const handleGoHome = () =>{
+    navigate("/")
+  }
 
   return (
     <Navbar
@@ -23,8 +26,10 @@ function NavbarHome() {
       style={{ height: "100px" }}
     >
       <div className="container d-flex justify-content-between align-items-center">
-        <Navbar.Brand href="#">
-          <img src={img} alt="Nexufy Logo" style={{ height: "120px" }} />
+        <Navbar.Brand >
+          <a href="" onClick={handleGoHome}>
+            <img src={img} alt="Nexufy Logo" style={{ height: "120px" }} />
+          </a>
         </Navbar.Brand>
         <Form
           inline

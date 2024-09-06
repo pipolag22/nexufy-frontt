@@ -14,8 +14,8 @@ const ProductItem = () => {
       <ProductData description={description}/>
       <hr className="container border-2" />
       <ProductSeller />
-      <p className="container fs-3 fw-medium my-4">Comentarios del producto</p>
-      <ProductComments/>
+      <h3 className="container fs-3 fw-medium my-4">Comentarios del producto</h3>
+      <ProductComments productId={id}/>
     </>
   );
 };
