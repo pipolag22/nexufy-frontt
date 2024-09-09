@@ -1,6 +1,6 @@
 // const env = import.meta.env.VITE_API_HOST;
 
-// Servicios de Productos
+// Product services
 export async function getProduct(productId) {
   try {
     const response = await fetch(
@@ -27,7 +27,8 @@ export async function getProduct(productId) {
   }
 }
 
-// Servicios de comentarios
+
+// Comments services
 export async function getComments(productId) {
   try {
     const response = await fetch(

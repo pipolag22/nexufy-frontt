@@ -22,7 +22,7 @@ function NavbarHome() {
   return (
     <Navbar
       expand="lg"
-      className="py-0 mb-4 bg-secundario"
+      className="py-0 mb-4 bg-secundario z-3"
       style={{ height: "100px" }}
     >
       <div className="container d-flex justify-content-between align-items-center">
