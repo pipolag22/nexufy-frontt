@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import AuthForm from "../AuthForm/AuthForm";
 import registerImage from "../../assets/img/undraw_online_ad_re_ol62-removebg-preview.png";
+import { registerService } from "../../api/authService";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -25,44 +26,29 @@ const Register = () => {
       type: "password",
       placeholder: "Ingresa tu contraseña",
     },
-    {
-      id: "name",
-      label: "Nombre",
-      type: "text",
-      placeholder: "Ingresa tu nombre",
-    },
-    {
-      id: "lastname",
-      label: "Apellido",
-      type: "text",
-      placeholder: "Ingresa tu apellido",
-    },
+    //DEJO LOS OTROS CAMPOS COMENTADOS YA QUE NO LOS REQUIERE EL REGISTER
+    // {
+    //   id: "name",
+    //   label: "Nombre",
+    //   type: "text",
+    //   placeholder: "Ingresa tu nombre",
+    // },
+    // {
+    //   id: "lastname",
+    //   label: "Apellido",
+    //   type: "text",
+    //   placeholder: "Ingresa tu apellido",
+    // },
   ];
-
   const handleRegister = async (formData) => {
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/customer/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData);
-      }
-
-      alert("Registro exitoso");
-      navigate("/login");
-    } catch (error) {
-      alert(error.message);
+      await registerService(formData);
+      navigate('/login');
+    } catch (error) { 
+      console.log("Error al registrarse: "+ error.message);
+      alert("Error al registrarse. Por favor, verifica tus datos e intenta nuevamente.");
     }
-  };
+  }
 
   const handleLoginRedirect = () => {
      navigate("/login");

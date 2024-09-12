@@ -58,6 +58,8 @@ color: #115982;
   transition: filter 0.3s ease-in-out; /* Transición suave para el efecto de hover */
 }
 
+
+
 /* Efecto hover para pantallas grandes */
 @media (min-width: 992px) { /* lg y mayores */
   .custom-card:hover .card-image {

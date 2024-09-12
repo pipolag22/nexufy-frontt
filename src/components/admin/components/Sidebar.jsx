@@ -34,11 +34,11 @@ const Sidebar = () => {
       <div className="h-100 position-absolute top-0 left-0 bottom-0 bg-secondary-subtle" style={{width:"17rem", paddingTop:"3rem" }}>
         <Col className="mt-2 pt-5 w-100 text-secondary">
           {navs.map((nav) => (
-            <Row key={nav.id} className="p-3">
+            <Row key={nav.id} className="py-2 ps-5">
               <Nav.Link
                 href={nav.url}
-                className={`d-flex align-items-center me-3 text-center ${
-                  location.pathname === nav.url ? "fw-semibold rounded border border-2 bg-dark-subtle border-opacity-50 border-secondary" : ""
+                className={`d-flex align-items-center me-3 text-center  ${
+                  location.pathname === nav.url ? "fw-bold rounded " : ""
                 }`}
               >
                 <i className={`${nav.icon} m-2 fs-5`}></i>

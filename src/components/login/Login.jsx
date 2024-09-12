@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import AuthForm from "../AuthForm/AuthForm";
 import loginImage from "../../assets/img/undraw_Login_re_4vu2-removebg-preview.png";
+import { loginService } from "../../api/authService";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,27 +23,16 @@ const Login = () => {
     },
   ];
 
+
   const handleLogin = async (formData) => {
     try {
-      const response = await fetch("http://localhost:8080/api/customer/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(errorData);
-      }
-
-      
-      navigate("/"); // Redirigir a una página de destino tras el inicio de sesión exitoso
-    } catch (error) {
-      alert(error.message);
+      const result = await loginService(formData);
+      localStorage.setItem('token',result.accessToken)
+      navigate('/');
+    } catch (error) { 
+      console.log("Error al iniciar sesión: "+ error.message);
     }
-  };
+  }
 
   const handleRegisterRedirect = () => {
     navigate("/register");
@@ -70,4 +60,3 @@ const Login = () => {
 };
 
 export default Login;
-
