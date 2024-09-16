@@ -14,7 +14,8 @@ const Publications = () => {
     const fetchProducts = async () => {
       try {
         if (user && user.id) { // Asegúrate de que `user` y `user.id` existen
-          const data = await getProductsByCustomerId(user.id);
+          const token = localStorage.getItem("token")
+          const data = await getProductsByCustomerId(user.id,token);
           setProducts(data);
         }
       } catch (error) {

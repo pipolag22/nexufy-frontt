@@ -18,7 +18,8 @@ const Profile = () => {
     const fetchCustomer = async () => {
       if (user && user.id) { // Verificamos si el usuario tiene un ID
         try {
-          const data = await getCustomerById(user.id); // Usamos el ID del usuario autenticado
+          const token=localStorage.getItem("token");
+          const data = await getCustomerById(user.id, token); // Usamos el ID del usuario autenticado
           setData(data);
         } catch (error) {
           setError(error);

@@ -1,11 +1,12 @@
 // get products by customer service
 
-export async function getProductsByCustomerId(customerId) {
+export async function getProductsByCustomerId(customerId,token) {
   try {
     const response = await fetch(`http://localhost:8081/api/customer/${customerId}/products`, {
       headers: {
         accept: "application/json",
-      },
+        Authorization: `Bearer ${token}`
+      }
     });
 
     if (!response.ok) {
@@ -21,7 +22,7 @@ export async function getProductsByCustomerId(customerId) {
   }
 }
 
-export async function getCustomerById(customerId) {
+export async function getCustomerById(customerId, token) {
   try {
     const response = await fetch(
       `http://localhost:8081/api/customer/${customerId}`,
@@ -29,6 +30,7 @@ export async function getCustomerById(customerId) {
       {
         headers: {
           accept: "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
