@@ -30,7 +30,7 @@ const Login = () => {
     try {
       const result = await loginService(formData); // Guardamos la autenticación
       handleLogin(result);
-      navigate("/admin"); // Redirigimos al panel admin
+      navigate("/"); // Redirigimos al panel admin
     } catch (error) {
       setErrorMessage(
         "Error al iniciar sesión. Por favor, verifica tus credenciales."

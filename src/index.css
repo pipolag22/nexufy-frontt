@@ -99,3 +99,32 @@ color: #115982;
     opacity: 1; /* Siempre visible en pantallas pequeñas */
   }
 }
+
+.categories-dropdown {
+  position: absolute;
+  top: 100%;
+  right: -10vw;
+  width: 90vw; /* Ancho completo de la pantalla */
+  background: white; /* Fondo blanco */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para el dropdown */
+  z-index: 1000; /* Asegúrate de que esté sobre otros elementos */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Ajusta el tamaño de las columnas */
+  gap: 1rem; /* Espacio entre las categorías */
+  padding: .2rem; /* Espacio interno del dropdown */
+  overflow-y: auto; /* Añade scroll si el contenido es muy largo */
+  max-height: 80vh; /* Altura máxima para que el dropdown no ocupe toda la pantalla */
+}
+
+
+.dropdown-itemCategory {
+  text-align: center;
+  padding: 1rem;
+  text-decoration: none;
+  color: black; /* Color del texto */
+  font-size: 14px
+}
+
+.dropdown-itemCategory:hover {
+  background-color: #e2e2e2bb; /* Color de fondo al pasar el mouse */
+}

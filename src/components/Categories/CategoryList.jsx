@@ -25,7 +25,7 @@ const imageMap = {
 const CategoryList = () => {
   
   return (
-    <>
+    <div className="mb-3">
       <p className="fs-3 text-center fw-bold ">Categorías</p>
       <div className="container">
         <Row xs={1} md={2} lg={3} className="g-4">
@@ -41,7 +41,7 @@ const CategoryList = () => {
           ))}
         </Row>
       </div>
-    </>
+    </div>
   );
 };
 
