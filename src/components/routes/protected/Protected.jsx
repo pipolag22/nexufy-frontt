@@ -4,7 +4,6 @@ import { AuthenticationContext } from "../../../services/authenticationContext/a
 
 const Protected = () => {
     const { user } = useContext(AuthenticationContext);
-
     if (!user)
         return <Navigate to="/login" />;
 

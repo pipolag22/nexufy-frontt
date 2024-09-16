@@ -32,7 +32,6 @@ function NavbarHome() {
           </a>
         </Navbar.Brand>
         <Form
-          inline
           onSubmit={handleSearch}
           className="d-flex flex-grow-1 mx-3"
         >

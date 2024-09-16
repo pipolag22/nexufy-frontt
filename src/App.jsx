@@ -34,21 +34,25 @@ function App() {
     },
     {
       path: "/admin",
-      element: <AdminLayout />,
-      children: [
-        {
-          path: "datos",
-          element: <Profile />,
-        },
-        {
-          path: "publicaciones",
-          element: <Publications />,
-        },
-        {
-          path: "estadisticas",
-          element: <Statistics />,
-        },
-      ],
+      element: <Protected/>,
+      children: [{
+        path: "",
+        element:<AdminLayout />,
+        children: [
+          {
+            path: "datos",
+            element: <Profile />,
+          },
+          {
+            path: "publicaciones",
+            element: <Publications />,
+          },
+          {
+            path: "estadisticas",
+            element: <Statistics />,
+          },
+        ],
+      }]
     },
     {
       path: "login",

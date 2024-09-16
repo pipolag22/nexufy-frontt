@@ -1,8 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import headerImage from "../../assets/img/home-removebg-preview.png";
+import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
+import { useContext } from "react";
 
 const Header = () => {
+  const { user } = useContext(AuthenticationContext);
+
   const navigate = useNavigate();
 
   const handleRegisterClick = () => {
@@ -23,14 +27,18 @@ const Header = () => {
             Simplifica tu cadena de suministro con conexiones directas. Únete a
             Nexufy.
           </h1>
-          <div className="text-end mt-3">
-            <button
-              className="btn btn-outline-primary btn-lg"
-              onClick={handleRegisterClick}
-            >
-              ¡Registrarme!
-            </button>
-          </div>
+          {!user ? (
+            <div className="text-end mt-3">
+              <button
+                className="btn btn-outline-primary btn-lg"
+                onClick={handleRegisterClick}
+              >
+                ¡Registrarme!
+              </button>
+            </div>
+          ) : (
+            <span></span>
+          )}
         </div>
       </div>
     </header>

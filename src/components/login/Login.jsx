@@ -1,12 +1,16 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import AuthForm from "../AuthForm/AuthForm";
 import loginImage from "../../assets/img/undraw_Login_re_4vu2-removebg-preview.png";
 import { loginService } from "../../api/authService";
+import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
 
 const Login = () => {
+  const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
-  
+  const { handleLogin } = useContext(AuthenticationContext);
+
   const loginFields = [
     {
       id: "username",
@@ -22,40 +26,41 @@ const Login = () => {
       placeholder: "Ingresa tu contraseña",
     },
   ];
-
-
-  const handleLogin = async (formData) => {
+  const handleLoginSubmit = async (formData) => {
     try {
-      const result = await loginService(formData);
-      localStorage.setItem('token',result.accessToken)
-      navigate('/');
-    } catch (error) { 
-      console.log("Error al iniciar sesión: "+ error.message);
+      const result = await loginService(formData); // Guardamos la autenticación
+      handleLogin(result);
+      navigate("/admin"); // Redirigimos al panel admin
+    } catch (error) {
+      setErrorMessage(
+        "Error al iniciar sesión. Por favor, verifica tus credenciales."
+      );
     }
-  }
+  };
 
   const handleRegisterRedirect = () => {
     navigate("/register");
   };
 
   useEffect(() => {
-    // Verificar si el usuario ya está autenticado y redirigir si es necesario
-    const isAuthenticated = false; // Aquí iría la lógica de autenticación
-
-    if (isAuthenticated) {
-      navigate("/");
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/"); // Redirige al home si ya está autenticado
     }
   }, [navigate]);
 
   return (
-    <AuthForm
-      title="Bienvenido de vuelta!"
-      fields={loginFields}
-      buttonText="Iniciar sesión"
-      linkText="Registrarme"
-      linkAction={handleRegisterRedirect}
-      onSubmit={handleLogin}
-    />
+    <div>
+      {errorMessage && <p className="text-danger">{errorMessage}</p>}
+      <AuthForm
+        title="Bienvenido de vuelta!"
+        fields={loginFields}
+        buttonText="Iniciar sesión"
+        linkText="Registrarme"
+        linkAction={handleRegisterRedirect}
+        onSubmit={handleLoginSubmit}
+      />
+    </div>
   );
 };
 

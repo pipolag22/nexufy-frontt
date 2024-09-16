@@ -1,26 +1,31 @@
 import React, { useEffect, useState } from "react";
 import ProductList from "../../Products/ProductList";
 import { getProductsByCustomerId } from "../../../api/customerService";
+import { useOutletContext } from "react-router-dom";
 
 const Publications = () => {
+  const {user} = useOutletContext();
+
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const clientId = "66bbd7ee094da25c9d6e7ef8";
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getProductsByCustomerId(clientId);
-        setProducts(data);
+        if (user && user.id) { // Asegúrate de que `user` y `user.id` existen
+          const data = await getProductsByCustomerId(user.id);
+          setProducts(data);
+        }
       } catch (error) {
-        setError(error);
+        setError(error.message || "Error fetching products");
       } finally {
         setIsLoading(false);
       }
     };
+
     fetchProducts();
-  }, [clientId]);
+  }, [user]);
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -32,7 +37,11 @@ const Publications = () => {
   return (
     <div>
       <h2>Productos publicados por ti</h2>
-      <ProductList products={products}/>
+      {products.length > 0 ? (
+        <ProductList products={products} />
+      ) : (
+        <p>No tienes productos publicados.</p>
+      )}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { Col, Nav, Row } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 
 const Sidebar = () => {
+  
   const navs = [
     {
       id: 1,
