@@ -11,6 +11,10 @@ import AdminLayout from "./components/admin/Layout";
 import Publications from "./components/admin/components/Publications";
 import Profile from "./components/admin/components/Profile";
 import Statistics from "./components/admin/components/Statistics";
+import CeoLayout from "./components/ceo/Layout";
+import AbmShop from "./components/ceo/components/AbmShop";
+import AbmUsers from "./components/ceo/components/AbmUsers";
+import Notifications from "./components/ceo/components/Notifications";
 
 function App() {
   const router = createBrowserRouter([
@@ -50,6 +54,36 @@ function App() {
           {
             path: "estadisticas",
             element: <Statistics />,
+          },
+        ],
+      }]
+    },
+    {
+      path: "/ceo",
+      element: <Protected/>,
+      children: [{
+        path: "",
+        element:<CeoLayout />,
+        children: [
+          {
+            path: "datos",
+            element: <Profile />,
+          },
+          {
+            path: "users",
+            element: <AbmUsers />,
+          },
+          {
+            path: "products",
+            element: <AbmShop />,
+          },
+          {
+            path: "estadisticas",
+            element: <Statistics />,
+          },
+          {
+            path: "notificaciones",
+            element: <Notifications />,
           },
         ],
       }]
