@@ -17,7 +17,7 @@ export async function loginService(formData) {
       console.log("Failed connection to auth login", error);
       throw error;
     }
-  };
+  }
 export async function registerService (formData)  {
     try {
       const response = await fetch("http://localhost:8081/api/auth/register", {
@@ -37,4 +37,4 @@ export async function registerService (formData)  {
       console.log("Failed connection to auth register", error);
       throw error;
     }
-  };
+  }
