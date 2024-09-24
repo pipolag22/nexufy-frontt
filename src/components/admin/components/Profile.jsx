@@ -1,36 +1,39 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getCustomerById } from "../../../api/customerService";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Navigate, useOutletContext } from "react-router-dom";
 
 const Profile = () => {
   const { user } = useOutletContext();
-  
+
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  if (!user) {
-    return <Navigate to="/login" />; // Redirigir si no hay usuario
-  }
 
+  // Mover la lógica condicional dentro del Hook
   useEffect(() => {
     const fetchCustomer = async () => {
-      if (user && user.id) { // Verificamos si el usuario tiene un ID
+      if (user && user.id) {
         try {
-          const token=localStorage.getItem("token");
-          const data = await getCustomerById(user.id, token); // Usamos el ID del usuario autenticado
+          const token = localStorage.getItem("token");
+          const data = await getCustomerById(user.id, token);
           setData(data);
         } catch (error) {
           setError(error);
         } finally {
           setIsLoading(false);
         }
+      } else {
+        setIsLoading(false); // Detener el loading si no hay usuario
       }
     };
 
     fetchCustomer();
-  }, [user]); // El efecto se ejecuta cuando el usuario cambia
+  }, [user]);
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -51,7 +54,9 @@ const Profile = () => {
               ? "https://avatar.iran.liara.run/public/boy"
               : data.gender === "F"
               ? "https://avatar.iran.liara.run/public/girl"
-              : `https://avatar.iran.liara.run/username?username=${data.username ? data.username[0] : 'U'}`
+              : `https://avatar.iran.liara.run/username?username=${
+                  data.username ? data.username[0] : "U"
+                }`
           }
           style={{ width: "5rem" }}
           alt="User Avatar"
@@ -62,52 +67,89 @@ const Profile = () => {
             {data.name || data.username} {data.lastname || ""}
           </p>
           <span className="fw-medium text-body-tertiary">
-            Miembro desde {data.registrationdate ? data.registrationdate.split("T")[0] : "-"}
+            Miembro desde{" "}
+            {data.registrationdate ? data.registrationdate.split("T")[0] : "-"}
           </span>
         </div>
       </div>
       <div className="w-100 p-2 px-4 border rounded border-2 border-secondary border-opacity-25 fw-semibold text-secondary">
-        <p className="fw-bold text-dark" style={{fontSize:".9rem"}}>Información Personal</p>
+        <p className="fw-bold text-dark" style={{ fontSize: ".9rem" }}>
+          Información Personal
+        </p>
         <Row className="text-dark d-flex justify-content-between">
           <Col xs={12} md={4}>
             <Row>
-              <Form.Label className="text-body-tertiary fw-base" style={{ fontSize: ".8rem" }}>
+              <Form.Label
+                className="text-body-tertiary fw-base"
+                style={{ fontSize: ".8rem" }}
+              >
                 Nombre
               </Form.Label>
-              <span className="fs-6 mb-4">{data.name || "Nombre no disponible"}</span>
+              <span className="fs-6 mb-4">
+                {data.name || "Nombre no disponible"}
+              </span>
             </Row>
             <Row>
-              <Form.Label className="text-body-tertiary fw-base" style={{ fontSize: ".8rem" }}>
+              <Form.Label
+                className="text-body-tertiary fw-base"
+                style={{ fontSize: ".8rem" }}
+              >
                 Email
               </Form.Label>
-              <span className="fs-6 mb-4">{data.email || "Email no disponible"}</span>
+              <span className="fs-6 mb-4">
+                {data.email || "Email no disponible"}
+              </span>
             </Row>
             <Row>
-              <Form.Label className="text-body-tertiary fw-base" style={{ fontSize: ".8rem" }}>
+              <Form.Label
+                className="text-body-tertiary fw-base"
+                style={{ fontSize: ".8rem" }}
+              >
                 Dirección
               </Form.Label>
-              <span className="fs-6 mb-4">{data.address || "Dirección no disponible"}</span>
+              <span className="fs-6 mb-4">
+                {data.address || "Dirección no disponible"}
+              </span>
             </Row>
           </Col>
           <Col xs={12} md={4}>
             <Row>
-              <Form.Label className="text-body-tertiary fw-base" style={{ fontSize: ".8rem" }}>
+              <Form.Label
+                className="text-body-tertiary fw-base"
+                style={{ fontSize: ".8rem" }}
+              >
                 Apellido
               </Form.Label>
-              <span className="fs-6 mb-4">{data.lastname || "Apellido no disponible"}</span>
+              <span className="fs-6 mb-4">
+                {data.lastname || "Apellido no disponible"}
+              </span>
             </Row>
             <Row>
-              <Form.Label className="text-body-tertiary fw-base" style={{ fontSize: ".8rem" }}>
+              <Form.Label
+                className="text-body-tertiary fw-base"
+                style={{ fontSize: ".8rem" }}
+              >
                 Nombre de usuario
               </Form.Label>
-              <span className="fs-6 mb-4">{data.username || "Usuario no disponible"}</span>
+              <span className="fs-6 mb-4">
+                {data.username || "Usuario no disponible"}
+              </span>
             </Row>
             <Row>
-              <Form.Label className="text-body-tertiary fw-base" style={{ fontSize: ".8rem" }}>
+              <Form.Label
+                className="text-body-tertiary fw-base"
+                style={{ fontSize: ".8rem" }}
+              >
                 Fecha de nacimiento
               </Form.Label>
-              <span className={`fs-6 mb-4 ${data.birthdate ? "" : "text-body-tertiary text-opacity-25"}`}>
-                {data.birthdate ? data.birthdate.split("T")[0] : "Fecha no disponible"}
+              <span
+                className={`fs-6 mb-4 ${
+                  data.birthdate ? "" : "text-body-tertiary text-opacity-25"
+                }`}
+              >
+                {data.birthdate
+                  ? data.birthdate.split("T")[0]
+                  : "Fecha no disponible"}
               </span>
             </Row>
           </Col>

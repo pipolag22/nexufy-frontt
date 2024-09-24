@@ -21,7 +21,6 @@ function NavbarHome() {
 
   const handleSearch = (event) => {
     event.preventDefault();
-    // Lógica de búsqueda aquí
     console.log("Search submitted");
   };
 
@@ -31,19 +30,18 @@ function NavbarHome() {
   const handleGoHome = () => {
     navigate("/");
   };
-const handleCategory =(category)=>{
-  setShowCategories(false)
-  navigate(`/product/category/${category.id}`,{
-    state:{
-      category:{
-        id:category.id,
-        name: category.name,
-        description: category.description
-      }
-    }
-  }
-  )
-}
+  const handleCategory = (category) => {
+    setShowCategories(false);
+    navigate(`/product/category/${category.id}`, {
+      state: {
+        category: {
+          id: category.id,
+          name: category.name,
+          description: category.description,
+        },
+      },
+    });
+  };
   return (
     <Navbar
       expand="lg"

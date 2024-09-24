@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ProductList from "../../Products/ProductList";
 import { getProductsByCustomerId } from "../../../api/customerService";
 import { useOutletContext } from "react-router-dom";
 
 const Publications = () => {
-  const {user} = useOutletContext();
+  const { user } = useOutletContext();
 
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
@@ -13,9 +13,10 @@ const Publications = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        if (user && user.id) { // Asegúrate de que `user` y `user.id` existen
-          const token = localStorage.getItem("token")
-          const data = await getProductsByCustomerId(user.id,token);
+        if (user && user.id) {
+          // Asegúrate de que `user` y `user.id` existen
+          const token = localStorage.getItem("token");
+          const data = await getProductsByCustomerId(user.id, token);
           setProducts(data);
         }
       } catch (error) {

@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Col, Nav, Row } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 
 const Sidebar = () => {
-  
   const navs = [
     {
       id: 1,
@@ -32,7 +31,10 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="h-100 position-absolute top-0 left-0 bottom-0 bg-secondary-subtle" style={{width:"17rem", paddingTop:"3rem" }}>
+      <div
+        className="h-100 position-absolute top-0 left-0 bottom-0 bg-secondary-subtle"
+        style={{ width: "17rem", paddingTop: "3rem" }}
+      >
         <Col className="mt-2 pt-5 w-100 text-secondary">
           {navs.map((nav) => (
             <Row key={nav.id} className="py-2 ps-5">
