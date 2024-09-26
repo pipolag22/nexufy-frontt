@@ -10,7 +10,6 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Mover la lógica condicional dentro del Hook
   useEffect(() => {
     const fetchCustomer = async () => {
       if (user && user.id) {
@@ -72,6 +71,7 @@ const Profile = () => {
           </span>
         </div>
       </div>
+
       <div className="w-100 p-2 px-4 border rounded border-2 border-secondary border-opacity-25 fw-semibold text-secondary">
         <p className="fw-bold text-dark" style={{ fontSize: ".9rem" }}>
           Información Personal

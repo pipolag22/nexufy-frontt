@@ -44,3 +44,26 @@ export async function getCustomerById(customerId, token) {
     throw error;
   }
 }
+export async function getAllCustomers(token) {
+  try {
+    const response = await fetch(
+      "http://localhost:8081/api/customer/all",
+
+      {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    console.log(data)
+    return data
+  } catch (error) {
+    console.error("Failed to fetch product:", error);
+    throw error;
+  }
+}

@@ -27,6 +27,27 @@ export async function getProduct(productId) {
   }
 }
 
+export async function getAllProducts(){
+  try {
+    const res = await fetch(
+      "http://localhost:8081/api/products/all",{
+        headers:{
+          accept:"application/json"
+        }
+      }
+    );
+    if(!res.ok){
+      throw new Error("Network response was not ok");
+    }
+    const data = await res.json();
+    return data;
+  }catch(error){
+    console.error("Failed to fetch products:",error);
+    throw error;
+  }
+}
+
+
 
 // Comments services
 export async function getComments(productId) {
