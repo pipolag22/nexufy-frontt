@@ -3,12 +3,12 @@ import AuthForm from "../AuthForm/AuthForm";
 import img from "../../assets/img/nexufy-horizontal-png.png";
 import registerImage from "../../assets/img/undraw_online_ad_re_ol62-removebg-preview.png";
 import { registerService } from "../../api/authService";
-import { useEffect, useState } from "react";
-import Navbar from "react-bootstrap/Navbar"; // Asegúrate de que Bootstrap esté importado
+import { useState } from "react";
+import Navbar from "react-bootstrap/Navbar";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState(""); // Estado para manejar errores
+  const [errorMessage, setErrorMessage] = useState("");
 
   const registerFields = [
     {
