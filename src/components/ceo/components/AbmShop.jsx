@@ -1,24 +1,22 @@
-import React, { useEffect, useState } from 'react'
-import CustomTable from './CustomTable'
-import { Table } from 'react-bootstrap'
-import { getAllProducts } from '../../../api/productService';
-import { useOutletContext } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Table } from "react-bootstrap";
+import { getAllProducts } from "../../../api/productService";
+import { useOutletContext, Navigate } from "react-router-dom";
 
 const AbmShop = () => {
-  const {user} = useOutletContext();
+  const { user } = useOutletContext();
 
- 
   const [productos, setProductos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   if (!user) {
-    return <Navigate to="/login" />; // Redirigir si no hay usuario
+    return <Navigate to="/login" />;
   }
 
   useEffect(() => {
     const fetchAllProducts = async () => {
-      if (user  ) { // Verificamos si es superadmin
+      if (user) {
         try {
           const products = await getAllProducts();
           setProductos(products);
@@ -31,7 +29,7 @@ const AbmShop = () => {
     };
 
     fetchAllProducts();
-  }, []); 
+  }, []);
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -41,9 +39,8 @@ const AbmShop = () => {
     return <p className="text-danger">{error.message}</p>;
   }
 
-
   return (
-      <div className="container ">
+    <div className="container ">
       <Table striped bordered hover variant="light">
         <thead>
           <tr className="text-center">
@@ -54,18 +51,18 @@ const AbmShop = () => {
           </tr>
         </thead>
         <tbody>
-           {productos.map((item)=>(
-          <tr key={item.id}>
-            <td>{item.name}</td>
-            <td>{item.description}</td>
-            <td>{item.price}</td>
-            <td></td>
-          </tr>
-           ))} 
+          {productos.map((item) => (
+            <tr key={item.id}>
+              <td>{item.name}</td>
+              <td>{item.description}</td>
+              <td>{item.price}</td>
+              <td></td>
+            </tr>
+          ))}
         </tbody>
       </Table>
     </div>
-  )
-}
+  );
+};
 
-export default AbmShop
+export default AbmShop;

@@ -7,25 +7,23 @@ import { updateCustomerProfile } from "../../../api/customerService";
 const CustomTable = ({ input }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingUserId, setEditingUserId] = useState(null);
-  const [data, setData] = useState(input); // Estado de los datos
+  const [data, setData] = useState(input);
   const [error, setError] = useState(null);
-  const [userToEdit, setUserToEdit] = useState(null); // Almacena el usuario que se va a editar
+  const [userToEdit, setUserToEdit] = useState(null);
 
-  // Función para manejar el clic en editar
   const handleEditClick = (userId) => {
-    const user = data.find((item) => item.id === userId); // Encuentra el usuario por ID
-    setUserToEdit(user); // Establece el usuario que se va a editar
+    const user = data.find((item) => item.id === userId);
+    setUserToEdit(user);
     setEditingUserId(userId);
     setIsEditing(true);
   };
 
-  // Función para guardar los cambios
   const handleSave = async (updatedData) => {
     const token = localStorage.getItem("token");
 
     try {
       await updateCustomerProfile(updatedData.id, token, updatedData);
-      // Actualizar los datos en la tabla
+
       setData((prevData) =>
         prevData.map((item) =>
           item.id === updatedData.id ? updatedData : item
@@ -38,12 +36,10 @@ const CustomTable = ({ input }) => {
     }
   };
 
-  // Si estamos editando, mostramos el formulario de edición
   if (isEditing && userToEdit) {
     return <EditProfileForm initialData={userToEdit} onSave={handleSave} />;
   }
 
-  // Si no estamos editando, mostramos la tabla
   return (
     <div className="container">
       <Table striped bordered hover variant="light">
