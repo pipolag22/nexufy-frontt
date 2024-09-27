@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { getCustomerById } from "../../../api/customerService";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Navigate, useOutletContext } from "react-router-dom";
+import EditProfileForm from "../../AuthForm/EditProfileForm";
+import { updateCustomerProfile } from "../../../api/customerService";
 
 const Profile = () => {
   const { user } = useOutletContext();
-
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const fetchCustomer = async () => {
@@ -23,12 +25,25 @@ const Profile = () => {
           setIsLoading(false);
         }
       } else {
-        setIsLoading(false); // Detener el loading si no hay usuario
+        setIsLoading(false);
       }
     };
 
     fetchCustomer();
   }, [user]);
+
+  const handleSave = async (updatedData) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      await updateCustomerProfile(user.id, token, updatedData);
+
+      setData(updatedData);
+      setIsEditing(false);
+    } catch (error) {
+      setError(error);
+    }
+  };
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -46,127 +61,107 @@ const Profile = () => {
     <div className="container w-100 d-flex flex-column align-items-start">
       <p className="fw-semibold">Mi Perfil</p>
 
-      <div className="w-100 d-flex align-items-center p-2 px-4 border rounded border-2 border-secondary my-2 border-opacity-25">
-        <img
-          src={
-            data.gender === "M"
-              ? "https://avatar.iran.liara.run/public/boy"
-              : data.gender === "F"
-              ? "https://avatar.iran.liara.run/public/girl"
-              : `https://avatar.iran.liara.run/username?username=${
-                  data.username ? data.username[0] : "U"
-                }`
-          }
-          style={{ width: "5rem" }}
-          alt="User Avatar"
-          className="mx-3"
-        />
-        <div className="d-flex flex-column">
-          <p className="fs-3 fw-semibold text-secondary mt-1">
-            {data.name || data.username} {data.lastname || ""}
-          </p>
-          <span className="fw-medium text-body-tertiary">
-            Miembro desde{" "}
-            {data.registrationdate ? data.registrationdate.split("T")[0] : "-"}
-          </span>
-        </div>
-      </div>
+      <div className="w-100 p-2 px-4 border rounded border-2 border-secondary border-opacity-25">
+        {isEditing ? (
+          <EditProfileForm initialData={data} onSave={handleSave} />
+        ) : (
+          <>
+            <Row className="text-dark d-flex justify-content-between">
+              <Col xs={12} md={4}>
+                <Row>
+                  <Form.Label
+                    className="text-body-tertiary fw-semibold"
+                    style={{ fontSize: ".9rem" }}
+                  >
+                    Nombre
+                  </Form.Label>
+                  <span className="fs-6 mb-4">
+                    {data.name || "Nombre no disponible"}
+                  </span>
+                </Row>
+                <Row>
+                  <Form.Label
+                    className="text-body-tertiary fw-semibold"
+                    style={{ fontSize: ".9rem" }}
+                  >
+                    Email
+                  </Form.Label>
+                  <span className="fs-6 mb-4">
+                    {data.email || "Email no disponible"}
+                  </span>
+                </Row>
+                <Row>
+                  <Form.Label
+                    className="text-body-tertiary fw-semibold"
+                    style={{ fontSize: ".9rem" }}
+                  >
+                    Dirección
+                  </Form.Label>
+                  <span className="fs-6 mb-4">
+                    {data.address || "Dirección no disponible"}
+                  </span>
+                </Row>
+              </Col>
 
-      <div className="w-100 p-2 px-4 border rounded border-2 border-secondary border-opacity-25 fw-semibold text-secondary">
-        <p className="fw-bold text-dark" style={{ fontSize: ".9rem" }}>
-          Información Personal
-        </p>
-        <Row className="text-dark d-flex justify-content-between">
-          <Col xs={12} md={4}>
-            <Row>
-              <Form.Label
-                className="text-body-tertiary fw-base"
-                style={{ fontSize: ".8rem" }}
-              >
-                Nombre
-              </Form.Label>
-              <span className="fs-6 mb-4">
-                {data.name || "Nombre no disponible"}
-              </span>
+              <Col xs={12} md={4}>
+                <Row>
+                  <Form.Label
+                    className="text-body-tertiary fw-semibold"
+                    style={{ fontSize: ".9rem" }}
+                  >
+                    Apellido
+                  </Form.Label>
+                  <span className="fs-6 mb-4">
+                    {data.lastname || "Apellido no disponible"}
+                  </span>
+                </Row>
+                <Row>
+                  <Form.Label
+                    className="text-body-tertiary fw-semibold"
+                    style={{ fontSize: ".9rem" }}
+                  >
+                    Nombre de usuario
+                  </Form.Label>
+                  <span className="fs-6 mb-4">
+                    {data.username || "Usuario no disponible"}
+                  </span>
+                </Row>
+                <Row>
+                  <Form.Label
+                    className="text-body-tertiary fw-semibold"
+                    style={{ fontSize: ".9rem" }}
+                  >
+                    Fecha de nacimiento
+                  </Form.Label>
+                  <span
+                    className={`fs-6 mb-4 ${
+                      data.birthdate ? "" : "text-body-tertiary text-opacity-25"
+                    }`}
+                  >
+                    {data.birthdate
+                      ? data.birthdate.split("T")[0]
+                      : "Fecha no disponible"}
+                  </span>
+                </Row>
+              </Col>
+
+              <Col xs={12} md={4}>
+                <Row className="justify-content-end me-4">
+                  <Button
+                    onClick={() => setIsEditing(true)}
+                    variant="outline-secondary"
+                    size="sm"
+                    className="border border-2 rounded-pill w-25 p-1 d-flex justify-content-center"
+                  >
+                    <span>
+                      Editar <i className="bi bi-pencil"></i>
+                    </span>
+                  </Button>
+                </Row>
+              </Col>
             </Row>
-            <Row>
-              <Form.Label
-                className="text-body-tertiary fw-base"
-                style={{ fontSize: ".8rem" }}
-              >
-                Email
-              </Form.Label>
-              <span className="fs-6 mb-4">
-                {data.email || "Email no disponible"}
-              </span>
-            </Row>
-            <Row>
-              <Form.Label
-                className="text-body-tertiary fw-base"
-                style={{ fontSize: ".8rem" }}
-              >
-                Dirección
-              </Form.Label>
-              <span className="fs-6 mb-4">
-                {data.address || "Dirección no disponible"}
-              </span>
-            </Row>
-          </Col>
-          <Col xs={12} md={4}>
-            <Row>
-              <Form.Label
-                className="text-body-tertiary fw-base"
-                style={{ fontSize: ".8rem" }}
-              >
-                Apellido
-              </Form.Label>
-              <span className="fs-6 mb-4">
-                {data.lastname || "Apellido no disponible"}
-              </span>
-            </Row>
-            <Row>
-              <Form.Label
-                className="text-body-tertiary fw-base"
-                style={{ fontSize: ".8rem" }}
-              >
-                Nombre de usuario
-              </Form.Label>
-              <span className="fs-6 mb-4">
-                {data.username || "Usuario no disponible"}
-              </span>
-            </Row>
-            <Row>
-              <Form.Label
-                className="text-body-tertiary fw-base"
-                style={{ fontSize: ".8rem" }}
-              >
-                Fecha de nacimiento
-              </Form.Label>
-              <span
-                className={`fs-6 mb-4 ${
-                  data.birthdate ? "" : "text-body-tertiary text-opacity-25"
-                }`}
-              >
-                {data.birthdate
-                  ? data.birthdate.split("T")[0]
-                  : "Fecha no disponible"}
-              </span>
-            </Row>
-          </Col>
-          <Col xs={12} md={4}>
-            <Row className="justify-content-end me-4">
-              <Button
-                variant="outline-secondary"
-                size="sm"
-                className="border border-2 rounded-pill w-25 p-1 d-flex justify-content-center"
-              >
-                <span>
-                  Editar <i className="bi bi-pencil"></i>
-                </span>
-              </Button>
-            </Row>
-          </Col>
-        </Row>
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,25 +1,24 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CustomTable from "./CustomTable";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, Navigate } from "react-router-dom";
 import { getAllCustomers } from "../../../api/customerService";
 
 const AbmUsers = () => {
-
   const { user } = useOutletContext();
-  
+
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   if (!user) {
-    return <Navigate to="/login" />; // Redirigir si no hay usuario
+    return <Navigate to="/login" />;
   }
 
   useEffect(() => {
     const fetchAllCustomers = async () => {
-      if (user && user.id) { // Verificamos si el usuario tiene un ID
+      if (user && user.id) {
         try {
-          const token=localStorage.getItem("token");
+          const token = localStorage.getItem("token");
           const customers = await getAllCustomers(token);
           setData(customers);
         } catch (error) {
@@ -31,8 +30,7 @@ const AbmUsers = () => {
     };
 
     fetchAllCustomers();
-  }, [user]); // El efecto se ejecuta cuando el usuario cambia
-
+  }, [user]);
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -44,7 +42,7 @@ const AbmUsers = () => {
   return (
     <div>
       <p>AbmUsers</p>
-      <CustomTable input={data}/>
+      <CustomTable input={data} />
     </div>
   );
 };

@@ -15,9 +15,10 @@ import categories from "../data/category.json";
 
 function NavbarHome() {
   const [showCategories, setShowCategories] = useState(false);
-
   const navigate = useNavigate();
   const { user, handleLogout } = useContext(AuthenticationContext);
+
+  console.log(user);
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -27,9 +28,11 @@ function NavbarHome() {
   const handleLoginRedirect = () => {
     navigate("/login");
   };
+
   const handleGoHome = () => {
     navigate("/");
   };
+
   const handleCategory = (category) => {
     setShowCategories(false);
     navigate(`/product/category/${category.id}`, {
@@ -42,6 +45,10 @@ function NavbarHome() {
       },
     });
   };
+
+  const isSuperAdmin =
+    user && user.roles && user.roles.includes("ROLE_SUPERADMIN");
+
   return (
     <Navbar
       expand="lg"
@@ -67,9 +74,6 @@ function NavbarHome() {
           </Button>
         </Form>
         <Nav className="d-flex align-items-center">
-          {/* <Nav.Link href="#" className="d-flex align-items-center me-3">
-            <FaBars className="me-1" /> Categorías
-          </Nav.Link> */}
           <Nav.Link
             href="#"
             className="d-flex align-items-center me-3 position-relative"
@@ -103,6 +107,9 @@ function NavbarHome() {
 
               <Dropdown.Menu>
                 <Dropdown.Item href="/admin/datos">Mi perfil</Dropdown.Item>
+                {isSuperAdmin && (
+                  <Dropdown.Item href="/ceo/datos">Perfil CEO</Dropdown.Item>
+                )}
                 <Dropdown.Item onClick={handleLogout}>
                   Cerrar sesión
                 </Dropdown.Item>

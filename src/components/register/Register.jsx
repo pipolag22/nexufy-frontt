@@ -9,6 +9,7 @@ import Navbar from "react-bootstrap/Navbar";
 const Register = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
+  const [isRegistered, setIsRegistered] = useState(false); // Estado para controlar la alerta de éxito
 
   const registerFields = [
     {
@@ -34,13 +35,18 @@ const Register = () => {
 
   const handleRegister = async (formData) => {
     try {
-      await registerService(formData); // Llama al servicio de registro
-      navigate("/login"); // Redirige al login después de registrar exitosamente
+      await registerService(formData);
+      setIsRegistered(true);
+      setErrorMessage("");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (error) {
       console.log("Error al registrarse: " + error.message);
       setErrorMessage(
         "Error al registrarse. Por favor, verifica tus datos e intenta nuevamente."
       );
+      setIsRegistered(false);
     }
   };
 
@@ -60,7 +66,14 @@ const Register = () => {
         </Navbar.Brand>
       </Navbar>
       {errorMessage && <p className="text-danger">{errorMessage}</p>}{" "}
-      {/* Mostrar error */}
+      {isRegistered && (
+        <div className="alert alert-success" role="alert">
+          <h4 className="alert-heading">¡Bien hecho!</h4>
+          <p>
+            Te has registrado exitosamente. Redirigiendo al inicio de sesión...
+          </p>
+        </div>
+      )}
       <AuthForm
         title="Crea tu cuenta"
         fields={registerFields}

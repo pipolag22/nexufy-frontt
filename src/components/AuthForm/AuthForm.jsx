@@ -1,19 +1,23 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import PropTypes from "prop-types";
 
-const AuthForm = ({ title, fields, buttonText, linkText, linkAction, onSubmit }) => {
-  // Manejador del envío del formulario
+const AuthForm = ({
+  title,
+  fields,
+  buttonText,
+  linkText,
+  linkAction,
+  onSubmit,
+}) => {
   const handleSubmit = (event) => {
-    event.preventDefault(); // Previene la recarga de la página
+    event.preventDefault();
     const formData = new FormData(event.target);
 
-    // Convierte los datos del formulario en un objeto
     const data = {};
     formData.forEach((value, key) => {
       data[key] = value;
     });
 
-    // Llama la función onSubmit pasada como prop
     onSubmit(data);
   };
 
@@ -33,7 +37,7 @@ const AuthForm = ({ title, fields, buttonText, linkText, linkAction, onSubmit })
                     type={field.type}
                     className="form-control"
                     id={field.id}
-                    name={field.id} // Asegura que el name coincide con el id
+                    name={field.id}
                     placeholder={field.placeholder}
                   />
                 </div>
@@ -72,7 +76,7 @@ AuthForm.propTypes = {
   buttonText: PropTypes.string.isRequired,
   linkText: PropTypes.string.isRequired,
   linkAction: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired, // Añadido onSubmit como requerido
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default AuthForm;
