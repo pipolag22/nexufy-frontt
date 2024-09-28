@@ -3,8 +3,6 @@ import CustomTable from "./CustomTable";
 import { useOutletContext, Navigate, useNavigate } from "react-router-dom";
 import { getAllCustomers } from "../../../api/customerService";
 import { Button, Form } from "react-bootstrap";
-import Swal from "sweetalert2";
-import { registerByAdminService } from "../../../api/adminService";
 
 const AbmUsers = () => {
   const { user } = useOutletContext();
@@ -73,45 +71,9 @@ const AbmUsers = () => {
   ];
 
   const handleRegister = async (formData) => {
-    try {
-      await registerByAdminService(formData);
-      // Vuelve a obtener la lista de usuarios
-      const token = localStorage.getItem("token");
-      const customers = await getAllCustomers(token);
-      setUsers(customers);
-      navigate("/login");
-    } catch (error) {
-      console.log("Error al registrarse: " + error.message);
-      setErrorMessage("Error al registrarse. Por favor, verifica tus datos e intenta nuevamente.");
-    }
   };
 
   const handleAddUser = async () => {
-    const { value: formValues } = await Swal.fire({
-      title: 'Agregar Usuario',
-      html:
-        `<input id="username" class="swal2-input" placeholder="Nombre de usuario">` +
-        `<input id="email" class="swal2-input" placeholder="Email">` +
-        `<input id="password" type="password" class="swal2-input" placeholder="Contraseña">`,
-      focusConfirm: false,
-      preConfirm: () => {
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        if (!username || !email || !password) {
-          Swal.showValidationMessage(`Por favor ingrese nombre de usuario, email y contraseña`);
-        }
-        return { username, email, password };
-      },
-      showCancelButton: true,
-      confirmButtonText: 'Agregar',
-      cancelButtonText: 'Cancelar',
-    });
-
-    if (formValues) {
-      const { username, email, password } = formValues;
-      await handleRegister({ username, email, password });
-    }
   };
 
   return (
