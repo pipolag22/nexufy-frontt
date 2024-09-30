@@ -33,8 +33,10 @@ const Login = () => {
     try {
       const result = await loginService(formData);
       handleLogin(result);
+      console.log(result)
       navigate("/");
     } catch (error) {
+      console.error(error)
       setErrorMessage(
         "Error al iniciar sesión. Por favor, verifica tus credenciales."
       );

@@ -58,8 +58,8 @@ const Profile = () => {
   }
 
   return (
-    <div className="container w-100 d-flex flex-column align-items-start">
-      <p className="fw-semibold">Mi Perfil</p>
+    <div className="container shadow p-4 bg-light-subtle mb-3 mx-2 d-flex flex-column align-items-start" style={{borderRadius:"20px" }}>
+      <p className="fs-3 fw-semibold">Mi Perfil</p>
 
       <div className="w-100 p-2 px-4 border rounded border-2 border-secondary border-opacity-25">
         {isEditing ? (

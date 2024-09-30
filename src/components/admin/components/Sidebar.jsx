@@ -1,5 +1,5 @@
 import { Col, Nav, Row } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
   const navs = [
@@ -37,15 +37,15 @@ const Sidebar = () => {
         <Col className="mt-2 pt-5 w-100 text-secondary">
           {navs.map((nav) => (
             <Row key={nav.id} className="py-2 ps-5">
-              <Nav.Link
-                href={nav.url}
-                className={`d-flex align-items-center me-3 text-center  ${
+              <Link
+                to={nav.url}
+                className={`nav-link d-flex align-items-center me-3 text-center  ${
                   location.pathname === nav.url ? "fw-bold rounded " : ""
                 }`}
               >
                 <i className={`${nav.icon} m-2 fs-5`}></i>
                 {nav.name}
-              </Nav.Link>
+              </Link>
             </Row>
           ))}
         </Col>

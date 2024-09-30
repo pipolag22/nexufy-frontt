@@ -1,15 +1,26 @@
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Table, Button, Row } from "react-bootstrap";
-import { useState } from "react";
+import { Table, Button, Row, Pagination } from "react-bootstrap";
 import EditProfileForm from "../../AuthForm/EditProfileForm";
 import { updateCustomerProfile } from "../../../api/customerService";
 
-const CustomTable = ({ input }) => {
+const CustomTable = ({ columns, input }) => {
+  const itemsPerPage = 5;
+  const [currentPage, setCurrentPage] = useState(1);
   const [isEditing, setIsEditing] = useState(false);
   const [editingUserId, setEditingUserId] = useState(null);
   const [data, setData] = useState(input);
   const [error, setError] = useState(null);
   const [userToEdit, setUserToEdit] = useState(null);
+
+  // Paginate data
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = data.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   const handleEditClick = (userId) => {
     const user = data.find((item) => item.id === userId);
@@ -20,10 +31,8 @@ const CustomTable = ({ input }) => {
 
   const handleSave = async (updatedData) => {
     const token = localStorage.getItem("token");
-
     try {
       await updateCustomerProfile(updatedData.id, token, updatedData);
-
       setData((prevData) =>
         prevData.map((item) =>
           item.id === updatedData.id ? updatedData : item
@@ -45,18 +54,17 @@ const CustomTable = ({ input }) => {
       <Table striped bordered hover variant="light">
         <thead>
           <tr className="text-center">
-            <th>Nombre de usuario</th>
-            <th>Email</th>
-            <th>Rol</th>
-            <th>Acciones</th>
+            {columns.map((col) => (
+              <th key={col.header}>{col.header}</th>
+            ))}
           </tr>
         </thead>
-        <tbody>
-          {data.map((item) => (
+        <tbody className="text-center" style={{ fontSize: "12px" }}>
+          {paginatedData.map((item) => (
             <tr key={item.id}>
-              <td>{item.username}</td>
-              <td>{item.email}</td>
-              <td>{item.roles[0]?.name.split("_")[1]}</td>
+              {columns.map((col) => (
+                <td key={col.accessor}>{col.render(item)}</td>
+              ))}
               <td>
                 <Row className="justify-content-end me-4">
                   <Button
@@ -76,11 +84,27 @@ const CustomTable = ({ input }) => {
         </tbody>
       </Table>
       {error && <p className="text-danger">{error.message}</p>}
+      <Pagination className="w-full d-flex justify-content-center">
+        <Pagination.First onClick={() => handlePageChange(1)} disabled={currentPage === 1} />
+        <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} />
+        {Array.from({ length: totalPages }, (_, index) => (
+          <Pagination.Item
+            key={index}
+            active={currentPage === index + 1}
+            onClick={() => handlePageChange(index + 1)}
+          >
+            {index + 1}
+          </Pagination.Item>
+        ))}
+        <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} />
+        <Pagination.Last onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages} />
+      </Pagination>
     </div>
   );
 };
 
 CustomTable.propTypes = {
+  columns: PropTypes.array.isRequired,
   input: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
