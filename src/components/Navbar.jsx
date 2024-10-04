@@ -12,13 +12,15 @@ import img from "../assets/img/nexufy-horizontal-png.png";
 import { FaSearch, FaBars, FaUserCircle } from "react-icons/fa";
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../services/authenticationContext/authentication.context";
+import { ThemeContext } from "../components/themes/ThemeContext";
 import categories from "../data/category.json";
-import ThemeToggle from "../components/themes/ThemeToggle"; // Importar el ThemeToggle
+import ThemeToggle from "../components/themes/ThemeToggle";
 
 function NavbarHome() {
   const [showCategories, setShowCategories] = useState(false);
   const navigate = useNavigate();
   const { user, handleLogout } = useContext(AuthenticationContext);
+  const { darkMode } = useContext(ThemeContext);
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -53,7 +55,7 @@ function NavbarHome() {
     <Navbar
       expand="lg"
       className="py-0 mb-4 bg-secundario z-3 w-100"
-      style={{ height: "100px", color: "var(--color-text-primary)" }} // Usar la variable de color
+      style={{ height: "100px", color: "var(--color-text-primary)" }}
     >
       <div className="container d-flex justify-content-between align-items-center">
         <Navbar.Brand>
@@ -66,8 +68,16 @@ function NavbarHome() {
           <FormControl
             type="text"
             placeholder="¿Qué materia prima buscas?"
-            className="me-2"
+            className={`me-2 ${
+              darkMode ? "bg-dark text-light placeholder-light" : ""
+            }`}
             aria-label="Buscar"
+            style={{
+              color: darkMode ? "#fff" : "#333",
+              "::placeholder": {
+                color: darkMode ? "#aaa" : "#555",
+              },
+            }}
           />
           <Button
             variant="outline-secondary"
@@ -120,11 +130,8 @@ function NavbarHome() {
           </Nav>
         </Navbar.Collapse>
 
-        {/* Este bloque es visible solo en pantallas grandes */}
         <Nav className="d-none d-lg-flex align-items-center">
-          {/* Botón de sol/luna movido antes de Categorías */}
           <ThemeToggle />{" "}
-          {/* Mueve este botón al lado izquierdo de "Categorías" */}
           <Nav.Link
             href="#"
             className="d-flex align-items-center me-3 position-relative"
