@@ -177,3 +177,13 @@ body {
     --color-dropdown-hover-bg
   ); /* Color de fondo al pasar el mouse */
 }
+
+/* Placeholder para modo oscuro */
+.form-control::placeholder {
+  color: #e0e0e0; /* Cambia el color del placeholder para modo oscuro */
+}
+
+/* Placeholder para modo claro */
+.form-control-light::placeholder {
+  color: #6c757d; /* Color del placeholder para modo claro */
+}

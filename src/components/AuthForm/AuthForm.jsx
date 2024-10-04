@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import PropTypes from "prop-types";
-import { useContext } from "react"; // Importar useContext
+import { useContext } from "react";
 import { ThemeContext } from "../themes/ThemeContext"; // Importar el ThemeContext
 
 const AuthForm = ({
@@ -53,6 +53,9 @@ const AuthForm = ({
                     id={field.id}
                     name={field.id}
                     placeholder={field.placeholder}
+                    style={{
+                      borderColor: darkMode ? "#ced4da" : "", // Cambiar el borde según el tema
+                    }}
                   />
                 </div>
               ))}
@@ -85,7 +88,7 @@ const AuthForm = ({
   );
 };
 
-//  PropTypes
+// Definir PropTypes
 AuthForm.propTypes = {
   title: PropTypes.string.isRequired,
   fields: PropTypes.arrayOf(
