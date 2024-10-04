@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react"; // Importar useContext
 import { Form, Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
+import { ThemeContext } from "../themes/ThemeContext"; // Importar el ThemeContext
 
 const EditProfileForm = ({ initialData, onSave }) => {
+  const { darkMode } = useContext(ThemeContext); // Obtener el estado del tema
   const [formData, setFormData] = useState(initialData);
 
   const handleChange = (e) => {
@@ -16,7 +18,12 @@ const EditProfileForm = ({ initialData, onSave }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form
+      onSubmit={handleSubmit}
+      className={`p-4 ${
+        darkMode ? "bg-dark text-light" : "bg-light text-dark"
+      }`} // Cambiar los colores según el tema
+    >
       <Row>
         <Col md={6}>
           <Form.Group controlId="formName">
@@ -27,6 +34,7 @@ const EditProfileForm = ({ initialData, onSave }) => {
               value={formData.name || ""}
               onChange={handleChange}
               required
+              className={darkMode ? "bg-secondary text-light" : ""} // Aplicar estilo al input
             />
           </Form.Group>
           <Form.Group controlId="formEmail">
@@ -37,6 +45,7 @@ const EditProfileForm = ({ initialData, onSave }) => {
               value={formData.email || ""}
               onChange={handleChange}
               required
+              className={darkMode ? "bg-secondary text-light" : ""} // Aplicar estilo al input
             />
           </Form.Group>
           <Form.Group controlId="formAddress">
@@ -46,6 +55,7 @@ const EditProfileForm = ({ initialData, onSave }) => {
               name="address"
               value={formData.address || ""}
               onChange={handleChange}
+              className={darkMode ? "bg-secondary text-light" : ""} // Aplicar estilo al input
             />
           </Form.Group>
         </Col>
@@ -57,6 +67,7 @@ const EditProfileForm = ({ initialData, onSave }) => {
               name="lastname"
               value={formData.lastname || ""}
               onChange={handleChange}
+              className={darkMode ? "bg-secondary text-light" : ""} // Aplicar estilo al input
             />
           </Form.Group>
           <Form.Group controlId="formUsername">
@@ -64,8 +75,8 @@ const EditProfileForm = ({ initialData, onSave }) => {
             <Form.Text
               className="form-control"
               style={{
-                backgroundColor: "#e9ecef",
-                border: "1px solid #ced4da",
+                backgroundColor: darkMode ? "#495057" : "#e9ecef", // Cambiar el color según el tema
+                border: darkMode ? "1px solid #6c757d" : "1px solid #ced4da",
                 padding: "0.375rem 0.75rem",
                 borderRadius: "0.25rem",
               }}
@@ -80,11 +91,16 @@ const EditProfileForm = ({ initialData, onSave }) => {
               name="birthdate"
               value={formData.birthdate || ""}
               onChange={handleChange}
+              className={darkMode ? "bg-secondary text-light" : ""} // Aplicar estilo al input
             />
           </Form.Group>
         </Col>
       </Row>
-      <Button variant="primary" type="submit" className="mt-3">
+      <Button
+        variant={darkMode ? "outline-light" : "primary"} // Cambiar el botón según el tema
+        type="submit"
+        className="mt-3"
+      >
         Guardar Cambios
       </Button>
     </Form>

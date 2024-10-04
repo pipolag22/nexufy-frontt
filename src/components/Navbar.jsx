@@ -13,13 +13,12 @@ import { FaSearch, FaBars, FaUserCircle } from "react-icons/fa";
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../services/authenticationContext/authentication.context";
 import categories from "../data/category.json";
+import ThemeToggle from "../components/themes/ThemeToggle"; // Importar el ThemeToggle
 
 function NavbarHome() {
   const [showCategories, setShowCategories] = useState(false);
   const navigate = useNavigate();
   const { user, handleLogout } = useContext(AuthenticationContext);
-
-  console.log(user);
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -51,13 +50,18 @@ function NavbarHome() {
     user && user.roles && user.roles.includes("ROLE_SUPERADMIN");
 
   return (
-    <Navbar expand="lg" className="py-0 mb-4 bg-secundario z-3 w-100" style={{ height: "100px" }}>
+    <Navbar
+      expand="lg"
+      className="py-0 mb-4 bg-secundario z-3 w-100"
+      style={{ height: "100px", color: "var(--color-text-primary)" }} // Usar la variable de color
+    >
       <div className="container d-flex justify-content-between align-items-center">
-        <Navbar.Brand >
-          <a href="/"  >
+        <Navbar.Brand>
+          <a href="/" style={{ color: "var(--color-text-primary)" }}>
             <img src={img} alt="Nexufy Logo" style={{ height: "6rem" }} />
           </a>
         </Navbar.Brand>
+
         <Form onSubmit={handleSearch} className="d-flex w-50 flex-grow-1 mx-3">
           <FormControl
             type="text"
@@ -65,17 +69,23 @@ function NavbarHome() {
             className="me-2"
             aria-label="Buscar"
           />
-          <Button variant="outline-secondary" style={{height:"2.5rem"}} type="submit">
+          <Button
+            variant="outline-secondary"
+            style={{ height: "2.5rem", color: "var(--color-text-primary)" }}
+            type="submit"
+          >
             <FaSearch />
           </Button>
         </Form>
 
-        {/* Aquí colapsamos la parte de categorías y usuario para pantallas pequeñas */}
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="d-lg-none" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="d-lg-none"> {/* Visible solo en pantallas pequeñas */}
+          <Nav className="d-lg-none">
             <NavDropdown title="Menú" id="basic-nav-dropdown" className="me-3">
-              <NavDropdown.Item onClick={() => setShowCategories(!showCategories)}>
+              <NavDropdown.Item
+                onClick={() => setShowCategories(!showCategories)}
+                style={{ color: "var(--color-text-primary)" }}
+              >
                 <FaBars className="me-1" /> Categorías
               </NavDropdown.Item>
               {showCategories && (
@@ -85,6 +95,7 @@ function NavbarHome() {
                       key={index}
                       onClick={() => handleCategory(category)}
                       className="dropdown-itemCategory"
+                      style={{ color: "var(--color-text-primary)" }}
                     >
                       {category.name} ({category.quantity})
                     </NavDropdown.Item>
@@ -110,12 +121,16 @@ function NavbarHome() {
         </Navbar.Collapse>
 
         {/* Este bloque es visible solo en pantallas grandes */}
-        <Nav className="d-none d-lg-flex align-items-center ">
+        <Nav className="d-none d-lg-flex align-items-center">
+          {/* Botón de sol/luna movido antes de Categorías */}
+          <ThemeToggle />{" "}
+          {/* Mueve este botón al lado izquierdo de "Categorías" */}
           <Nav.Link
             href="#"
             className="d-flex align-items-center me-3 position-relative"
             onMouseEnter={() => setShowCategories(true)}
             onMouseLeave={() => setShowCategories(false)}
+            style={{ color: "var(--color-text-primary)" }}
           >
             <FaBars className="me-1" /> Categorías
             {showCategories && (
@@ -125,6 +140,7 @@ function NavbarHome() {
                     key={index}
                     onClick={() => handleCategory(category)}
                     className="dropdown-itemCategory text-dark-subtle"
+                    style={{ color: "var(--color-text-primary)" }}
                   >
                     {category.name} ({category.quantity})
                   </a>
@@ -138,6 +154,7 @@ function NavbarHome() {
                 className="d-flex align-items-center"
                 variant="outline-secondary"
                 id="dropdown-basic"
+                style={{ color: "var(--color-text-primary)" }}
               >
                 <FaUserCircle className="me-1" /> {user.name || user.username}
               </Dropdown.Toggle>
@@ -153,7 +170,11 @@ function NavbarHome() {
               </Dropdown.Menu>
             </Dropdown>
           ) : (
-            <Nav.Link onClick={handleLoginRedirect} className="d-flex align-items-center">
+            <Nav.Link
+              onClick={handleLoginRedirect}
+              className="d-flex align-items-center"
+              style={{ color: "var(--color-text-primary)" }}
+            >
               <FaUserCircle className="me-1" /> Iniciar Sesión
             </Nav.Link>
           )}
@@ -164,4 +185,3 @@ function NavbarHome() {
 }
 
 export default NavbarHome;
-

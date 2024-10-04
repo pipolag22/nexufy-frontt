@@ -9,7 +9,8 @@ import Navbar from "react-bootstrap/Navbar";
 const Register = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-  const [isRegistered, setIsRegistered] = useState(false); // Estado para controlar la alerta de éxito
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false); // Nuevo estado para modo oscuro
 
   const registerFields = [
     {
@@ -58,12 +59,19 @@ const Register = () => {
     navigate("/");
   };
 
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
-    <div>
+    <div className={isDarkMode ? "dark-mode" : ""}>
       <Navbar className="px-3 py-2">
         <Navbar.Brand onClick={handleGoHome} style={{ cursor: "pointer" }}>
           <img src={img} alt="Nexufy Logo" style={{ height: "120px" }} />
         </Navbar.Brand>
+        <button onClick={toggleDarkMode} className="btn btn-secondary">
+          {isDarkMode ? "Modo Claro" : "Modo Oscuro"}
+        </button>
       </Navbar>
       {errorMessage && <p className="text-danger">{errorMessage}</p>}{" "}
       {isRegistered && (

@@ -5,7 +5,7 @@ import img from "../../assets/img/nexufy-horizontal-png.png";
 import loginImage from "../../assets/img/undraw_Login_re_4vu2-removebg-preview.png";
 import { loginService } from "../../api/authService";
 import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
-import { Navbar } from "react-bootstrap"; // Asegúrate de importar Navbar
+import { Navbar } from "react-bootstrap";
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -33,10 +33,10 @@ const Login = () => {
     try {
       const result = await loginService(formData);
       handleLogin(result);
-      console.log(result)
+      console.log(result);
       navigate("/");
     } catch (error) {
-      console.error(error)
+      console.error(error);
       setErrorMessage(
         "Error al iniciar sesión. Por favor, verifica tus credenciales."
       );
