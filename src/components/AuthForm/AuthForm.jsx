@@ -10,6 +10,7 @@ const AuthForm = ({
   linkText,
   linkAction,
   onSubmit,
+  errorMessage, // Recibir el mensaje de error como prop
 }) => {
   const { darkMode } = useContext(ThemeContext); // Obtener el estado del tema
 
@@ -56,9 +57,21 @@ const AuthForm = ({
                     style={{
                       borderColor: darkMode ? "#ced4da" : "", // Cambiar el borde según el tema
                     }}
+                    // Agregar el atributo autoComplete para el campo de contraseña
+                    autoComplete={
+                      field.type === "password" ? "current-password" : undefined
+                    }
                   />
                 </div>
               ))}
+
+              {/* Mostrar mensaje de error debajo de Nombre de Usuario si existe */}
+              {errorMessage && (
+                <div className="mb-3">
+                  <p className="text-danger">{errorMessage}</p>
+                </div>
+              )}
+
               <button
                 type="submit"
                 className={`btn ${
@@ -104,6 +117,7 @@ AuthForm.propTypes = {
   linkText: PropTypes.string.isRequired,
   linkAction: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string, // Definir el prop de errorMessage
 };
 
 export default AuthForm;

@@ -3,14 +3,17 @@ import AuthForm from "../AuthForm/AuthForm";
 import img from "../../assets/img/nexufy-horizontal-png.png";
 import registerImage from "../../assets/img/undraw_online_ad_re_ol62-removebg-preview.png";
 import { registerService } from "../../api/authService";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Navbar from "react-bootstrap/Navbar";
+import ThemeToggle from "../themes/ThemeToggle"; // Importar el componente de sol y luna
+import { ThemeContext } from "../themes/ThemeContext"; // Importar el contexto del tema
 
 const Register = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const [isRegistered, setIsRegistered] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false); // Nuevo estado para modo oscuro
+
+  const { darkMode } = useContext(ThemeContext); // Obtener el modo actual desde el contexto
 
   const registerFields = [
     {
@@ -59,23 +62,25 @@ const Register = () => {
     navigate("/");
   };
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
   return (
-    <div className={isDarkMode ? "dark-mode" : ""}>
+    <div className={darkMode ? "bg-dark text-light" : "bg-light text-dark"}>
       <Navbar className="px-3 py-2">
         <Navbar.Brand onClick={handleGoHome} style={{ cursor: "pointer" }}>
           <img src={img} alt="Nexufy Logo" style={{ height: "120px" }} />
         </Navbar.Brand>
-        <button onClick={toggleDarkMode} className="btn btn-secondary">
-          {isDarkMode ? "Modo Claro" : "Modo Oscuro"}
-        </button>
+
+        {/* Botón de cambio de tema (sol y luna) */}
+        <div className="ms-auto">
+          <ThemeToggle />
+        </div>
       </Navbar>
-      {errorMessage && <p className="text-danger">{errorMessage}</p>}{" "}
+      {/* Mensaje de error */}
+      {errorMessage && (
+        <p className="text-danger text-center">{errorMessage}</p>
+      )}{" "}
+      {/* Mensaje de éxito */}
       {isRegistered && (
-        <div className="alert alert-success" role="alert">
+        <div className="alert alert-success text-center" role="alert">
           <h4 className="alert-heading">¡Bien hecho!</h4>
           <p>
             Te has registrado exitosamente. Redirigiendo al inicio de sesión...
