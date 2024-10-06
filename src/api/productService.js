@@ -47,6 +47,28 @@ export async function getAllProducts(){
   }
 }
 
+// Contact service
+export async function getSellerContact(customerId) {
+  try {
+    const response = await fetch(
+      `http://localhost:8081/api/customers/${customerId}/contact`, 
+      {
+        headers: {
+          accept: "application/json",
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch seller contact:", error);
+    throw error;
+  }
+}
+
 
 
 // Comments services

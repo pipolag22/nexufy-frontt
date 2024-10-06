@@ -1,4 +1,4 @@
-import React from "react";
+
 import ProductCard from "./components/ProductCard";
 import ProductData from "./components/ProductData";
 import ProductSeller from "./components/ProductSeller";

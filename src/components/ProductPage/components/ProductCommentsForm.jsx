@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { sendComments } from "@/services/commentService"; // Asegúrate de que la ruta sea correcta
 
