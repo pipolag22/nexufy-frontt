@@ -1,7 +1,7 @@
 export async function registerAdminUser(formData, token) {
   try {
     const response = await fetch(
-      "http://localhost:8081/api/auth/register-admin",
+      "http://localhost:8081/api/superadmin/customers/create",
       {
         method: "POST",
         headers: {
@@ -22,6 +22,7 @@ export async function registerAdminUser(formData, token) {
     throw error;
   }
 }
+
 export async function suspendCustomer(id, days, token) {
   try {
     const response = await fetch(
@@ -80,6 +81,7 @@ export async function deleteCustomer(id, token) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify(id),
       }
     );
 

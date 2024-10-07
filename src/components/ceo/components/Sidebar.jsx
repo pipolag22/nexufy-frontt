@@ -49,7 +49,7 @@ const Sidebar = () => {
   return (
     <>
       <div
-        className={`h-100 position-absolute top-0 left-0 bottom-0 d-flex flex-column justify-content-center align-items-center ${
+        className={`h-100 position-fixed top-0 left-0 bottom-0 d-flex flex-column justify-content-center align-items-center ${
           darkMode ? "bg-dark text-light" : "bg-light text-dark"
         }`} // Cambia entre temas oscuro y claro
         style={{ width: "6rem", paddingTop: "2rem" }}

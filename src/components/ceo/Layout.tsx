@@ -28,7 +28,7 @@ const CeoLayout = () => {
           <aside>
             <Sidebar />
           </aside>
-          <main className="flex-grow-1" style={{ marginLeft: "6rem" }}>
+          <main className="flex-grow-1 me-4" style={{ marginLeft: "6rem" }}>
             <div className="d-flex justify-content-between align-items-center ">
               <h1
                 className={`fw-bold mt-3 mb-3 ${

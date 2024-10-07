@@ -12,35 +12,40 @@ const AbmShop = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Redirige a la página de login si no hay usuario
   if (!user) {
     return <Navigate to="/login" />;
   }
 
   useEffect(() => {
+    // Función para obtener todos los productos
     const fetchAllProducts = async () => {
       if (user) {
         try {
-          const products = await getAllProducts();
-          setProductos(products);
+          const products = await getAllProducts(); // Llama a la API para obtener productos
+          setProductos(products); // Actualiza el estado con los productos obtenidos
         } catch (error) {
-          setError(error);
+          setError(error); // Maneja el error
         } finally {
-          setIsLoading(false);
+          setIsLoading(false); // Indica que se ha terminado la carga
         }
       }
     };
 
     fetchAllProducts();
-  }, [user]);
+  }, [user]); // Efecto que se ejecuta cuando el usuario cambia
 
+  // Muestra un mensaje de carga mientras se obtienen los datos
   if (isLoading) {
     return <p>Loading...</p>;
   }
 
+  // Muestra el error si ocurre
   if (error) {
     return <p className="text-danger">{error.message}</p>;
   }
 
+  // Definición de las columnas de la tabla
   const productColumns = [
     {
       header: "Nombre del producto",
@@ -72,6 +77,15 @@ const AbmShop = () => {
     },
   ];
 
+  // Función para manejar la edición de productos
+  const handleEdit = (updatedProduct) => {
+    setProductos((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === updatedProduct.id ? updatedProduct : product // Actualiza el producto editado
+      )
+    );
+  };
+
   return (
     <div
       className={`container shadow p-4 mb-3 mx-2 ${
@@ -96,7 +110,8 @@ const AbmShop = () => {
         </Form>
       </div>
 
-      <CustomTable columns={productColumns} input={productos} />
+      {/* Renderiza la tabla de productos */}
+      <CustomTable columns={productColumns} data={productos} onEdit={handleEdit} />
     </div>
   );
 };

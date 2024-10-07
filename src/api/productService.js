@@ -47,7 +47,27 @@ export async function getAllProducts(){
   }
 }
 
-
+export async function postProduct(newProduct, token) {
+  try {
+    const response = await fetch(
+      "http://localhost:8081/api/products" ,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body:JSON.stringify(newProduct)
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+  } catch (error) {
+    console.error("Failed to fetch product:", error);
+    throw error;
+  }
+}
 
 // Comments services
 export async function getComments(productId) {
@@ -88,3 +108,4 @@ export async function postComments(commentData) {
     console.log("Failed to send Comment ", error);
   }
 }
+
