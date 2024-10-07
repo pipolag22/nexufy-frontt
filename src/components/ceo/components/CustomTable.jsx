@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { Table, Button, Row, Pagination } from "react-bootstrap";
 import EditProfileForm from "../../AuthForm/EditProfileForm";
 import { updateCustomerProfile } from "../../../api/customerService";
 import Swal from "sweetalert2";
-import { deleterAdminUser } from "../../../api/adminService";
+import { deleteCustomer } from "../../../api/adminService";
+import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
 
 const CustomTable = ({ columns, data, onEdit, onDelete }) => {
+  const { darkMode } = useContext(ThemeContext); // Acceder al estado del modo oscuro
   const itemsPerPage = 5; // Número de elementos por página
   const [currentPage, setCurrentPage] = useState(1); // Estado para la página actual
   const [isEditing, setIsEditing] = useState(false); // Estado para saber si se está editando un usuario
   const [userToEdit, setUserToEdit] = useState(null); // Estado para el usuario que se está editando
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [error, setError] = useState(null);
 
   // Calcula la paginación
   const totalPages = Math.ceil(data.length / itemsPerPage); // Total de páginas
@@ -43,7 +47,7 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
 
     if (result.isConfirmed) {
       try {
-        await deleterAdminUser(user.id, token);
+        await deleteCustomer(user.id, token);
         Swal.fire("¡Borrado!", "El usuario ha sido borrado.", "success");
         onDelete(user.id); // Llama a la función de eliminación
       } catch (error) {
@@ -72,7 +76,13 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
 
   return (
     <div className="container">
-      <Table striped bordered hover variant="light">
+      <Table
+        striped
+        bordered
+        hover
+        variant={darkMode ? "dark" : "light"} // Cambiar el tema de la tabla
+        className={darkMode ? "bg-dark text-light" : "bg-light text-dark"}
+      >
         <thead>
           <tr className="text-center">
             {columns.map((col) => (
@@ -90,7 +100,7 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
                 <Row className="d-flex justify-content-center gap-2">
                   <Button
                     onClick={() => handleEditClick(item)} // Llama a la función de editar
-                    variant="outline-secondary"
+                    variant={darkMode ? "outline-light" : "outline-secondary"}
                     size="sm"
                     className="w-25"
                   >

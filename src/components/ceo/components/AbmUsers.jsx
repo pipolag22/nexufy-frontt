@@ -1,13 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import CustomTable from "./CustomTable";
-import { useOutletContext, Navigate } from "react-router-dom";
+import { useOutletContext, Navigate, useNavigate } from "react-router-dom";
 import { getAllCustomers } from "../../../api/customerService";
 import { Button, Form } from "react-bootstrap";
 import CreateUserForm from "../../AuthForm/CreateUserForm";
 import { registerAdminUser } from "../../../api/adminService";
+import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
+
 
 const AbmUsers = () => {
   const { user } = useOutletContext();
+  const navigate = useNavigate();
+  const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema oscuro
 
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -90,7 +94,9 @@ const AbmUsers = () => {
 
   return (
     <div
-      className="container shadow p-4 bg-light-subtle mb-3 mx-2"
+      className={`container shadow p-4 mb-3 mx-2 ${
+        darkMode ? "bg-dark text-light" : "bg-light-subtle"
+      }`}
       style={{ borderRadius: "20px" }}
     >
       {openNewUser ? (
@@ -102,17 +108,16 @@ const AbmUsers = () => {
             <p className="fs-4 fw-semibold">Usuarios registrados</p>
             <div className="w-50 d-flex justify-content-around">
               <Form className="d-flex w-75">
-                <Form.Control type="text" placeholder="Buscar Usuario" />
-                <Button className="mx-2" type="submit">
+                <Form.Control type="text" placeholder="Buscar Usuario" className={darkMode ? "bg-dark text-light" : "bg-light text-dark"} />
+                <Button className="mx-2" type="submit" variant={darkMode ? "outline-light" : "outline-secondary"}>
                   <i className="bi bi-search"></i>
                 </Button>
               </Form>
             </div>
-            <Button className="mx-2" onClick={handleCreateClick}>
+            <Button className="mx-2" onClick={handleCreateClick} variant={darkMode ? "outline-light" : "outline-secondary"}>
               <i className="bi bi-plus"> Agregar</i>
             </Button>
           </div>
-
           <CustomTable columns={userColumns} data={users} onEdit={handleEdit} onDelete={handleDelete}/>
         </>
       )}
