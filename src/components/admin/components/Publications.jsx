@@ -74,30 +74,32 @@ const Publications = () => {
       ) : (
         <>
           <h2>Productos publicados por ti</h2>
-          {products.length > 0 ? (
-            <ProductList products={products} />
-          ) : (
-            <p>No tienes productos publicados.</p>
-          )}
+          <div className="d-flex flex-wrap"> {/* Contenedor para flexbox */}
+            {products.length > 0 ? (
+              <ProductList products={products} />
+            ) : (
+              <p>No tienes productos publicados.</p>
+            )}
             <Card
-              style={{ height: "28rem", width:"16rem", border: "none" }}
+              style={{ height: "28rem", width: "16rem", border: "none" }}
               className="shadow rounded mt-3"
-              
             >
-              <Card.Body className="bg-secundario d-flex flex-column justify-content-center align-content-center ">
-                  <Button
-                    className="d-flex align-items-center justify-content-center rounded-circle mx-auto border border-primary border-5 bg-transparent"
-                    style={{ width: "5rem",height:"5rem" }}
-                    onClick={handleCreatePublication}
-                  >
-                    <p className="fs-1 fw-bold pt-3 text-primary">+</p>
-                  </Button>
+              <Card.Body className="bg-secundario d-flex flex-column justify-content-center align-content-center">
+                <Button
+                  className="d-flex align-items-center justify-content-center rounded-circle mx-auto border border-primary border-5 bg-transparent"
+                  style={{ width: "5rem", height: "5rem" }}
+                  onClick={handleCreatePublication}
+                >
+                  <p className="fs-1 fw-bold pt-3 text-primary">+</p>
+                </Button>
               </Card.Body>
             </Card>
+          </div>
         </>
       )}
     </div>
   );
+  
 };
 
 export default Publications;

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
+import categories from "../../../data/category.json";
 
 const CreateProductForm = ({ onSave }) => {
   const [formData, setFormData] = useState({});
@@ -15,7 +16,7 @@ const CreateProductForm = ({ onSave }) => {
     const formattedData = {
       ...formData,
       price: parseFloat(formData.price), // Convertir a double
-      stock: parseInt(formData.stock),   // Convertir a int
+      stock: parseInt(formData.stock), // Convertir a int
     };
     onSave(formattedData);
   };
@@ -46,12 +47,14 @@ const CreateProductForm = ({ onSave }) => {
         <Col md={6}>
           <Form.Group controlId="category">
             <Form.Label>Categoría</Form.Label>
-            <Form.Control
-              type="text"
-              name="category"
-              onChange={handleChange}
-              required
-            />
+            <Form.Select name="category" onChange={handleChange} required>
+              <option>Selecciona una categoría</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </Form.Select>
           </Form.Group>
           <Form.Group controlId="price">
             <Form.Label>Precio</Form.Label>
@@ -109,11 +112,7 @@ const CreateProductForm = ({ onSave }) => {
         <Col md={6}>
           <Form.Group controlId="urlImage">
             <Form.Label>Imágen</Form.Label>
-            <Form.Control
-              type="text"
-              name="image"
-              onChange={handleChange}
-            />
+            <Form.Control type="text" name="image" onChange={handleChange} />
           </Form.Group>
         </Col>
       </Row>
