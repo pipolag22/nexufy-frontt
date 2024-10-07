@@ -31,16 +31,21 @@ const Sidebar = () => {
   return (
     <>
       <div
-        className="h-100 position-absolute top-0 left-0 bottom-0 bg-secondary-subtle"
-        style={{ width: "17rem", paddingTop: "3rem" }}
+        className="h-100 position-fixed top-0 left-0 bg-secondary-subtle"
+        style={{
+          width: "17rem",
+          paddingTop: "3rem",
+          height: "100vh",
+          overflowY: "auto",
+        }} 
       >
         <Col className="mt-2 pt-5 w-100 text-secondary">
           {navs.map((nav) => (
             <Row key={nav.id} className="py-2 ps-5">
               <Link
                 to={nav.url}
-                className={`nav-link d-flex align-items-center me-3 text-center  ${
-                  location.pathname === nav.url ? "fw-bold rounded " : ""
+                className={`nav-link d-flex align-items-center me-3 text-center ${
+                  location.pathname === nav.url ? "fw-bold rounded" : ""
                 }`}
               >
                 <i className={`${nav.icon} m-2 fs-5`}></i>

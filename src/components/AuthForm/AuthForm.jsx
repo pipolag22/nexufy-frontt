@@ -22,7 +22,7 @@ const AuthForm = ({
   };
 
   return (
-    <div className="d-flex align-items-center vh-100">
+    <div className="d-flex align-items-center vh-80">
       <div className="container">
         <div className="row">
           <div className="col-md-6 d-flex flex-column justify-content-center bg-light p-5">
