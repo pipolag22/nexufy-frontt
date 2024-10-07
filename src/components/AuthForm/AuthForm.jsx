@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import PropTypes from "prop-types";
 import { useContext } from "react";
-import { ThemeContext } from "../themes/ThemeContext"; // Importar el ThemeContext
+import { ThemeContext } from "../themes/ThemeContext";
 
 const AuthForm = ({
   title,
@@ -10,9 +10,9 @@ const AuthForm = ({
   linkText,
   linkAction,
   onSubmit,
-  errorMessage, // Recibir el mensaje de error como prop
+  errorMessage,
 }) => {
-  const { darkMode } = useContext(ThemeContext); // Obtener el estado del tema
+  const { darkMode } = useContext(ThemeContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -50,14 +50,13 @@ const AuthForm = ({
                     type={field.type}
                     className={`form-control ${
                       darkMode ? "bg-dark text-light" : ""
-                    }`} // Cambiar el estilo del input según el tema
+                    }`}
                     id={field.id}
                     name={field.id}
                     placeholder={field.placeholder}
                     style={{
-                      borderColor: darkMode ? "#ced4da" : "", // Cambiar el borde según el tema
+                      borderColor: darkMode ? "#ced4da" : "",
                     }}
-                    // Agregar el atributo autoComplete para el campo de contraseña
                     autoComplete={
                       field.type === "password" ? "current-password" : undefined
                     }
@@ -65,7 +64,6 @@ const AuthForm = ({
                 </div>
               ))}
 
-              {/* Mostrar mensaje de error debajo de Nombre de Usuario si existe */}
               {errorMessage && (
                 <div className="mb-3">
                   <p className="text-danger">{errorMessage}</p>
@@ -117,7 +115,7 @@ AuthForm.propTypes = {
   linkText: PropTypes.string.isRequired,
   linkAction: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  errorMessage: PropTypes.string, // Definir el prop de errorMessage
+  errorMessage: PropTypes.string,
 };
 
 export default AuthForm;

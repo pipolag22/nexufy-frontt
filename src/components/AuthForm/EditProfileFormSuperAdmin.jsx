@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 import {
@@ -6,9 +6,11 @@ import {
   unsuspendCustomer,
   deleteCustomer,
 } from "../../api/adminService";
-import moment from "moment"; // Importa moment.js para manejar las fechas
+import moment from "moment";
+import { AuthenticationContext } from "../../services/authenticationContext/authentication.context"; // Importar el contexto de autenticación
 
-const EditProfileForm = ({ initialData, onSave }) => {
+const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
+  const { user } = useContext(AuthenticationContext); // Obtener el usuario autenticado
   const [formData, setFormData] = useState(initialData);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -25,7 +27,7 @@ const EditProfileForm = ({ initialData, onSave }) => {
     e.preventDefault();
     setErrorMessage(null);
     try {
-      await onSave(formData); // Actualizar el perfil del usuario
+      await onSave(formData);
       setSuccessMessage("Cambios guardados exitosamente.");
     } catch (error) {
       setErrorMessage(error.message || "Error al actualizar el perfil.");
@@ -35,14 +37,14 @@ const EditProfileForm = ({ initialData, onSave }) => {
   const handleSuspend = async (days) => {
     try {
       const token = localStorage.getItem("token");
-      const newSuspensionEndDate = moment().add(days, "days").toDate(); // Calcular la fecha de suspensión
-      await suspendCustomer(formData.id, days, token); // Suspender al usuario por 7 o 30 días
+      const newSuspensionEndDate = moment().add(days, "days").toDate();
+      await suspendCustomer(formData.id, days, token);
       setFormData({
         ...formData,
         suspended: true,
         suspendedUntil: newSuspensionEndDate,
-      }); // Actualizar el estado de suspensión
-      setSuspensionEndDate(newSuspensionEndDate); // Guardar la fecha de fin de la suspensión
+      });
+      setSuspensionEndDate(newSuspensionEndDate);
       setSuccessMessage(`Usuario suspendido por ${days} días.`);
     } catch (error) {
       setErrorMessage(error.message || "Error al suspender al usuario.");
@@ -52,9 +54,9 @@ const EditProfileForm = ({ initialData, onSave }) => {
   const handleUnsuspend = async () => {
     try {
       const token = localStorage.getItem("token");
-      await unsuspendCustomer(formData.id, token); // Retirar suspensión
-      setFormData({ ...formData, suspended: false, suspendedUntil: null }); // Actualizar el estado de suspensión
-      setSuspensionEndDate(null); // Eliminar la fecha de fin de la suspensión
+      await unsuspendCustomer(formData.id, token);
+      setFormData({ ...formData, suspended: false, suspendedUntil: null });
+      setSuspensionEndDate(null);
       setSuccessMessage("Suspensión retirada.");
     } catch (error) {
       setErrorMessage(error.message || "Error al retirar la suspensión.");
@@ -64,12 +66,15 @@ const EditProfileForm = ({ initialData, onSave }) => {
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem("token");
-      await deleteCustomer(formData.id, token); // Eliminar usuario
+      await deleteCustomer(formData.id, token);
       setSuccessMessage("Usuario eliminado exitosamente.");
     } catch (error) {
       setErrorMessage(error.message || "Error al eliminar al usuario.");
     }
   };
+
+  // Verificar si el usuario actual es el mismo del perfil que se está editando
+  const isOwnProfile = user && user.id === formData.id;
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -126,8 +131,6 @@ const EditProfileForm = ({ initialData, onSave }) => {
               style={{
                 backgroundColor: "#e9ecef",
                 border: "1px solid #ced4da",
-                padding: "0.375rem 0.75rem",
-                borderRadius: "0.25rem",
               }}
             >
               {formData.username || ""}
@@ -136,7 +139,6 @@ const EditProfileForm = ({ initialData, onSave }) => {
         </Col>
       </Row>
 
-      {/* Mostrar el mensaje de suspensión si el usuario está suspendido */}
       {formData.suspended && suspensionEndDate && (
         <Row className="mt-3">
           <Col>
@@ -148,42 +150,42 @@ const EditProfileForm = ({ initialData, onSave }) => {
         </Row>
       )}
 
-      {/* Botones de acciones para suspender, levantar suspensión o eliminar */}
-      <Row className="mt-4">
-        <Col>
-          <Button
-            variant="danger"
-            onClick={() => handleSuspend(7)}
-            className="me-2"
-          >
-            Suspender por 7 días
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => handleSuspend(30)}
-            className="me-2"
-          >
-            Suspender por 30 días
-          </Button>
-
-          {/* Mostrar el botón para levantar la suspensión solo si el usuario está suspendido */}
-          {formData.suspended && (
+      {/* Solo mostrar los botones de suspensión y eliminación si no es el propio perfil */}
+      {!isOwnProfile && (
+        <Row className="mt-4">
+          <Col>
             <Button
-              variant="success"
-              onClick={handleUnsuspend}
+              variant="danger"
+              onClick={() => handleSuspend(7)}
               className="me-2"
             >
-              Levantar suspensión
+              Suspender por 7 días
             </Button>
-          )}
+            <Button
+              variant="danger"
+              onClick={() => handleSuspend(30)}
+              className="me-2"
+            >
+              Suspender por 30 días
+            </Button>
 
-          <Button variant="outline-danger" onClick={handleDelete}>
-            Eliminar usuario
-          </Button>
-        </Col>
-      </Row>
+            {formData.suspended && (
+              <Button
+                variant="success"
+                onClick={handleUnsuspend}
+                className="me-2"
+              >
+                Levantar suspensión
+              </Button>
+            )}
 
-      {/* Mostrar mensajes de éxito o error */}
+            <Button variant="outline-danger" onClick={handleDelete}>
+              Eliminar usuario
+            </Button>
+          </Col>
+        </Row>
+      )}
+
       {errorMessage && <p className="text-danger mt-3">{errorMessage}</p>}
       {successMessage && <p className="text-success mt-3">{successMessage}</p>}
 
@@ -194,7 +196,7 @@ const EditProfileForm = ({ initialData, onSave }) => {
   );
 };
 
-EditProfileForm.propTypes = {
+EditProfileFormSuperAdmin.propTypes = {
   initialData: PropTypes.shape({
     name: PropTypes.string,
     email: PropTypes.string,
@@ -202,10 +204,10 @@ EditProfileForm.propTypes = {
     lastname: PropTypes.string,
     username: PropTypes.string,
     id: PropTypes.string.isRequired,
-    suspended: PropTypes.bool, // Asegúrate de que el objeto de datos contiene la propiedad `suspended`
-    suspendedUntil: PropTypes.string, // Nueva propiedad para la fecha de suspensión
+    suspended: PropTypes.bool,
+    suspendedUntil: PropTypes.string,
   }).isRequired,
   onSave: PropTypes.func.isRequired,
 };
 
-export default EditProfileForm;
+export default EditProfileFormSuperAdmin;

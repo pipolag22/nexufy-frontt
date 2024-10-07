@@ -2,13 +2,15 @@ import { useEffect, useState, useContext } from "react";
 import { getCustomerById } from "../../../api/customerService";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Navigate, useOutletContext } from "react-router-dom";
-import EditProfileForm from "../../AuthForm/EditProfileForm";
-import { updateCustomerProfile } from "../../../api/customerService";
+import EditProfileFormUserAdmin from "../../AuthForm/EditProfileFormUserAdmin";
+import EditProfileFormSuperAdmin from "../../AuthForm/EditProfileFormSuperAdmin";
 import { ThemeContext } from "../../themes/ThemeContext"; // Importar ThemeContext
+import { AuthenticationContext } from "../../../services/authenticationContext/authentication.context"; // Importar contexto de autenticación
 
 const Profile = () => {
   const { user } = useOutletContext();
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
+  const { user: loggedInUser } = useContext(AuthenticationContext); // Obtener usuario autenticado
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,7 +41,6 @@ const Profile = () => {
 
     try {
       await updateCustomerProfile(user.id, token, updatedData);
-
       setData(updatedData);
       setIsEditing(false);
     } catch (error) {
@@ -59,6 +60,9 @@ const Profile = () => {
     return <p className="text-danger">{error.message}</p>;
   }
 
+  // Lógica para mostrar el formulario correspondiente
+  const isSuperAdmin = loggedInUser.roles.includes("ROLE_SUPERADMIN");
+
   return (
     <div
       className={`container shadow p-4 mb-3 mx-2 d-flex flex-column align-items-start ${
@@ -76,9 +80,14 @@ const Profile = () => {
         }`}
       >
         {isEditing ? (
-          <EditProfileForm initialData={data} onSave={handleSave} />
+          isSuperAdmin ? (
+            <EditProfileFormSuperAdmin initialData={data} onSave={handleSave} />
+          ) : (
+            <EditProfileFormUserAdmin initialData={data} onSave={handleSave} />
+          )
         ) : (
           <>
+            {/* Mostrar información del usuario */}
             <Row className="text-dark d-flex justify-content-between">
               <Col xs={12} md={4}>
                 <Row>

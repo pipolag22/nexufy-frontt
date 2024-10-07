@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { Table, Button, Row, Pagination } from "react-bootstrap";
-import EditProfileForm from "../../AuthForm/EditProfileForm";
+import EditProfileForm from "../../AuthForm/EditProfileFormSuperAdmin";
 import { updateCustomerProfile } from "../../../api/customerService";
 import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
 
