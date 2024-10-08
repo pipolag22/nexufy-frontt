@@ -3,7 +3,7 @@ import img from "../../../assets/img/construccion.jpg";
 import { Col, Row } from "react-bootstrap";
 import ProductContact from "./ProductContact";
 
-const ProductCard = ({name,price,category}) => {
+const ProductCard = ({id, name,price,category}) => {
   return (
     <>
       <div className="container-fluid container-md">
@@ -27,7 +27,7 @@ const ProductCard = ({name,price,category}) => {
                 <hr />
               </div>
               <Card.Text className="h-50">
-                <ProductContact/>
+                <ProductContact customerId={id}/>
               </Card.Text>
             </Card.Body>
           </Col>

@@ -1,6 +1,7 @@
 import React from "react";
 import { Table } from "react-bootstrap";
 
+// eslint-disable-next-line react/prop-types
 const ProductData = ({description}) => {
   return (
     <div className="container mt-4" >
