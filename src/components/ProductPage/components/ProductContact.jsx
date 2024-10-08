@@ -1,11 +1,27 @@
-import React, { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Col, Row } from "react-bootstrap";
 import { AuthenticationContext } from "../../../services/authenticationContext/authentication.context";
 import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
+import { getSellerContact } from "../../../api/productService"; // Importa la nueva función
 
-const ProductContact = () => {
+const ProductContact = ({ customerId }) => {
   const { user } = useContext(AuthenticationContext);
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
+  const [sellerInfo, setSellerInfo] = useState(null);
+
+  useEffect(() => {
+    // Llamar al servicio para obtener la información del vendedor
+    const fetchSellerInfo = async () => {
+      try {
+        const data = await getSellerContact(customerId); // Usar el servicio en lugar de fetch directo
+        setSellerInfo(data);
+      } catch (error) {
+        console.error("Error fetching seller info:", error);
+      }
+    };
+
+    fetchSellerInfo();
+  }, [customerId]);
 
   return (
     <div>
@@ -19,36 +35,55 @@ const ProductContact = () => {
             Contactar al vendedor
           </p>
         </Row>
-        {user ? (
+        {user  ? (
           <div>
             <Row>
               <Col>
-                <button className="btn btn-outline-primary shadow rounded-pill w-100">
+                {/* Botón de WhatsApp */}
+                <a
+                  href={`https://wa.me/${sellerInfo?.phone}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-outline-primary shadow rounded-pill w-100"
+                >
                   <i className="bi bi-whatsapp text-primary-custom"></i>
-                </button>
+                </a>
               </Col>
               <Col>
-                <button className="btn btn-outline-primary shadow rounded-pill w-100">
+                {/* Botón de Gmail */}
+                <a
+                  href={`mailto:${sellerInfo?.email}`}
+                  className="btn btn-outline-primary shadow rounded-pill w-100"
+                >
                   <i className="bi bi-envelope text-primary-custom"></i>
-                </button>
+                </a>
               </Col>
               <Col>
-                <button className="btn btn-outline-primary shadow rounded-pill w-100">
+                {/* Botón para llamada telefónica */}
+                <a
+                  href={`tel:${sellerInfo?.phone}`}
+                  className="btn btn-outline-primary shadow rounded-pill w-100"
+                >
                   <i className="bi bi-telephone-outbound text-primary-custom"></i>
-                </button>
+                </a>
               </Col>
               <Col>
-                <button className="btn btn-outline-primary shadow rounded-pill w-100">
+                {/* Botón de Google Maps */}
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(sellerInfo?.address)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-outline-primary shadow rounded-pill w-100"
+                >
                   <i className="bi bi-browser-chrome text-primary-custom"></i>
-                </button>
+                </a>
               </Col>
             </Row>
             <Row>
               <p
                 className={`mt-2 ${darkMode ? "text-light" : "text-secondary"}`}
               >
-                <i className="bi bi-geo-alt pe-2"></i>Se encuentra en La Falda,
-                Córdoba
+                <i className="bi bi-geo-alt pe-2"></i>Se encuentra en {sellerInfo?.address}
               </p>
             </Row>
           </div>
