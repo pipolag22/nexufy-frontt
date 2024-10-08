@@ -6,7 +6,7 @@ const ProductList = ({ products }) => {
   }
   return (
     <>
-      <Row xs={1} md={2} lg={4} className="g-4">
+      <Row xs={1} md={2} lg={4} className="g-4 mx-4 mb-6">
         {products.map((productMock) => (
           <Col key={productMock?.id}>
             <ProductCard

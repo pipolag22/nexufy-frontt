@@ -26,7 +26,7 @@ const ProductCard = ({ id, image, name, description, price, category }) => {
   };
 
   return (
-    <Card style={{ height: "28rem", border: "none" }} className="shadow">
+    <Card style={{ height: "28rem", border: "none" }} className="shadow mb-2">
       <Card.Img variant="top" src={img} />
       <Card.Body
         className={`bg-secundario d-flex flex-column justify-content-around`}

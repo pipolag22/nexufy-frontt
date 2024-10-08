@@ -1,38 +1,73 @@
+import { useContext, useEffect, useRef, useState } from "react";
 import {
-  Navbar,
-  Nav,
-  Form,
-  FormControl,
   Button,
   Dropdown,
+  Form,
+  FormControl,
+  Nav,
+  Navbar,
   NavDropdown,
 } from "react-bootstrap";
+import { FaBars, FaSearch, FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { searchProducts } from "../api/productService";
 import img from "../assets/img/nexufy-horizontal-png.png";
-import { FaSearch, FaBars, FaUserCircle } from "react-icons/fa";
-import { useContext, useState } from "react";
-import { AuthenticationContext } from "../services/authenticationContext/authentication.context";
 import { ThemeContext } from "../components/themes/ThemeContext";
-import categories from "../data/category.json";
 import ThemeToggle from "../components/themes/ThemeToggle";
+import categories from "../data/category.json";
+import { AuthenticationContext } from "../services/authenticationContext/authentication.context";
 
 function NavbarHome() {
   const [showCategories, setShowCategories] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [debounceTimeOut, setDebounceTimeOut] = useState(null);
+
   const navigate = useNavigate();
+  const resultsRef = useRef(null)
+
   const { user, handleLogout } = useContext(AuthenticationContext);
   const { darkMode } = useContext(ThemeContext);
 
-  const handleSearch = (event) => {
+  const handleSearch = async (event) => {
     event.preventDefault();
-    console.log("Search submitted");
+    if (!searchQuery) return;
+    try {
+      const results = await searchProducts(searchQuery);
+      setSearchResults(results);
+    } catch (error) {
+      console.error("Error al realizar la búsqueda", error);
+    }
   };
+
+  const handleInputSearch = (event) => {
+    setSearchQuery(event.target.value);
+    // debounceTimeOut es un temporizador que activa la busqueda en tiempo real, clearTimeout limpia el temporizador
+    if (debounceTimeOut) {
+      clearTimeout(debounceTimeOut);
+    }
+    // Aca se va a crear un temporizador en la nueva busqueda
+    const timeout = setTimeout(() => {
+      if (event.target.value) {
+        handleSearch(event);
+      } else {
+        setSearchResults([]); //limpiar resultados si la busqueda esta vacia
+      }
+    }, 1000); //tiempo de espera de  1 segundo
+    setDebounceTimeOut(timeout);
+  };
+
+  useEffect(() => {
+    //limpiar el timeout si el componente se desmonta
+    return () => {
+      if (debounceTimeOut) {
+        clearTimeout(debounceTimeOut);
+      }
+    };
+  }, [debounceTimeOut]);
 
   const handleLoginRedirect = () => {
     navigate("/login");
-  };
-
-  const handleGoHome = () => {
-    navigate("/");
   };
 
   const handleCategory = (category) => {
@@ -48,8 +83,27 @@ function NavbarHome() {
     });
   };
 
+  const handleClickSearch = (producto) => {
+    setSearchQuery("")
+    setSearchResults([])
+    navigate(`/product/${producto.id}`)
+  };
   const isSuperAdmin =
     user && user.roles && user.roles.includes("ROLE_SUPERADMIN");
+
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (resultsRef.current && !resultsRef.current.contains(event.target)) {
+          setSearchResults([]); // Oculta los resultados
+        }
+      };
+    
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+    
 
   return (
     <Navbar
@@ -64,20 +118,21 @@ function NavbarHome() {
           </a>
         </Navbar.Brand>
 
-        <Form onSubmit={handleSearch} className="d-flex w-50 flex-grow-1 mx-3">
+        <Form
+          onSubmit={handleSearch}
+          className="d-flex w-50 flex-grow-1 mx-3 text-bg-light"
+        >
           <FormControl
             type="text"
             placeholder="¿Qué materia prima buscas?"
             className={`me-2 ${
-              darkMode ? "bg-dark text-light placeholder-light" : ""
+              darkMode
+                ? "bg-dark text-light placeholder-light"
+                : "bg-light text-bg-light"
             }`}
             aria-label="Buscar"
-            style={{
-              color: darkMode ? "#fff" : "#333",
-              "::placeholder": {
-                color: darkMode ? "#aaa" : "#555",
-              },
-            }}
+            value={searchQuery}
+            onChange={handleInputSearch}
           />
           <Button
             variant="outline-secondary"
@@ -87,6 +142,20 @@ function NavbarHome() {
             <FaSearch />
           </Button>
         </Form>
+        {/* Renderiza los resultados de búsqueda */}
+        {searchResults.length > 0 && (
+          <div className="search-results" ref={resultsRef}>
+            {searchResults.map((producto) => (
+              <div
+              onClick={() => handleClickSearch(producto)} 
+              key={producto.id}
+                className="search-result-item p-2"
+              >
+                {producto.name}
+              </div>
+            ))}
+          </div>
+        )}
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="d-lg-none" />
         <Navbar.Collapse id="basic-navbar-nav">

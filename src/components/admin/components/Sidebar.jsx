@@ -35,7 +35,7 @@ const Sidebar = () => {
   return (
     <>
       <div
-         className="h-100 position-fixed top-0 left-0 bg-secondary-subtle"
+         className={`h-100 position-fixed top-0 left-0  ${darkMode ? "bg-dark" : "bg-secondary-subtle"}`}
          style={{ width: "17rem", paddingTop: "3rem", height: "100vh", overflowY: "auto", overflowX:"hidden" }} // Agrega `height` y `overflowY`
        
       >

@@ -1,28 +1,51 @@
+import { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom"; // Importa useParams
+import { ThemeContext } from "../themes/ThemeContext";
 import ProductCard from "./components/ProductCard";
+import ProductComments from "./components/ProductComments";
 import ProductData from "./components/ProductData";
 import ProductSeller from "./components/ProductSeller";
-import { useLocation } from "react-router-dom";
-import ProductComments from "./components/ProductComments";
-import { ThemeContext } from "../themes/ThemeContext";
-import { useContext } from "react";
+import { getProduct } from "../../api/productService";
 
 const ProductItem = () => {
-  const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
-  const location = useLocation();
-  const { id, image, name, description, price, category } =
-    location.state.product;
+  const [producto, setProducto] = useState(null); // Cambia SetProducto a setProducto
+  const { darkMode } = useContext(ThemeContext);
+  const { id } = useParams(); // Usa useParams para obtener el ID del producto
+
+  // Verifica si el ID del producto existe
+  if (!id) {
+    return <div>No se encontró el producto.</div>; // Mensaje para el caso sin producto
+  }
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const data = await getProduct(id); // Usa el ID directamente
+        setProducto(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchProduct();
+  }, [id]);
+
+  // Verifica si el producto se ha cargado
+  if (!producto) {
+    return <div>Cargando producto...</div>; // Mensaje de carga
+  }
+
+  const { image, name, description, price, category } = producto;
 
   return (
     <>
       <ProductCard
-        id={id}
+        id={id} // Puedes seguir usando el ID aquí
         image={image}
         name={name}
         price={price}
         category={category}
       />
 
-      {/* Descripción del producto con condicional para tema oscuro */}
       <ProductData description={description} />
 
       <hr
@@ -31,7 +54,6 @@ const ProductItem = () => {
         }`}
       />
 
-      {/* Sección de información del vendedor */}
       <ProductSeller />
 
       <h3
@@ -42,7 +64,6 @@ const ProductItem = () => {
         Comentarios del producto
       </h3>
 
-      {/* Comentarios del producto */}
       <ProductComments productId={id} />
     </>
   );

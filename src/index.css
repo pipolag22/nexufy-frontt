@@ -187,3 +187,23 @@ body {
 .form-control-light::placeholder {
   color: #6c757d; /* Color del placeholder para modo claro */
 }
+
+.search-results {  
+  position: absolute;
+  top: 5rem;
+  width:80vw ; /* Ancho completo de la pantalla */
+  background: var(--color-dropdown-bg); /* Fondo dropdown */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para el dropdown */
+  z-index: 1000; /* Asegúrate de que esté sobre otros elementos */
+  gap: 1rem; /* Espacio entre las categorías */
+  padding: 0.2rem; /* Espacio interno del dropdown */
+  overflow-y: auto; /* Añade scroll si el contenido es muy largo */
+  max-height: 80vh; 
+}
+.search-result-item:hover{
+  background-color: var(
+    --color-dropdown-hover-bg
+  );
+  cursor: pointer;
+  font-weight: 600;
+}

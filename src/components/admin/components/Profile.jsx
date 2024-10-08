@@ -99,7 +99,8 @@ const Profile = () => {
                   >
                     Nombre
                   </Form.Label>
-                  <span className="fs-6 mb-4">
+                  <span className={`fs-6 mb-4 ${
+                      darkMode ? "text-light" : "text-body-tertiary"}`}>
                     {data.name || "Nombre no disponible"}
                   </span>
                 </Row>
@@ -112,7 +113,8 @@ const Profile = () => {
                   >
                     Email
                   </Form.Label>
-                  <span className="fs-6 mb-4">
+                  <span className={`fs-6 mb-4 ${
+                      darkMode ? "text-light" : "text-body-tertiary"}`}>
                     {data.email || "Email no disponible"}
                   </span>
                 </Row>
@@ -125,7 +127,8 @@ const Profile = () => {
                   >
                     Dirección
                   </Form.Label>
-                  <span className="fs-6 mb-4">
+                  <span className={`fs-6 mb-4 ${
+                      darkMode ? "text-light" : "text-body-tertiary"}`}>
                     {data.address || "Dirección no disponible"}
                   </span>
                 </Row>
@@ -141,7 +144,8 @@ const Profile = () => {
                   >
                     Apellido
                   </Form.Label>
-                  <span className="fs-6 mb-4">
+                  <span className={`fs-6 mb-4 ${
+                      darkMode ? "text-light" : "text-body-tertiary"}`}>
                     {data.lastname || "Apellido no disponible"}
                   </span>
                 </Row>
@@ -154,7 +158,8 @@ const Profile = () => {
                   >
                     Nombre de usuario
                   </Form.Label>
-                  <span className="fs-6 mb-4">
+                  <span className={`fs-6 mb-4 ${
+                      darkMode ? "text-light" : "text-body-tertiary"}`}>
                     {data.username || "Usuario no disponible"}
                   </span>
                 </Row>
@@ -169,8 +174,7 @@ const Profile = () => {
                   </Form.Label>
                   <span
                     className={`fs-6 mb-4 ${
-                      data.birthdate ? "" : "text-body-tertiary text-opacity-25"
-                    }`}
+                      darkMode ? "text-light" : "text-body-tertiary"}`}
                   >
                     {data.birthdate
                       ? data.birthdate.split("T")[0]

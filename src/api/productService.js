@@ -4,7 +4,7 @@
 export async function getProduct(productId) {
   try {
     const response = await fetch(
-      "http://localhost:8081/api/product/" + productId,
+      "http://localhost:8081/api/products/" + productId,
       {
         headers: {
           accept: "application/json",
@@ -18,6 +18,7 @@ export async function getProduct(productId) {
     return {
       name: data.name,
       description: data.description,
+      image:data.urlImage,
       price: data.price,
       category: data.category,
     };
@@ -109,3 +110,20 @@ export async function postComments(commentData) {
   }
 }
 
+export async function searchProducts(searchQuery){
+  try {
+    const response = await fetch(`http://localhost:8081/api/products/search?name=${searchQuery}`,{
+      headers:{
+        "Content-Type":"application/json",
+      }
+    });
+    if(!response.ok){
+      throw new Error("Error en la búsqueda de productos");
+    }
+    const data = await response.json();
+    return data;
+  }catch(err){
+    console.error("Error al buscar productos!", err)
+    return [];// Devuelve un array vacío en caso de error
+  }
+}
