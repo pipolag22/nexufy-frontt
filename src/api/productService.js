@@ -21,6 +21,7 @@ export async function getProduct(productId) {
       image:data.urlImage,
       price: data.price,
       category: data.category,
+      customerId: data.customer.id
     };
   } catch (error) {
     console.error("Failed to fetch product:", error);
@@ -69,14 +70,15 @@ export async function postProduct(newProduct, token) {
     throw error;
   }
 }
-export async function getSellerContact(customerId) {
+export async function getSellerContact(customerId, token) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/customers/${customerId}/contact`, 
+      `http://localhost:8081/api/customer/${customerId}/contact`, 
       {
         headers: {
           accept: "application/json",
-        },
+          Authorization: `Bearer ${token}`,
+        },  
       }
     );
     if (!response.ok) {

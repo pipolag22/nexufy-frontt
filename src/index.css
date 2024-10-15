@@ -144,6 +144,11 @@ body {
     opacity: 1; /* Siempre visible en pantallas pequeñas */
   }
 }
+.item-menu:hover{
+  background-color: #7572729e;
+  color: #fdfafa;
+  font-weight: 600;
+}
 
 .categories-dropdown {
   position: absolute;
@@ -206,4 +211,8 @@ body {
   );
   cursor: pointer;
   font-weight: 600;
+}
+
+.boton-back{
+  cursor: pointer;  
 }

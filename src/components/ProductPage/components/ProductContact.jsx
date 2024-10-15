@@ -7,13 +7,14 @@ import { getSellerContact } from "../../../api/productService"; // Importa la nu
 const ProductContact = ({ customerId }) => {
   const { user } = useContext(AuthenticationContext);
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
-  const [sellerInfo, setSellerInfo] = useState(null);
+  const [sellerInfo, setSellerInfo] = useState({});
 
   useEffect(() => {
+    const token = localStorage.getItem('token')
     // Llamar al servicio para obtener la información del vendedor
     const fetchSellerInfo = async () => {
       try {
-        const data = await getSellerContact(customerId); // Usar el servicio en lugar de fetch directo
+        const data = await getSellerContact(customerId, token); // Usar el servicio en lugar de fetch directo
         setSellerInfo(data);
       } catch (error) {
         console.error("Error fetching seller info:", error);

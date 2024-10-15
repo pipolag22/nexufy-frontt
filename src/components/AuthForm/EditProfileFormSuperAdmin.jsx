@@ -123,6 +123,15 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
               onChange={handleChange}
             />
           </Form.Group>
+          <Form.Group controlId="formLastname">
+            <Form.Label>Teléfono</Form.Label>
+            <Form.Control
+              type="text"
+              name="phone"
+              value={formData.phone || ""}
+              onChange={handleChange}
+            />
+          </Form.Group>
 
           <Form.Group controlId="formUsername">
             <Form.Label>Nombre de Usuario</Form.Label>
@@ -201,6 +210,7 @@ EditProfileFormSuperAdmin.propTypes = {
     name: PropTypes.string,
     email: PropTypes.string,
     address: PropTypes.string,
+    phone: PropTypes.string,
     lastname: PropTypes.string,
     username: PropTypes.string,
     id: PropTypes.string.isRequired,

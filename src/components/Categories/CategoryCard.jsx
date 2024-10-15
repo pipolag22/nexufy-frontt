@@ -31,17 +31,17 @@ const CategoryCard = ({ id, image, name, description }) => {
       />
       <div
         className={`overlay text-card-custom d-flex flex-column justify-content-center align-items-start ${
-          darkMode ? "bg-dark text-light" : "bg-light text-dark"
+          darkMode ? " text-light" : " text-dark"
         }`} // Cambiar el color según el tema
       >
         <p
           className={`fs-3 fw-semibold ${
-            darkMode ? "text-light" : "text-dark"
+            darkMode ?"text-dark" : "text-light" 
           }`}
         >
           {name}
         </p>
-        <p className={`fs-6 ${darkMode ? "text-light" : "text-dark"}`}>
+        <p className={`fs-6 ${darkMode ? "text-dark" : "text-light"}`}>
           {description}
         </p>
       </div>

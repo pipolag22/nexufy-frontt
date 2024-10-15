@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { getCustomerById } from "../../../api/customerService";
+import { getCustomerById, updateCustomerProfile } from "../../../api/customerService";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Navigate, useOutletContext } from "react-router-dom";
 import EditProfileFormUserAdmin from "../../AuthForm/EditProfileFormUserAdmin";

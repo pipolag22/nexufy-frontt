@@ -139,7 +139,7 @@ const AbmUsers = () => {
               onClick={handleCreateClick}
               variant={darkMode ? "outline-light" : "outline-secondary"}
             >
-              <i className="bi bi-plus"> Agregar</i>
+              <i className="bi bi-plus"/><span>Agregar</span> 
             </Button>
           </div>
           <CustomTable

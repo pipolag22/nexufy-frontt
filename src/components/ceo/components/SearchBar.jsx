@@ -15,7 +15,7 @@ const SearchBar = ({ searchQuery, setSearchQuery, darkMode }) => {
     // Aca se va a crear un temporizador en la nueva busqueda
     const timeout = setTimeout(() => {
       setSearchQuery(value); // Actualiza el query de búsqueda en el componente padre
-    }, 1000); 
+    }, 0); 
     setDebounceTimeOut(timeout);
   };
 

@@ -66,40 +66,38 @@ const Publications = () => {
   }
 
   return (
-    <div className={`container ${
-      darkMode ? "bg-dark text-light" : "bg-light text-dark"
-    } p-4 rounded`}>
+    <div
+      className={`container ${
+        darkMode ? "bg-dark text-light" : "bg-light text-dark"
+      } p-4 rounded`}
+    >
       {openNewProduct ? (
         <CreateProductForm onSave={handleSave} />
       ) : (
         <>
-          <h2>Productos publicados por ti</h2>
-          <div className="d-flex flex-wrap"> {/* Contenedor para flexbox */}
+          <div className="d-flex justify-content-between align-items-center mb-2">
+            <h2>Productos publicados por ti</h2>
+            <Button
+              variant="outline-primary"
+              className=""
+              onClick={handleCreatePublication}
+            >
+              Publicar nuevo
+            </Button>
+          </div>
+          <div className="d-flex flex-wrap">
+            {" "}
+            {/* Contenedor para flexbox */}
             {products.length > 0 ? (
               <ProductList products={products} />
             ) : (
               <p>No tienes productos publicados.</p>
             )}
-            <Card
-              style={{ height: "28rem", width: "16rem", border: "none" }}
-              className="shadow rounded mt-3"
-            >
-              <Card.Body className="bg-secundario d-flex flex-column justify-content-center align-content-center">
-                <Button
-                  className="d-flex align-items-center justify-content-center rounded-circle mx-auto border border-primary border-5 bg-transparent"
-                  style={{ width: "5rem", height: "5rem" }}
-                  onClick={handleCreatePublication}
-                >
-                  <p className="fs-1 fw-bold pt-3 text-primary">+</p>
-                </Button>
-              </Card.Body>
-            </Card>
           </div>
         </>
       )}
     </div>
   );
-  
 };
 
 export default Publications;

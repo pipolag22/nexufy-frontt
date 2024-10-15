@@ -5,7 +5,7 @@ import { Col, Row } from "react-bootstrap";
 import ProductContact from "./ProductContact";
 import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
 
-const ProductCard = ({id,  name, price, category }) => {
+const ProductCard = ({id,  name, price, category, customerId }) => {
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
 
   return (
@@ -16,7 +16,7 @@ const ProductCard = ({id,  name, price, category }) => {
         </Col>
         <Col lg={5}>
           <Card.Body
-            className={`h-100 w-75 ${
+            className={`h-100 w-100 ${
               darkMode ? "bg-dark text-light" : "bg-light text-dark"
             }`} // Aplicar clases según el tema
           >
@@ -46,7 +46,7 @@ const ProductCard = ({id,  name, price, category }) => {
               <hr />
             </div>
             <Card.Text className="h-50">
-              <ProductContact customerId={id} />{" "}
+              <ProductContact customerId={customerId} />{" "}
               {/* El componente ProductContact ya tiene el modo oscuro implementado */}
             </Card.Text>
           </Card.Body>

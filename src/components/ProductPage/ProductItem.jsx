@@ -8,7 +8,7 @@ import ProductSeller from "./components/ProductSeller";
 import { getProduct } from "../../api/productService";
 
 const ProductItem = () => {
-  const [producto, setProducto] = useState(null); // Cambia SetProducto a setProducto
+  const [producto, setProducto] = useState(null);
   const { darkMode } = useContext(ThemeContext);
   const { id } = useParams(); // Usa useParams para obtener el ID del producto
 
@@ -34,7 +34,7 @@ const ProductItem = () => {
     return <div>Cargando producto...</div>; // Mensaje de carga
   }
 
-  const { image, name, description, price, category } = producto;
+  const { image, name, description, price, category, customerId } = producto;
 
   return (
     <>
@@ -44,6 +44,7 @@ const ProductItem = () => {
         name={name}
         price={price}
         category={category}
+        customerId={customerId}
       />
 
       <ProductData description={description} />
@@ -54,7 +55,7 @@ const ProductItem = () => {
         }`}
       />
 
-      <ProductSeller />
+      <ProductSeller customerId={customerId} />
 
       <h3
         className={`container fs-3 fw-medium my-4 ${
