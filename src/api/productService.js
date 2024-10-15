@@ -145,7 +145,7 @@ export async function searchProducts(searchQuery){
     const data = await response.json();
     return data;
   }catch(err){
-    console.error("Error al buscar productos!", err)
+    console.error("Error al buscar usuarios!", err)
     return [];
   }
 }

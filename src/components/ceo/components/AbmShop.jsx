@@ -1,16 +1,19 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
 import { Navigate, useOutletContext } from "react-router-dom";
-import { Button, Form } from "react-bootstrap";
+import { getAllProducts, searchProducts } from "../../../api/productService"; // Asegúrate de que tienes una función para buscar productos
+import { ThemeContext } from "../../themes/ThemeContext";
 import CustomTable from "./CustomTable";
-import { getAllProducts } from "../../../api/productService";
-import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
+import SearchBar from "./SearchBar"; // Importa SearchBar
 
 const AbmShop = () => {
   const { user } = useOutletContext();
-  const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema oscuro
+  const { darkMode } = useContext(ThemeContext);
   const [productos, setProductos] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]); // Productos filtrados
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Redirige a la página de login si no hay usuario
   if (!user) {
@@ -18,34 +21,49 @@ const AbmShop = () => {
   }
 
   useEffect(() => {
-    // Función para obtener todos los productos
     const fetchAllProducts = async () => {
       if (user) {
         try {
-          const products = await getAllProducts(); // Llama a la API para obtener productos
-          setProductos(products); // Actualiza el estado con los productos obtenidos
+          const products = await getAllProducts();
+          setProductos(products);
+          setFilteredProducts(products); // Inicializa los productos filtrados
         } catch (error) {
-          setError(error); // Maneja el error
+          setError(error);
         } finally {
-          setIsLoading(false); // Indica que se ha terminado la carga
+          setIsLoading(false);
         }
       }
     };
 
     fetchAllProducts();
-  }, [user]); // Efecto que se ejecuta cuando el usuario cambia
+  }, [user]);
 
-  // Muestra un mensaje de carga mientras se obtienen los datos
+  // Efecto para manejar la búsqueda
+  useEffect(() => {
+    const fetchSearchedProducts = async () => {
+      if (searchQuery) {
+        try {
+          const results = await searchProducts(searchQuery); // Llama a la función de búsqueda
+          setFilteredProducts(results); // Actualiza los productos filtrados
+        } catch (error) {
+          setError(error);
+        }
+      } else {
+        setFilteredProducts(productos); // Restablece a todos los productos si no hay búsqueda
+      }
+    };
+
+    fetchSearchedProducts();
+  }, [searchQuery, productos]); // Se activa cuando searchQuery o productos cambian
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
 
-  // Muestra el error si ocurre
   if (error) {
     return <p className="text-danger">{error.message}</p>;
   }
 
-  // Definición de las columnas de la tabla
   const productColumns = [
     {
       header: "Nombre del producto",
@@ -69,7 +87,7 @@ const AbmShop = () => {
         <Button
           style={{ height: "22px", fontSize: "12px", textAlign: "center" }}
           className="py-1"
-          variant={darkMode ? "outline-light" : "outline-primary"} // Cambiar el color del botón según el tema
+          variant={darkMode ? "outline-light" : "outline-primary"}
         >
           Editar
         </Button>
@@ -77,11 +95,10 @@ const AbmShop = () => {
     },
   ];
 
-  // Función para manejar la edición de productos
   const handleEdit = (updatedProduct) => {
     setProductos((prevProducts) =>
       prevProducts.map((product) =>
-        product.id === updatedProduct.id ? updatedProduct : product // Actualiza el producto editado
+        product.id === updatedProduct.id ? updatedProduct : product
       )
     );
   };
@@ -95,23 +112,18 @@ const AbmShop = () => {
     >
       <div className="d-flex justify-content-between align-items-center mb-2">
         <p className="fs-4 w-50 fw-semibold">Productos de usuarios</p>
-        <Form className="d-flex">
-          <Form.Control
-            type="text"
-            placeholder="Buscar producto"
-            className={darkMode ? "bg-dark text-light" : "bg-light text-dark"} // Estilo del input según el tema
-          />
-          <Button
-            className="mx-2"
-            variant={darkMode ? "outline-light" : "outline-primary"}
-          >
-            <i className="bi bi-search"></i>
-          </Button>
-        </Form>
+        <SearchBar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          darkMode={darkMode}
+        />
       </div>
 
-      {/* Renderiza la tabla de productos */}
-      <CustomTable columns={productColumns} data={productos} onEdit={handleEdit} />
+      <CustomTable
+        columns={productColumns}
+        data={filteredProducts}
+        onEdit={handleEdit}
+      />
     </div>
   );
 };

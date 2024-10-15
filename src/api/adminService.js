@@ -95,3 +95,22 @@ export async function deleteCustomer(id, token) {
     throw error;
   }
 }
+
+export async function searchData(searchQuery, token, table){
+  try{
+    const response = await fetch(`http://localhost:8081/api/admin/${table}/search?name=${searchQuery}`,{
+      headers:{
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      }
+    });
+    if(!response.ok){
+      throw new Error("Error en la búsqueda!")
+    }
+    const data = await response.json();
+    return data;
+  }catch(err){
+    console.log("Error en la búsqueda", err);
+    return [];
+  }
+}

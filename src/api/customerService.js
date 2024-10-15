@@ -92,3 +92,22 @@ export async function updateCustomerProfile(customerId, token, profileData) {
     throw error;
   }
 }
+
+export async function searchCustomers(searchQuery, token){
+  try {
+    const response = await fetch(`http://localhost:8081/api/customer/search?username=${searchQuery}`,{
+      headers:{
+        "Content-Type":"application/json",
+        Authorization: `Bearer ${token}`
+      }
+    });
+    if(!response.ok){
+      throw new Error("Error en la búsqueda de usuarios");
+    }
+    const data = await response.json();
+    return data;
+  }catch(err){
+    console.error("Error al buscar productos!", err)
+    return [];
+  }
+}
