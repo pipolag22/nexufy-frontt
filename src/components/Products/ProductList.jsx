@@ -11,7 +11,7 @@ const ProductList = ({ products }) => {
           <Col key={productMock?.id}>
             <ProductCard
               id={productMock.id}
-              image={productMock.urlImage}
+              image={productMock?.urlImage}
               name={productMock.name}
               description={productMock.description}
               price={productMock.price}
