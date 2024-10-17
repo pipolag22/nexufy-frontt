@@ -2,6 +2,7 @@ import { useContext } from "react";
 import ProductList from "./ProductList";
 import products from "../../data/products.json";
 import { ThemeContext } from "../themes/ThemeContext"; // Importar el ThemeContext
+import { Link } from "react-router-dom";
 
 const FeaturedProduct = () => {
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
@@ -20,12 +21,12 @@ const FeaturedProduct = () => {
       <ProductList products={firstFourProducts} />
       <div className="text-end mt-4 me-4 link-opacity-100-hover">
         {/* Cambia el color del enlace según el modo oscuro o claro */}
-        <a
-          href="#"
+        <Link
+          to="/all"
           className={`fw-medium ${darkMode ? "text-white" : "text-primary"}`}
         >
           Ver todos los productos →
-        </a>
+        </Link>
       </div>
     </div>
   );

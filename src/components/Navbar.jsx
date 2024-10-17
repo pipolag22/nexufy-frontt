@@ -9,7 +9,7 @@ import {
   NavDropdown,
 } from "react-bootstrap";
 import { FaBars, FaSearch, FaUserCircle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { searchProducts } from "../api/productService";
 import img from "../assets/img/nexufy-horizontal-png.png";
 import { ThemeContext } from "../components/themes/ThemeContext";
@@ -89,9 +89,9 @@ function NavbarHome() {
     >
       <div className="container d-flex justify-content-between align-items-center">
         <Navbar.Brand>
-          <a href="/" style={{ color: "var(--color-text-primary)" }}>
+          <Link to="/" style={{ color: "var(--color-text-primary)" }}>
             <img src={img} alt="Nexufy Logo" style={{ width: "12vw" }} />
-          </a>
+          </Link>
         </Navbar.Brand>
 
         <Form

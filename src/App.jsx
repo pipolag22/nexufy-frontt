@@ -17,6 +17,8 @@ import AbmUsers from "./components/ceo/components/AbmUsers";
 import Notifications from "./components/ceo/components/Notifications";
 import { ThemeProvider } from "./components/themes/ThemeContext"; // Importar ThemeProvider
 import ThemeToggle from "./components/themes/ThemeToggle"; // Importar el botón de alternar tema
+import AllProductsLayout from "./all-products/Layout";
+import AllProducts from "./all-products/components/AllProducts";
 
 function App() {
   const router = createBrowserRouter([
@@ -37,6 +39,16 @@ function App() {
           element: <CategoryPage />,
         },
       ],
+    },
+    {
+      path: "/all",
+      element: <AllProductsLayout />,
+      children: [
+        {
+          path:"",
+          element: <AllProducts/>
+        },
+      ]
     },
     {
       path: "/admin",
