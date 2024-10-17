@@ -11,23 +11,12 @@ const FilterSidebar = () => {
     const navs = [
         {
           id: 1,
-          name: "Mis datos",
-          icon: "bi bi-person-vcard",
-          url: "/admin/datos",
+          name: "Por precio",
           active: true,
         },
         {
           id: 2,
-          name: "Publicaciones",
-          icon: "bi bi-shop",
-          url: "/admin/publicaciones",
-          active: false,
-        },
-        {
-          id: 3,
-          name: "Estadísticas",
-          icon: "bi bi-graph-up-arrow",
-          url: "/admin/estadisticas",
+          name: "Por categoría",
           active: false,
         },
       ];
@@ -48,13 +37,11 @@ const FilterSidebar = () => {
         <Col className="mt-2 pt-5 w-100">
           {navs.map((nav) => (
             <Row key={nav.id} className="py-2 px-5">
-              <Link
-                to={nav.url}
+              <p
                 className={`nav-link d-flex align-items-center  text-center fw-bold ${darkMode ? "text-light" : "text-body-secondary"}`} // Ajustar el color del texto según el tema
               >
-                <i className={`${nav.icon} m-2 fs-5`}></i>
                 {nav.name}
-              </Link>
+              </p>
             </Row>
           ))}
         </Col>

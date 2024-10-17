@@ -1,18 +1,17 @@
 import React, { useContext } from "react";
 import Card from "react-bootstrap/Card";
-import img from "../../../assets/img/construccion.jpg";
 import { Col, Row } from "react-bootstrap";
 import ProductContact from "./ProductContact";
 import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
 
-const ProductCard = ({id,  name, price, category, customerId }) => {
+const ProductCard = ({id,  name, price, category, customerId,image }) => {
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
 
   return (
     <div className="container-fluid container-md">
       <Row className="flex-lg-row flex-column">
         <Col lg={7} className="mb-3 mb-lg-0">
-          <img className="rounded w-100" src={img} alt="Producto" />
+          <img className="rounded w-100" src={image} alt="Producto" />
         </Col>
         <Col lg={5}>
           <Card.Body

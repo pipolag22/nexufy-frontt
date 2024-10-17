@@ -2,7 +2,6 @@ import { useContext } from "react"; // Importar useContext para acceder al Theme
 import { Button } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import Placeholder from "react-bootstrap/Placeholder"; // Importar Placeholder
-import img from "../../assets/img/metales.jpg";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../themes/ThemeContext"; // Importar el ThemeContext
@@ -25,13 +24,14 @@ const ProductCard = ({ id, image, name, description, price, category, loading })
       },
     });
   };
+  
 
   return (
     <Card style={{ height: "28rem", border: "none" }} className="shadow mb-2">
       {loading ? (
         // Mostrar el skeleton mientras carga
         <>
-          <Card.Img variant="top" src={img} />
+          <Card.Img variant="top" src={image} />
           <Card.Body className={`bg-secundario d-flex flex-column justify-content-around`}>
             <Placeholder as={Card.Title} animation="glow">
               <Placeholder xs={6} />
@@ -53,7 +53,7 @@ const ProductCard = ({ id, image, name, description, price, category, loading })
       ) : (
         // Mostrar el contenido real
         <>
-          <Card.Img variant="top" src={img} />
+          <Card.Img variant="top" src={image} />
           <Card.Body className={`bg-secundario d-flex flex-column justify-content-around`}>
             {/* Nombre del producto */}
             <Card.Title className={`fw-semibold ${darkMode ? "text-white" : "text-primary"}`}>
