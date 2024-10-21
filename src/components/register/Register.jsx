@@ -5,8 +5,13 @@ import registerImage from "../../assets/img/undraw_online_ad_re_ol62-removebg-pr
 import { registerService } from "../../api/authService";
 import { useState, useContext } from "react";
 import Navbar from "react-bootstrap/Navbar";
-import ThemeToggle from "../themes/ThemeToggle"; // Importar el componente de sol y luna
-import { ThemeContext } from "../themes/ThemeContext"; // Importar el contexto del tema
+import ThemeToggle from "../themes/ThemeToggle";
+import { ThemeContext } from "../themes/ThemeContext";
+
+// **Importar el contexto de idioma y las traducciones**
+import { LanguageContext } from "../themes/LanguageContext"; // Importar el contexto del idioma
+import LanguageToggle from "../themes/LanguageToggle"; // Importar el botón de cambio de idioma
+import translations from "../themes/translations"; // Importar las traducciones
 
 const Register = () => {
   const navigate = useNavigate();
@@ -15,25 +20,30 @@ const Register = () => {
 
   const { darkMode } = useContext(ThemeContext); // Obtener el modo actual desde el contexto
 
+  // **Obtener el idioma actual y las traducciones**
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual desde el contexto
+  const t = translations[language]; // Obtener las traducciones correspondientes
+
+  // **Utilizar las traducciones en los campos del formulario**
   const registerFields = [
     {
       id: "username",
-      label: "Nombre de Usuario",
+      label: t.usernameLabel,
       type: "text",
-      placeholder: "Ingresa tu nombre de usuario",
+      placeholder: t.usernamePlaceholder,
       image: registerImage,
     },
     {
       id: "email",
-      label: "Email",
+      label: t.emailLabel,
       type: "email",
-      placeholder: "Ingresa tu email",
+      placeholder: t.emailPlaceholder,
     },
     {
       id: "password",
-      label: "Contraseña",
+      label: t.passwordLabel,
       type: "password",
-      placeholder: "Ingresa tu contraseña",
+      placeholder: t.passwordPlaceholder,
     },
   ];
 
@@ -47,9 +57,7 @@ const Register = () => {
       }, 2000);
     } catch (error) {
       console.log("Error al registrarse: " + error.message);
-      setErrorMessage(
-        "Error al registrarse. Por favor, verifica tus datos e intenta nuevamente."
-      );
+      setErrorMessage(t.registrationError); // Utilizar la traducción del mensaje de error
       setIsRegistered(false);
     }
   };
@@ -69,29 +77,28 @@ const Register = () => {
           <img src={img} alt="Nexufy Logo" style={{ height: "120px" }} />
         </Navbar.Brand>
 
-        {/* Botón de cambio de tema (sol y luna) */}
-        <div className="ms-auto">
+        {/* Botones de cambio de idioma y tema */}
+        <div className="ms-auto d-flex align-items-center">
+          <LanguageToggle />
           <ThemeToggle />
         </div>
       </Navbar>
       {/* Mensaje de error */}
       {errorMessage && (
         <p className="text-danger text-center">{errorMessage}</p>
-      )}{" "}
+      )}
       {/* Mensaje de éxito */}
       {isRegistered && (
         <div className="alert alert-success text-center" role="alert">
-          <h4 className="alert-heading">¡Bien hecho!</h4>
-          <p>
-            Te has registrado exitosamente. Redirigiendo al inicio de sesión...
-          </p>
+          <h4 className="alert-heading">{t.wellDone}</h4>
+          <p>{t.registrationSuccess}</p>
         </div>
       )}
       <AuthForm
-        title="Crea tu cuenta"
+        title={t.createAccount}
         fields={registerFields}
-        buttonText="Registrarme"
-        linkText="Iniciar sesión"
+        buttonText={t.registerButton}
+        linkText={t.loginLink}
         linkAction={handleLoginRedirect}
         onSubmit={handleRegister}
       />

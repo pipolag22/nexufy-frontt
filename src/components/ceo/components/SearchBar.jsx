@@ -1,21 +1,27 @@
-import React, { useState } from "react"; 
-import { Button, Form } from "react-bootstrap"; // Asegúrate de importar estos componentes
+// SearchBar.js
+import React, { useState, useContext } from "react";
+import { Button, Form } from "react-bootstrap";
+import { LanguageContext } from "../../themes/LanguageContext"; // Importar el LanguageContext
+import translations from "../../themes/translations"; // Importar las traducciones
 
 const SearchBar = ({ searchQuery, setSearchQuery, darkMode }) => {
   const [debounceTimeOut, setDebounceTimeOut] = useState(null);
 
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
+
   const handleInputSearch = (event) => {
     const value = event.target.value;
 
-    // debounceTimeOut es un temporizador que activa la busqueda en tiempo real
+    // debounceTimeOut es un temporizador que activa la búsqueda en tiempo real
     if (debounceTimeOut) {
       clearTimeout(debounceTimeOut);
     }
 
-    // Aca se va a crear un temporizador en la nueva busqueda
+    // Crear un temporizador para la nueva búsqueda
     const timeout = setTimeout(() => {
       setSearchQuery(value); // Actualiza el query de búsqueda en el componente padre
-    }, 0); 
+    }, 0);
     setDebounceTimeOut(timeout);
   };
 
@@ -30,9 +36,9 @@ const SearchBar = ({ searchQuery, setSearchQuery, darkMode }) => {
     <Form onSubmit={handleSearch} className="d-flex">
       <Form.Control
         type="text"
-        placeholder="Buscar producto"
+        placeholder={t.searchPlaceholder}
         className={darkMode ? "bg-dark text-light" : "bg-light text-dark"}
-        aria-label="Buscar"
+        aria-label={t.searchAriaLabel}
         value={searchQuery} // Mantiene el control del valor del input
         onChange={handleInputSearch}
       />

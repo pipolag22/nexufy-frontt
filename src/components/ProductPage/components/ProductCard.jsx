@@ -1,17 +1,22 @@
+// ProductCard.js
 import React, { useContext } from "react";
 import Card from "react-bootstrap/Card";
 import { Col, Row } from "react-bootstrap";
 import ProductContact from "./ProductContact";
 import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
+import { LanguageContext } from "../../themes/LanguageContext"; // Importar el LanguageContext
+import translations from "../../themes/translations"; // Importar las traducciones
 
-const ProductCard = ({id,  name, price, category, customerId,image }) => {
+const ProductCard = ({ id, name, price, category, customerId, image }) => {
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
 
   return (
     <div className="container-fluid container-md">
       <Row className="flex-lg-row flex-column">
         <Col lg={7} className="mb-3 mb-lg-0">
-          <img className="rounded w-100" src={image} alt="Producto" />
+          <img className="rounded w-100" src={image} alt={t.productImageAlt} />
         </Col>
         <Col lg={5}>
           <Card.Body
@@ -32,7 +37,7 @@ const ProductCard = ({id,  name, price, category, customerId,image }) => {
                     darkMode ? "text-light" : "text-secondary"
                   }`}
                 >
-                  Por 1000 u.
+                  {t.perUnit}
                 </p>
               </Card.Title>
               <Card.Subtitle

@@ -1,31 +1,36 @@
+// ProductComments.js
 import React, { useEffect, useState, useContext } from "react";
 import { getComments } from "../../../api/productService";
 import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
+import { LanguageContext } from "../../themes/LanguageContext"; // Importar el LanguageContext
+import translations from "../../themes/translations"; // Importar las traducciones
 
 const ProductComments = ({ productId }) => {
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
+
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const productHardcode = "66bbd887094da25c9d6e7ef9";
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const { data } = await getComments(productHardcode);
+        const data = await getComments(productId);
         setComments(data);
       } catch (error) {
-        setError("Failed to load comments");
+        setError(t.failedToLoadComments);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchComments();
-  }, [productId]);
+  }, [productId, t.failedToLoadComments]);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <p>{t.loading}</p>;
   }
 
   if (error) {
@@ -37,7 +42,7 @@ const ProductComments = ({ productId }) => {
       <p
         className={`fw-medium ${darkMode ? "text-light" : "text-dark-subtle"}`}
       >
-        Comentarios desde fetch
+        {t.comments}
       </p>
       {comments.length > 0 ? (
         comments.map((comment) => (
@@ -48,13 +53,17 @@ const ProductComments = ({ productId }) => {
             }`}
           >
             <p>{comment.text}</p>
-            <p>Rating: {comment.rating}</p>
-            <p>Fecha: {new Date(comment.date).toLocaleDateString()}</p>
+            <p>
+              {t.rating}: {comment.rating}
+            </p>
+            <p>
+              {t.date}: {new Date(comment.date).toLocaleDateString(language)}
+            </p>
           </div>
         ))
       ) : (
         <p className={darkMode ? "text-light" : "text-dark"}>
-          No comments available
+          {t.noCommentsAvailable}
         </p>
       )}
     </div>

@@ -1,10 +1,15 @@
+// FeaturedProduct.js
 import { useContext, useEffect, useState } from "react";
 import ProductList from "./ProductList";
 import { ThemeContext } from "../themes/ThemeContext"; // Importar el ThemeContext
+import { LanguageContext } from "../themes/LanguageContext"; // Importar el LanguageContext
+import translations from "../themes/translations"; // Importar las traducciones
 import { getAllProducts } from "../../api/productService";
 
 const FeaturedProduct = () => {
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true); // Añadir un estado de carga
 
@@ -21,29 +26,30 @@ const FeaturedProduct = () => {
     };
     fetchProducts();
   }, []);
-    // Muestra un mensaje de carga mientras se obtienen los productos
-    if (loading) {
-      return <div>Cargando productos destacados...</div>;
-    }
-console.log(products)
+
+  // Muestra un mensaje de carga mientras se obtienen los productos
+  if (loading) {
+    return <div>{t.loadingFeaturedProducts}</div>;
+  }
+
   return (
     <div className="container">
-      {/* Cambia el color del texto "Productos destacados" según el modo oscuro o claro */}
+      {/* Cambia el texto "Productos destacados" según el idioma */}
       <p
         className={`fs-3 text-center fw-bold ${
           darkMode ? "text-white" : "text-primary"
         }`}
       >
-        Productos destacados
+        {t.featuredProducts}
       </p>
       <ProductList products={products} />
       <div className="text-end mt-4 me-4 link-opacity-100-hover">
-        {/* Cambia el color del enlace según el modo oscuro o claro */}
+        {/* Cambia el texto del enlace según el idioma */}
         <a
           href="#"
           className={`fw-medium ${darkMode ? "text-white" : "text-primary"}`}
         >
-          Ver todos los productos →
+          {t.viewAllProducts} →
         </a>
       </div>
     </div>

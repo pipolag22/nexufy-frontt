@@ -1,16 +1,21 @@
+// ProductContact.js
 import { useState, useEffect, useContext } from "react";
 import { Col, Row } from "react-bootstrap";
 import { AuthenticationContext } from "../../../services/authenticationContext/authentication.context";
 import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
+import { LanguageContext } from "../../themes/LanguageContext"; // Importar el LanguageContext
+import translations from "../../themes/translations"; // Importar las traducciones
 import { getSellerContact } from "../../../api/productService"; // Importa la nueva función
 
 const ProductContact = ({ customerId }) => {
   const { user } = useContext(AuthenticationContext);
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
   const [sellerInfo, setSellerInfo] = useState({});
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
     // Llamar al servicio para obtener la información del vendedor
     const fetchSellerInfo = async () => {
       try {
@@ -33,10 +38,10 @@ const ProductContact = ({ customerId }) => {
               darkMode ? "text-light" : "text-dark"
             }`}
           >
-            Contactar al vendedor
+            {t.contactSeller}
           </p>
         </Row>
-        {user  ? (
+        {user ? (
           <div>
             <Row>
               <Col>
@@ -71,7 +76,9 @@ const ProductContact = ({ customerId }) => {
               <Col>
                 {/* Botón de Google Maps */}
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(sellerInfo?.address)}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    sellerInfo?.address
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-outline-primary shadow rounded-pill w-100"
@@ -84,13 +91,15 @@ const ProductContact = ({ customerId }) => {
               <p
                 className={`mt-2 ${darkMode ? "text-light" : "text-secondary"}`}
               >
-                <i className="bi bi-geo-alt pe-2"></i>Se encuentra en {sellerInfo?.address}
+                <i className="bi bi-geo-alt pe-2"></i>
+                {t.locationPrefix}
+                {sellerInfo?.address}
               </p>
             </Row>
           </div>
         ) : (
           <p className={darkMode ? "text-light" : "text-dark"}>
-            Para contactar con el vendedor, <a href="/login">inicia sesión</a>.
+            {t.mustLoginToContactSeller} <a href="/login">{t.login}</a>.
           </p>
         )}
         <div className="d-flex align-items-center">
@@ -100,7 +109,7 @@ const ProductContact = ({ customerId }) => {
               darkMode ? "text-light" : "text-secondary"
             }`}
           >
-            15 visitas
+            {t.visitsCount.replace("{count}", "15")}
           </span>
         </div>
       </Col>

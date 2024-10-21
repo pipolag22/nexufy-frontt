@@ -1,3 +1,4 @@
+// App.jsx
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./components/home/Home";
 import Login from "./components/login/Login";
@@ -15,8 +16,8 @@ import CeoLayout from "./components/ceo/Layout";
 import AbmShop from "./components/ceo/components/AbmShop";
 import AbmUsers from "./components/ceo/components/AbmUsers";
 import Notifications from "./components/ceo/components/Notifications";
-import { ThemeProvider } from "./components/themes/ThemeContext"; // Importar ThemeProvider
-import ThemeToggle from "./components/themes/ThemeToggle"; // Importar el botón de alternar tema
+import { ThemeProvider } from "./components/themes/ThemeContext";
+import { LanguageProvider } from "./components/themes/LanguageContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -106,11 +107,11 @@ function App() {
 
   return (
     <ThemeProvider>
-      {" "}
-      {/* Envolver toda la aplicación en ThemeProvider */}
-      <AuthenticationContextProvider>
-        <RouterProvider router={router} />
-      </AuthenticationContextProvider>
+      <LanguageProvider>
+        <AuthenticationContextProvider>
+          <RouterProvider router={router} />
+        </AuthenticationContextProvider>
+      </LanguageProvider>
     </ThemeProvider>
   );
 }

@@ -1,6 +1,9 @@
+// ProductItem.js
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // Importa useParams
 import { ThemeContext } from "../themes/ThemeContext";
+import { LanguageContext } from "../themes/LanguageContext"; // Importar el LanguageContext
+import translations from "../themes/translations"; // Importar las traducciones
 import ProductCard from "./components/ProductCard";
 import ProductComments from "./components/ProductComments";
 import ProductData from "./components/ProductData";
@@ -10,11 +13,13 @@ import { getProduct } from "../../api/productService";
 const ProductItem = () => {
   const [producto, setProducto] = useState(null);
   const { darkMode } = useContext(ThemeContext);
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
   const { id } = useParams(); // Usa useParams para obtener el ID del producto
 
   // Verifica si el ID del producto existe
   if (!id) {
-    return <div>No se encontró el producto.</div>; // Mensaje para el caso sin producto
+    return <div>{t.productNotFound}</div>; // Mensaje para el caso sin producto
   }
 
   useEffect(() => {
@@ -31,7 +36,7 @@ const ProductItem = () => {
 
   // Verifica si el producto se ha cargado
   if (!producto) {
-    return <div>Cargando producto...</div>; // Mensaje de carga
+    return <div>{t.loadingProduct}</div>; // Mensaje de carga
   }
 
   const { image, name, description, price, category, customerId } = producto;
@@ -62,7 +67,7 @@ const ProductItem = () => {
           darkMode ? "text-white" : "text-dark"
         }`}
       >
-        Comentarios del producto
+        {t.productComments}
       </h3>
 
       <ProductComments productId={id} />

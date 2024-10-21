@@ -1,10 +1,16 @@
-import { useState } from "react";
+// CreateProductForm.js
+import { useState, useContext } from "react";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 import categories from "../../../data/category.json";
+import { LanguageContext } from "../../themes/LanguageContext"; // Importar el LanguageContext
+import translations from "../../themes/translations"; // Importar las traducciones
 
 const CreateProductForm = ({ onSave }) => {
   const [formData, setFormData] = useState({});
+
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,14 +29,15 @@ const CreateProductForm = ({ onSave }) => {
 
   return (
     <div>
-      <div className="boton-back mb-4 d-flex align-items-center"  >
-        <i className="bi bi-arrow-left text-body-tertiary"/><span className="fw-semibold text-body-tertiary mx-1">Volver</span>
+      <div className="boton-back mb-4 d-flex align-items-center">
+        <i className="bi bi-arrow-left text-body-tertiary" />
+        <span className="fw-semibold text-body-tertiary mx-1">{t.back}</span>
       </div>
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col md={6}>
             <Form.Group controlId="name">
-              <Form.Label>Nombre</Form.Label>
+              <Form.Label>{t.nameLabel}</Form.Label>
               <Form.Control
                 type="text"
                 name="name"
@@ -39,7 +46,7 @@ const CreateProductForm = ({ onSave }) => {
               />
             </Form.Group>
             <Form.Group controlId="description">
-              <Form.Label>Descripción</Form.Label>
+              <Form.Label>{t.descriptionLabel}</Form.Label>
               <Form.Control
                 type="text"
                 name="description"
@@ -50,9 +57,9 @@ const CreateProductForm = ({ onSave }) => {
           </Col>
           <Col md={6}>
             <Form.Group controlId="category">
-              <Form.Label>Categoría</Form.Label>
+              <Form.Label>{t.categoryLabel}</Form.Label>
               <Form.Select name="category" onChange={handleChange} required>
-                <option>Selecciona una categoría</option>
+                <option value="">{t.selectCategory}</option>
                 {categories.map((cat) => (
                   <option key={cat.id} value={cat.name}>
                     {cat.name}
@@ -61,7 +68,7 @@ const CreateProductForm = ({ onSave }) => {
               </Form.Select>
             </Form.Group>
             <Form.Group controlId="price">
-              <Form.Label>Precio</Form.Label>
+              <Form.Label>{t.priceLabel}</Form.Label>
               <Form.Control
                 type="text"
                 name="price"
@@ -72,7 +79,7 @@ const CreateProductForm = ({ onSave }) => {
           </Col>
           <Col md={6}>
             <Form.Group controlId="stock">
-              <Form.Label>Stock disponible</Form.Label>
+              <Form.Label>{t.stockLabel}</Form.Label>
               <Form.Control
                 type="text"
                 name="stock"
@@ -81,32 +88,32 @@ const CreateProductForm = ({ onSave }) => {
               />
             </Form.Group>
             <Form.Group controlId="state">
-              <Form.Label>Selecciona el estado</Form.Label>
+              <Form.Label>{t.stateLabel}</Form.Label>
               <div key={`inline-radio`} className="mb-3">
                 <Form.Check
                   inline
-                  label="Nuevo"
+                  label={t.new}
                   name="state"
                   type="radio"
-                  id={`inline-radio-nuevo`}
+                  id={`inline-radio-new`}
                   value="nuevo"
                   onChange={handleChange}
                 />
                 <Form.Check
                   inline
-                  label="Usado"
+                  label={t.used}
                   name="state"
                   type="radio"
-                  id={`inline-radio-usado`}
+                  id={`inline-radio-used`}
                   value="usado"
                   onChange={handleChange}
                 />
                 <Form.Check
                   inline
-                  label="Como nuevo"
+                  label={t.likeNew}
                   name="state"
                   type="radio"
-                  id={`inline-radio-como-nuevo`}
+                  id={`inline-radio-like-new`}
                   value="como_nuevo"
                   onChange={handleChange}
                 />
@@ -115,13 +122,13 @@ const CreateProductForm = ({ onSave }) => {
           </Col>
           <Col md={6}>
             <Form.Group controlId="urlImage">
-              <Form.Label>Imágen</Form.Label>
+              <Form.Label>{t.imageLabel}</Form.Label>
               <Form.Control type="text" name="image" onChange={handleChange} />
             </Form.Group>
           </Col>
         </Row>
         <Button variant="primary" type="submit" className="mt-3">
-          Guardar
+          {t.saveButton}
         </Button>
       </Form>
     </div>

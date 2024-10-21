@@ -4,14 +4,18 @@ import { Navigate, useNavigate, useOutletContext } from "react-router-dom";
 import { registerAdminUser } from "../../../api/adminService";
 import { getAllCustomers, searchCustomers } from "../../../api/customerService";
 import CreateUserForm from "../../AuthForm/CreateUserForm";
-import { ThemeContext } from "../../themes/ThemeContext"; 
+import { ThemeContext } from "../../themes/ThemeContext";
+import { LanguageContext } from "../../themes/LanguageContext"; // Importar el contexto de idioma
 import CustomTable from "./CustomTable";
 import SearchBar from "./SearchBar";
+import translations from "../../themes/translations"; // Importar las traducciones
 
 const AbmUsers = () => {
   const { user } = useOutletContext();
   const navigate = useNavigate();
   const { darkMode } = useContext(ThemeContext);
+  const { language } = useContext(LanguageContext); // Acceder al idioma actual
+  const t = translations[language]; // Obtener las traducciones para el idioma actual
 
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -45,7 +49,7 @@ const AbmUsers = () => {
 
   // Efecto para manejar la búsqueda
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
     const fetchSearchedUsers = async () => {
       if (searchQuery) {
         try {
@@ -83,7 +87,7 @@ const AbmUsers = () => {
   }
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <p>{t.loading}</p>; // Texto traducido para "Loading..."
   }
 
   if (error) {
@@ -92,17 +96,17 @@ const AbmUsers = () => {
 
   const userColumns = [
     {
-      header: "Nombre de usuario",
+      header: t.username, // Texto traducido para "Nombre de usuario"
       accessor: "username",
       render: (item) => item.username,
     },
     {
-      header: "Email",
+      header: t.email, // Texto traducido para "Email"
       accessor: "email",
       render: (item) => item.email,
     },
     {
-      header: "Rol",
+      header: t.role, // Texto traducido para "Rol"
       accessor: "roles",
       render: (item) => item.roles[0]?.name.split("_")[1],
     },
@@ -126,7 +130,8 @@ const AbmUsers = () => {
       ) : (
         <>
           <div className="d-flex justify-content-between align-items-center mb-2">
-            <p className="fs-4 fw-semibold">Usuarios registrados</p>
+            <p className="fs-4 fw-semibold">{t.registeredUsers}</p>{" "}
+            {/* Texto traducido para "Usuarios registrados" */}
             <div className="w-50 d-flex justify-content-around">
               <SearchBar
                 searchQuery={searchQuery}
@@ -139,7 +144,8 @@ const AbmUsers = () => {
               onClick={handleCreateClick}
               variant={darkMode ? "outline-light" : "outline-secondary"}
             >
-              <i className="bi bi-plus"/><span>Agregar</span> 
+              <i className="bi bi-plus" />
+              <span>{t.addUser}</span> {/* Texto traducido para "Agregar" */}
             </Button>
           </div>
           <CustomTable

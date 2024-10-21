@@ -1,3 +1,4 @@
+// Publications.js
 import { useEffect, useState, useContext } from "react";
 import ProductList from "../../Products/ProductList";
 import { getProductsByCustomerId } from "../../../api/customerService";
@@ -6,10 +7,14 @@ import { Button, Card } from "react-bootstrap";
 import CreateProductForm from "./CreateProductForm";
 import { postProduct } from "../../../api/productService";
 import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
+import { LanguageContext } from "../../themes/LanguageContext"; // Importar el LanguageContext
+import translations from "../../themes/translations"; // Importar las traducciones
 
 const Publications = () => {
   const { user } = useOutletContext();
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
 
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
@@ -29,7 +34,7 @@ const Publications = () => {
         setProducts(data);
       }
     } catch (error) {
-      setError(error.message || "Error fetching products");
+      setError(error.message || t.errorFetchingProducts);
     } finally {
       setIsLoading(false);
     }
@@ -53,12 +58,12 @@ const Publications = () => {
       await fetchUserProducts();
     } catch (err) {
       console.error(err);
-      setError(err);
+      setError(err.message || t.errorSavingProduct);
     }
   };
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <p>{t.loading}</p>;
   }
 
   if (error) {
@@ -76,22 +81,21 @@ const Publications = () => {
       ) : (
         <>
           <div className="d-flex justify-content-between align-items-center mb-2">
-            <h2>Productos publicados por ti</h2>
+            <h2>{t.productsPublishedByYou}</h2>
             <Button
               variant="outline-primary"
               className=""
               onClick={handleCreatePublication}
             >
-              Publicar nuevo
+              {t.publishNew}
             </Button>
           </div>
           <div className="d-flex flex-wrap">
-            {" "}
             {/* Contenedor para flexbox */}
             {products.length > 0 ? (
               <ProductList products={products} />
             ) : (
-              <p>No tienes productos publicados.</p>
+              <p>{t.noProductsPublished}</p>
             )}
           </div>
         </>

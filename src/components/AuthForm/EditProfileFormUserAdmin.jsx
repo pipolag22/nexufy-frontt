@@ -1,10 +1,17 @@
-import { useState } from "react";
+// EditProfileFormUserAdmin.js
+import { useState, useContext } from "react";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
+import { LanguageContext } from "../themes/LanguageContext"; // Importar el LanguageContext
+import translations from "../themes/translations"; // Importar las traducciones
+
 const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
   const [formData, setFormData] = useState(initialData);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,9 +23,9 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
     setErrorMessage(null);
     try {
       await onSave(formData);
-      setSuccessMessage("Cambios guardados exitosamente.");
+      setSuccessMessage(t.changesSavedSuccessfully);
     } catch (error) {
-      setErrorMessage(error.message || "Error al actualizar el perfil.");
+      setErrorMessage(error.message || t.errorUpdatingProfile);
     }
   };
 
@@ -27,7 +34,7 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
       <Row>
         <Col md={6}>
           <Form.Group controlId="formName">
-            <Form.Label>Nombre</Form.Label>
+            <Form.Label>{t.nameLabel}</Form.Label>
             <Form.Control
               type="text"
               name="name"
@@ -38,7 +45,7 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
           </Form.Group>
 
           <Form.Group controlId="formEmail">
-            <Form.Label>Email</Form.Label>
+            <Form.Label>{t.emailLabel}</Form.Label>
             <Form.Control
               type="email"
               name="email"
@@ -49,7 +56,7 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
           </Form.Group>
 
           <Form.Group controlId="formAddress">
-            <Form.Label>Dirección</Form.Label>
+            <Form.Label>{t.addressLabel}</Form.Label>
             <Form.Control
               type="text"
               name="address"
@@ -61,7 +68,7 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
 
         <Col md={6}>
           <Form.Group controlId="formLastname">
-            <Form.Label>Apellido</Form.Label>
+            <Form.Label>{t.lastnameLabel}</Form.Label>
             <Form.Control
               type="text"
               name="lastname"
@@ -69,8 +76,9 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
               onChange={handleChange}
             />
           </Form.Group>
-          <Form.Group controlId="formLastname">
-            <Form.Label>Teléfono</Form.Label>
+
+          <Form.Group controlId="formPhone">
+            <Form.Label>{t.phoneLabel}</Form.Label>
             <Form.Control
               type="text"
               name="phone"
@@ -80,7 +88,7 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
           </Form.Group>
 
           <Form.Group controlId="formUsername">
-            <Form.Label>Nombre de Usuario</Form.Label>
+            <Form.Label>{t.usernameLabel}</Form.Label>
             <Form.Text className="form-control">
               {formData.username || ""}
             </Form.Text>
@@ -92,7 +100,7 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
       {successMessage && <p className="text-success mt-3">{successMessage}</p>}
 
       <Button variant="primary" type="submit" className="mt-3">
-        Guardar Cambios
+        {t.saveChangesButton}
       </Button>
     </Form>
   );

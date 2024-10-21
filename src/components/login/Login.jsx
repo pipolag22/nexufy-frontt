@@ -1,3 +1,4 @@
+// Login.js
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import AuthForm from "../AuthForm/AuthForm";
@@ -10,32 +11,41 @@ import ThemeToggle from "../themes/ThemeToggle";
 import { ThemeContext } from "../themes/ThemeContext";
 import Swal from "sweetalert2";
 
+// Importar el contexto de idioma y las traducciones
+import { LanguageContext } from "../themes/LanguageContext";
+import LanguageToggle from "../themes/LanguageToggle";
+import translations from "../themes/translations";
+
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const { darkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
   const { handleLogin } = useContext(AuthenticationContext);
 
+  // Obtener el idioma actual y las traducciones
+  const { language } = useContext(LanguageContext);
+  const t = translations[language];
+
   const loginFields = [
     {
       id: "username",
-      label: "Nombre de Usuario",
+      label: t.usernameLabel,
       type: "text",
-      placeholder: "Ingresa tu nombre de usuario",
+      placeholder: t.usernamePlaceholder,
       image: loginImage,
     },
     {
       id: "password",
-      label: "Contraseña",
+      label: t.passwordLabel,
       type: "password",
-      placeholder: "Ingresa tu contraseña",
+      placeholder: t.passwordPlaceholder,
     },
   ];
 
   const formatSuspensionTime = (suspensionDateTime) => {
     const dateTime = new Date(suspensionDateTime);
-    const formattedDate = dateTime.toLocaleDateString();
-    const formattedTime = dateTime.toLocaleTimeString();
+    const formattedDate = dateTime.toLocaleDateString(language);
+    const formattedTime = dateTime.toLocaleTimeString(language);
     return { formattedDate, formattedTime };
   };
 
@@ -47,18 +57,18 @@ const Login = () => {
     } catch (error) {
       console.error(error);
 
-      if (error.message.includes("suspendida")) {
-        const suspensionTime = error.message.split("hasta")[1].trim();
+      if (error.code === "ACCOUNT_SUSPENDED") {
+        const suspensionTime = error.suspensionUntil;
         const { formattedDate, formattedTime } =
           formatSuspensionTime(suspensionTime);
 
         let timerInterval;
         Swal.fire({
           icon: "error",
-          title: "Cuenta suspendida",
-          html: `<p>Tu cuenta está suspendida hasta:</p>
-                 <p>Fecha: ${formattedDate}</p>
-                 <p>Hora: ${formattedTime}</p>`,
+          title: t.accountSuspended,
+          html: `<p>${t.accountSuspendedUntil}</p>
+                 <p>${t.dateLabel}: ${formattedDate}</p>
+                 <p>${t.timeLabel}: ${formattedTime}</p>`,
           timer: 3000,
           timerProgressBar: true,
           didOpen: () => {
@@ -68,7 +78,7 @@ const Login = () => {
 
             timerInterval = setInterval(() => {
               const timeLeft = Math.ceil(Swal.getTimerLeft() / 1000);
-              timerDisplay.textContent = `Redirigiendo al home en ${timeLeft}...`;
+              timerDisplay.textContent = `${t.redirectingHomeIn} ${timeLeft}...`;
             }, 1000);
           },
           willClose: () => {
@@ -77,9 +87,7 @@ const Login = () => {
           },
         });
       } else {
-        setErrorMessage(
-          "Error al iniciar sesión. Por favor, verifica tus credenciales."
-        );
+        setErrorMessage(t.loginErrorMessage);
       }
     }
   };
@@ -106,16 +114,18 @@ const Login = () => {
           <img src={img} alt="Nexufy Logo" style={{ height: "120px" }} />
         </Navbar.Brand>
 
-        <div className="ms-auto">
+        {/* Botones de cambio de idioma y tema */}
+        <div className="ms-auto d-flex align-items-center">
+          <LanguageToggle />
           <ThemeToggle />
         </div>
       </Navbar>
-      {errorMessage && <p className="text-danger">{errorMessage}</p>}{" "}
+      {errorMessage && <p className="text-danger">{errorMessage}</p>}
       <AuthForm
-        title="Bienvenido de vuelta!"
+        title={t.welcomeBack}
         fields={loginFields}
-        buttonText="Iniciar sesión"
-        linkText="Registrarme"
+        buttonText={t.loginButtonText}
+        linkText={t.registerLinkText}
         linkAction={handleRegisterRedirect}
         onSubmit={handleLoginSubmit}
         placeholderClass={darkMode ? "placeholder-dark" : "placeholder-light"}

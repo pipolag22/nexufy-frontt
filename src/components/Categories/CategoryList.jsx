@@ -1,4 +1,9 @@
-import categories from "../../data/category.json";
+// CategoryList.js
+import { useContext } from "react";
+import { Col, Row } from "react-bootstrap";
+import { ThemeContext } from "../themes/ThemeContext"; // Importar ThemeContext
+import { LanguageContext } from "../themes/LanguageContext"; // Importar LanguageContext
+import translations from "../themes/translations"; // Importar las traducciones
 import CategoryCard from "./CategoryCard";
 import Image1 from "../../assets/img/metales.jpg";
 import Image2 from "../../assets/img/polimeros.png";
@@ -9,9 +14,6 @@ import Image6 from "../../assets/img/alimentos.jpg";
 import Image7 from "../../assets/img/electronico.png";
 import Image8 from "../../assets/img/construccion.jpg";
 import Image9 from "../../assets/img/envases.jpg";
-import { Col, Row } from "react-bootstrap";
-import { useContext } from "react"; // Importar useContext
-import { ThemeContext } from "../themes/ThemeContext"; // Importar ThemeContext
 
 const imageMap = {
   image1: Image1,
@@ -27,6 +29,11 @@ const imageMap = {
 
 const CategoryList = () => {
   const { darkMode } = useContext(ThemeContext); // Obtener el estado del tema
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
+
+  // Obtener las categorías traducidas
+  const categories = t.categoriess;
 
   return (
     <div className="mb-3">
@@ -35,9 +42,7 @@ const CategoryList = () => {
           darkMode ? "text-light" : "text-dark"
         }`}
       >
-        {" "}
-        {/* Cambiar color según el tema */}
-        Categorías
+        {t.categoriesTitle}
       </p>
       <div className="container">
         <Row xs={1} md={2} lg={3} className="g-4">

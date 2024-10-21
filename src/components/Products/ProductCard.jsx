@@ -1,13 +1,28 @@
-import { useContext } from "react"; // Importar useContext para acceder al ThemeContext
+// ProductCard.js
+import { useContext } from "react";
 import { Button } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
-import Placeholder from "react-bootstrap/Placeholder"; // Importar Placeholder
+import Placeholder from "react-bootstrap/Placeholder";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useNavigate } from "react-router-dom";
-import { ThemeContext } from "../themes/ThemeContext"; // Importar el ThemeContext
+import { ThemeContext } from "../themes/ThemeContext";
 
-const ProductCard = ({ id, image, name, description, price, category, loading }) => {
-  const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
+// **Importar el contexto de idioma y las traducciones**
+import { LanguageContext } from "../themes/LanguageContext";
+import translations from "../themes/translations";
+
+const ProductCard = ({
+  id,
+  image,
+  name,
+  description,
+  price,
+  category,
+  loading,
+}) => {
+  const { darkMode } = useContext(ThemeContext);
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
   const navigate = useNavigate();
 
   const handleDetail = () => {
@@ -24,7 +39,6 @@ const ProductCard = ({ id, image, name, description, price, category, loading })
       },
     });
   };
-  
 
   return (
     <Card style={{ height: "28rem", border: "none" }} className="shadow mb-2">
@@ -32,7 +46,9 @@ const ProductCard = ({ id, image, name, description, price, category, loading })
         // Mostrar el skeleton mientras carga
         <>
           <Card.Img variant="top" src={image} />
-          <Card.Body className={`bg-secundario d-flex flex-column justify-content-around`}>
+          <Card.Body
+            className={`bg-secundario d-flex flex-column justify-content-around`}
+          >
             <Placeholder as={Card.Title} animation="glow">
               <Placeholder xs={6} />
             </Placeholder>
@@ -54,27 +70,49 @@ const ProductCard = ({ id, image, name, description, price, category, loading })
         // Mostrar el contenido real
         <>
           <Card.Img variant="top" src={image} />
-          <Card.Body className={`bg-secundario d-flex flex-column justify-content-around`}>
+          <Card.Body
+            className={`bg-secundario d-flex flex-column justify-content-around`}
+          >
             {/* Nombre del producto */}
-            <Card.Title className={`fw-semibold ${darkMode ? "text-white" : "text-primary"}`}>
+            <Card.Title
+              className={`fw-semibold ${
+                darkMode ? "text-white" : "text-primary"
+              }`}
+            >
               {name}
             </Card.Title>
 
             {/* Descripción del producto */}
-            <Card.Text className={`fw-medium lh-sm ${darkMode ? "text-white" : "text-secondary"}`}>
+            <Card.Text
+              className={`fw-medium lh-sm ${
+                darkMode ? "text-white" : "text-secondary"
+              }`}
+            >
               {description}
             </Card.Text>
 
             {/* Precio del producto */}
-            <Card.Text className={`fw-semibold mb-0 ${darkMode ? "text-white" : "text-primary"}`}>
+            <Card.Text
+              className={`fw-semibold mb-0 ${
+                darkMode ? "text-white" : "text-primary"
+              }`}
+            >
               $ {price}{" "}
-              <span className={`fw-medium ${darkMode ? "text-white" : "text-secondary"}`}>
-                por kg
+              <span
+                className={`fw-medium ${
+                  darkMode ? "text-white" : "text-secondary"
+                }`}
+              >
+                {t.perKg}
               </span>
             </Card.Text>
 
             {/* Categoría del producto */}
-            <Card.Text className={`fw-medium ${darkMode ? "text-white" : "text-secondary"}`}>
+            <Card.Text
+              className={`fw-medium ${
+                darkMode ? "text-white" : "text-secondary"
+              }`}
+            >
               <i className="bi bi-star-fill text-primary-custom"></i> {category}
             </Card.Text>
 
@@ -84,7 +122,7 @@ const ProductCard = ({ id, image, name, description, price, category, loading })
                 style={{ width: "12rem", height: "2rem" }}
                 onClick={handleDetail}
               >
-                Ver más
+                {t.viewMore}
               </Button>
             </div>
           </Card.Body>

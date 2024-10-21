@@ -1,3 +1,4 @@
+// NavbarHome.js
 import { useContext, useEffect, useRef, useState } from "react";
 import {
   Button,
@@ -14,6 +15,9 @@ import { searchProducts } from "../api/productService";
 import img from "../assets/img/nexufy-horizontal-png.png";
 import { ThemeContext } from "../components/themes/ThemeContext";
 import ThemeToggle from "../components/themes/ThemeToggle";
+import { LanguageContext } from "../components/themes/LanguageContext"; // Importar LanguageContext
+import LanguageToggle from "../components/themes/LanguageToggle"; // Importar LanguageToggle
+import translations from "../components/themes/translations"; // Importar las traducciones
 import categories from "../data/category.json";
 import { AuthenticationContext } from "../services/authenticationContext/authentication.context";
 
@@ -28,6 +32,8 @@ function NavbarHome() {
 
   const { user, handleLogout } = useContext(AuthenticationContext);
   const { darkMode } = useContext(ThemeContext);
+  const { language } = useContext(LanguageContext); // Acceder al idioma actual
+  const t = translations[language]; // Obtener las traducciones para el idioma actual
 
   const handleSearch = async (event) => {
     event.preventDefault();
@@ -100,7 +106,7 @@ function NavbarHome() {
         >
           <FormControl
             type="text"
-            placeholder="¿Qué materia prima buscas?"
+            placeholder={t.searchPlaceholder}
             className={`me-2 ${
               darkMode ? "bg-dark text-light" : "bg-light text-bg-light"
             }`}
@@ -128,39 +134,69 @@ function NavbarHome() {
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="d-lg-none" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="d-lg-none ">
-              {user ? (
-                <div className=" bg-light text-center d-flex flex-column">
-                  <NavDropdown.Item className="item-menu py-2" href="/admin/datos">Mi perfil</NavDropdown.Item>
-                  {isSuperAdmin && <Dropdown.Item className="item-menu py-2" href="/ceo/datos">Perfil CEO</Dropdown.Item>}
-                  <NavDropdown.Item className="item-menu py-2" onClick={handleLogout}>
-                    Cerrar sesión
-                  </NavDropdown.Item>
-                  </div>
-                ) : (
-                <NavDropdown.Item onClick={handleLoginRedirect}>
-                  Iniciar Sesión
+          <Nav className="d-lg-none">
+            {user ? (
+              <div
+                className={`${
+                  darkMode ? "bg-dark text-light" : "bg-light text-dark"
+                } text-center d-flex flex-column`}
+              >
+                <NavDropdown.Item
+                  className="item-menu py-2"
+                  href="/admin/datos"
+                >
+                  {t.myProfile}
                 </NavDropdown.Item>
-              )}
+                {isSuperAdmin && (
+                  <Dropdown.Item className="item-menu py-2" href="/ceo/datos">
+                    {t.ceoProfile}
+                  </Dropdown.Item>
+                )}
+                <NavDropdown.Item
+                  className="item-menu py-2"
+                  onClick={handleLogout}
+                >
+                  {t.logout}
+                </NavDropdown.Item>
+              </div>
+            ) : (
+              <NavDropdown.Item
+                className={`${darkMode ? "text-light" : "text-dark"}`}
+                onClick={handleLoginRedirect}
+              >
+                {t.login}
+              </NavDropdown.Item>
+            )}
           </Nav>
         </Navbar.Collapse>
 
         <Nav className="d-none d-lg-flex align-items-center">
+          <LanguageToggle />
           <ThemeToggle />
+
           <Nav.Link
-            className="position-relative"
+            className={`position-relative ${
+              darkMode ? "text-light" : "text-dark"
+            }`}
             onMouseEnter={() => setShowCategories(true)}
             onMouseLeave={() => setShowCategories(false)}
           >
-            <div className="
-            d-flex  align-items-center mx-2"><FaBars className="me-1" /> <span>Categorías</span></div>
+            <div className="d-flex align-items-center mx-2">
+              <FaBars className="me-1" /> <span>{t.categories}</span>
+            </div>
             {showCategories && (
-              <div className="categories-dropdown">
+              <div
+                className={`categories-dropdown ${
+                  darkMode ? "bg-dark text-light" : "bg-light text-dark"
+                }`}
+              >
                 {categories.map((category, index) => (
                   <a
                     key={index}
                     onClick={() => handleCategory(category)}
-                    className="dropdown-itemCategory"
+                    className={`dropdown-itemCategory ${
+                      darkMode ? "bg-dark text-light" : "bg-light text-dark"
+                    }`}
                   >
                     {category.name} ({category.quantity})
                   </a>
@@ -169,20 +205,56 @@ function NavbarHome() {
             )}
           </Nav.Link>
 
+          {/* Botón de Iniciar Sesión con soporte para modo oscuro */}
           {user ? (
             <Dropdown>
-              <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
+              <Dropdown.Toggle
+                variant="outline-secondary"
+                id="dropdown-basic"
+                className={`mx-2 ${
+                  darkMode
+                    ? "bg-dark text-light border-light"
+                    : "bg-light text-dark border-dark"
+                }`}
+              >
                 <FaUserCircle className="me-1" /> {user.name || user.username}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item href="/admin/datos">Mi perfil</Dropdown.Item>
-                {isSuperAdmin && <Dropdown.Item href="/ceo/datos">Perfil CEO</Dropdown.Item>}
-                <Dropdown.Item onClick={handleLogout}>Cerrar sesión</Dropdown.Item>
+              <Dropdown.Menu
+                className={`${
+                  darkMode ? "bg-dark text-light" : "bg-light text-dark"
+                }`}
+              >
+                <Dropdown.Item
+                  href="/admin/datos"
+                  className={`${darkMode ? "text-light" : "text-dark"}`}
+                >
+                  {t.myProfile}
+                </Dropdown.Item>
+                {isSuperAdmin && (
+                  <Dropdown.Item
+                    href="/ceo/datos"
+                    className={`${darkMode ? "text-light" : "text-dark"}`}
+                  >
+                    {t.ceoProfile}
+                  </Dropdown.Item>
+                )}
+                <Dropdown.Item
+                  onClick={handleLogout}
+                  className={`${darkMode ? "text-light" : "text-dark"}`}
+                >
+                  {t.logout}
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           ) : (
-            <Nav.Link onClick={handleLoginRedirect}>
-              <FaUserCircle className="me-1" /> Iniciar Sesión
+            <Nav.Link
+              onClick={handleLoginRedirect}
+              className={`mx-2 d-flex align-items-center ${
+                darkMode ? "text-light" : "text-dark"
+              }`}
+              style={{ paddingLeft: 0, whiteSpace: "nowrap" }} // Añadir whiteSpace para evitar saltos de línea
+            >
+              <FaUserCircle className="me-1" /> {t.login}
             </Nav.Link>
           )}
         </Nav>
