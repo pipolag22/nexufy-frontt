@@ -51,7 +51,7 @@ const FeaturedProduct = () => {
           className={`fw-medium ${darkMode ? "text-white" : "text-primary"}`}
         >
           {t.viewAllProducts} →
-        </a>
+        </Link>
       </div>
     </div>
   );

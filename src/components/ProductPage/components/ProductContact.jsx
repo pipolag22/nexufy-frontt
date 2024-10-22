@@ -83,7 +83,7 @@ const ProductContact = ({ customerId }) => {
                   rel="noopener noreferrer"
                   className="btn btn-outline-primary shadow rounded-pill w-100"
                 >
-                  <i className="bi bi-browser-chrome text-primary-custom"></i>
+                  <i className="bi bi-geo-alt-fill text-primary-custom"></i>
                 </a>
               </Col>
             </Row>
