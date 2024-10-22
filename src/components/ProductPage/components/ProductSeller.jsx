@@ -1,12 +1,17 @@
+// ProductSeller.js
 import { useContext, useEffect, useState } from "react";
 import img from "../../../assets/img/undraw_factory_dy0a-removebg-preview.png"; // Imagen del vendedor
 import { AuthenticationContext } from "../../../services/authenticationContext/authentication.context";
 import { ThemeContext } from "../../themes/ThemeContext";
+import { LanguageContext } from "../../themes/LanguageContext"; // Importar el LanguageContext
+import translations from "../../themes/translations"; // Importar las traducciones
 import { getCustomerById } from "../../../api/customerService";
 
 const ProductSeller = ({ customerId }) => {
   const { user } = useContext(AuthenticationContext);
   const { darkMode } = useContext(ThemeContext);
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
 
   const [seller, setSeller] = useState({});
 
@@ -47,7 +52,7 @@ const ProductSeller = ({ customerId }) => {
       <div className="d-flex">
         <div className="d-flex w-100 flex-column justify-content-between">
           <p className={`fw-semibold ${darkMode ? "text-light" : "text-dark"}`}>
-            Información del vendedor
+            {t.sellerInformation}
           </p>
           {user ? (
             <div className="d-flex flex-column flex-lg-row justify-content-between">
@@ -57,7 +62,7 @@ const ProductSeller = ({ customerId }) => {
                     darkMode ? "text-light" : "text-dark"
                   }`}
                 >
-                  {seller?.name} {seller?.lastname} 
+                  {seller?.name} {seller?.lastname}
                   <i className="bi bi-star-fill text-primary-custom me-1"></i>
                   <i className="bi bi-star-fill text-primary-custom me-1"></i>
                   <i className="bi bi-star-fill text-primary-custom"></i>
@@ -69,21 +74,21 @@ const ProductSeller = ({ customerId }) => {
                     darkMode ? "text-light" : "text-dark"
                   }`}
                 >
-                  Lo han contactado 25 veces
+                  {t.contactedTimes.replace("{count}", "25")}
                 </p>
                 <p
                   className={`fw-semibold ${
                     darkMode ? "text-light" : "text-dark"
                   }`}
                 >
-                  +20 ventas realizadas
+                  {t.salesMade.replace("{count}", "20")}
                 </p>
                 <p
                   className={`fw-semibold ${
                     darkMode ? "text-light" : "text-dark"
                   }`}
                 >
-                  Realiza envíos a todo el país
+                  {t.shipsNationwide}
                 </p>
 
                 <a
@@ -92,7 +97,7 @@ const ProductSeller = ({ customerId }) => {
                     darkMode ? "text-light" : "text-dark"
                   }`}
                 >
-                  Ver más productos de este vendedor →
+                  {t.viewMoreProducts}
                 </a>
               </div>
               <img
@@ -105,7 +110,7 @@ const ProductSeller = ({ customerId }) => {
           ) : (
             <div className="d-flex h-100 flex-column justify-content-center">
               <p className={darkMode ? "text-light" : "text-dark"}>
-                Debes iniciar sesión para ver información del vendedor
+                {t.mustLoginToSeeSellerInfo}
               </p>
             </div>
           )}

@@ -1,3 +1,4 @@
+// EditProfileFormSuperAdmin.js
 import { useState, useContext } from "react";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
@@ -8,9 +9,14 @@ import {
 } from "../../api/adminService";
 import moment from "moment";
 import { AuthenticationContext } from "../../services/authenticationContext/authentication.context"; // Importar el contexto de autenticación
+import { LanguageContext } from "../themes/LanguageContext"; // Importar el LanguageContext
+import translations from "../themes/translations"; // Importar las traducciones
 
 const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
   const { user } = useContext(AuthenticationContext); // Obtener el usuario autenticado
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
+
   const [formData, setFormData] = useState(initialData);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -28,9 +34,9 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
     setErrorMessage(null);
     try {
       await onSave(formData);
-      setSuccessMessage("Cambios guardados exitosamente.");
+      setSuccessMessage(t.changesSavedSuccessfully);
     } catch (error) {
-      setErrorMessage(error.message || "Error al actualizar el perfil.");
+      setErrorMessage(error.message || t.errorUpdatingProfile);
     }
   };
 
@@ -45,9 +51,9 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
         suspendedUntil: newSuspensionEndDate,
       });
       setSuspensionEndDate(newSuspensionEndDate);
-      setSuccessMessage(`Usuario suspendido por ${days} días.`);
+      setSuccessMessage(t.suspendedUserForDays.replace("{days}", days));
     } catch (error) {
-      setErrorMessage(error.message || "Error al suspender al usuario.");
+      setErrorMessage(error.message || t.errorSuspendingUser);
     }
   };
 
@@ -57,9 +63,9 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
       await unsuspendCustomer(formData.id, token);
       setFormData({ ...formData, suspended: false, suspendedUntil: null });
       setSuspensionEndDate(null);
-      setSuccessMessage("Suspensión retirada.");
+      setSuccessMessage(t.suspensionLifted);
     } catch (error) {
-      setErrorMessage(error.message || "Error al retirar la suspensión.");
+      setErrorMessage(error.message || t.errorLiftingSuspension);
     }
   };
 
@@ -67,9 +73,9 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
     try {
       const token = localStorage.getItem("token");
       await deleteCustomer(formData.id, token);
-      setSuccessMessage("Usuario eliminado exitosamente.");
+      setSuccessMessage(t.userDeletedSuccessfully);
     } catch (error) {
-      setErrorMessage(error.message || "Error al eliminar al usuario.");
+      setErrorMessage(error.message || t.errorDeletingUser);
     }
   };
 
@@ -81,7 +87,7 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
       <Row>
         <Col md={6}>
           <Form.Group controlId="formName">
-            <Form.Label>Nombre</Form.Label>
+            <Form.Label>{t.nameLabel}</Form.Label>
             <Form.Control
               type="text"
               name="name"
@@ -92,7 +98,7 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
           </Form.Group>
 
           <Form.Group controlId="formEmail">
-            <Form.Label>Email</Form.Label>
+            <Form.Label>{t.emailLabel}</Form.Label>
             <Form.Control
               type="email"
               name="email"
@@ -103,7 +109,7 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
           </Form.Group>
 
           <Form.Group controlId="formAddress">
-            <Form.Label>Dirección</Form.Label>
+            <Form.Label>{t.addressLabel}</Form.Label>
             <Form.Control
               type="text"
               name="address"
@@ -115,7 +121,7 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
 
         <Col md={6}>
           <Form.Group controlId="formLastname">
-            <Form.Label>Apellido</Form.Label>
+            <Form.Label>{t.lastnameLabel}</Form.Label>
             <Form.Control
               type="text"
               name="lastname"
@@ -123,8 +129,9 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
               onChange={handleChange}
             />
           </Form.Group>
-          <Form.Group controlId="formLastname">
-            <Form.Label>Teléfono</Form.Label>
+
+          <Form.Group controlId="formPhone">
+            <Form.Label>{t.phoneLabel}</Form.Label>
             <Form.Control
               type="text"
               name="phone"
@@ -134,7 +141,7 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
           </Form.Group>
 
           <Form.Group controlId="formUsername">
-            <Form.Label>Nombre de Usuario</Form.Label>
+            <Form.Label>{t.usernameLabel}</Form.Label>
             <Form.Text
               className="form-control"
               style={{
@@ -152,8 +159,10 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
         <Row className="mt-3">
           <Col>
             <p className="text-warning">
-              Este usuario está suspendido hasta{" "}
-              {moment(suspensionEndDate).format("DD/MM/YYYY HH:mm")}.
+              {t.userSuspendedUntil.replace(
+                "{date}",
+                moment(suspensionEndDate).locale(language).format("L LT")
+              )}
             </p>
           </Col>
         </Row>
@@ -168,14 +177,14 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
               onClick={() => handleSuspend(7)}
               className="me-2"
             >
-              Suspender por 7 días
+              {t.suspendForDays.replace("{days}", 7)}
             </Button>
             <Button
               variant="danger"
               onClick={() => handleSuspend(30)}
               className="me-2"
             >
-              Suspender por 30 días
+              {t.suspendForDays.replace("{days}", 30)}
             </Button>
 
             {formData.suspended && (
@@ -184,12 +193,12 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
                 onClick={handleUnsuspend}
                 className="me-2"
               >
-                Levantar suspensión
+                {t.liftSuspension}
               </Button>
             )}
 
             <Button variant="outline-danger" onClick={handleDelete}>
-              Eliminar usuario
+              {t.deleteUser}
             </Button>
           </Col>
         </Row>
@@ -199,7 +208,7 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
       {successMessage && <p className="text-success mt-3">{successMessage}</p>}
 
       <Button variant="primary" type="submit" className="mt-3">
-        Guardar Cambios
+        {t.saveChangesButton}
       </Button>
     </Form>
   );

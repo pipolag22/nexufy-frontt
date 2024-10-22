@@ -1,63 +1,64 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Navigate, useOutletContext } from "react-router-dom";
-import { getAllProducts, searchProducts } from "../../../api/productService"; // Asegúrate de que tienes una función para buscar productos
+import { getAllProducts, searchProducts } from "../../../api/productService";
 import { ThemeContext } from "../../themes/ThemeContext";
+import { LanguageContext } from "../../themes/LanguageContext";
 import CustomTable from "./CustomTable";
-import SearchBar from "./SearchBar"; // Importa SearchBar
+import SearchBar from "./SearchBar";
+import translations from "../../themes/translations"; // Importar traducciones
 
 const AbmShop = () => {
   const { user } = useOutletContext();
   const { darkMode } = useContext(ThemeContext);
+  const { language } = useContext(LanguageContext);
+  const t = translations[language];
+
   const [productos, setProductos] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]); // Productos filtrados
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Redirige a la página de login si no hay usuario
   if (!user) {
     return <Navigate to="/login" />;
   }
 
   useEffect(() => {
     const fetchAllProducts = async () => {
-      if (user) {
-        try {
-          const products = await getAllProducts();
-          setProductos(products);
-          setFilteredProducts(products); // Inicializa los productos filtrados
-        } catch (error) {
-          setError(error);
-        } finally {
-          setIsLoading(false);
-        }
+      try {
+        const products = await getAllProducts();
+        setProductos(products);
+        setFilteredProducts(products); // Inicializa los productos filtrados
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchAllProducts();
-  }, [user]);
+  }, []); // Solo al montar
 
-  // Efecto para manejar la búsqueda
   useEffect(() => {
     const fetchSearchedProducts = async () => {
       if (searchQuery) {
         try {
-          const results = await searchProducts(searchQuery); // Llama a la función de búsqueda
-          setFilteredProducts(results); // Actualiza los productos filtrados
+          const results = await searchProducts(searchQuery);
+          setFilteredProducts(results);
         } catch (error) {
           setError(error);
         }
       } else {
-        setFilteredProducts(productos); // Restablece a todos los productos si no hay búsqueda
+        setFilteredProducts(productos); // Restablece a todos los productos
       }
     };
 
     fetchSearchedProducts();
-  }, [searchQuery, productos]); // Se activa cuando searchQuery o productos cambian
+  }, [searchQuery, productos]);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <p>{t.loading}</p>;
   }
 
   if (error) {
@@ -66,22 +67,22 @@ const AbmShop = () => {
 
   const productColumns = [
     {
-      header: "Nombre del producto",
+      header: t.productName,
       accessor: "name",
       render: (item) => item.name,
     },
     {
-      header: "Precio",
+      header: t.price,
       accessor: "price",
       render: (item) => `$${item.price}`,
     },
     {
-      header: "Categoría",
+      header: t.category,
       accessor: "category",
       render: (item) => item.category,
     },
     {
-      header: "Acciones",
+      header: t.actions,
       accessor: "actions",
       render: (item) => (
         <Button
@@ -89,19 +90,11 @@ const AbmShop = () => {
           className="py-1"
           variant={darkMode ? "outline-light" : "outline-primary"}
         >
-          Editar
+          {t.edit}
         </Button>
       ),
     },
   ];
-
-  const handleEdit = (updatedProduct) => {
-    setProductos((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === updatedProduct.id ? updatedProduct : product
-      )
-    );
-  };
 
   return (
     <div
@@ -111,7 +104,7 @@ const AbmShop = () => {
       style={{ borderRadius: "20px" }}
     >
       <div className="d-flex justify-content-between align-items-center mb-2">
-        <p className="fs-4 w-50 fw-semibold">Productos de usuarios</p>
+        <p className="fs-4 w-50 fw-semibold">{t.products}</p>
         <SearchBar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -119,11 +112,7 @@ const AbmShop = () => {
         />
       </div>
 
-      <CustomTable
-        columns={productColumns}
-        data={filteredProducts}
-        onEdit={handleEdit}
-      />
+      <CustomTable columns={productColumns} data={filteredProducts} />
     </div>
   );
 };

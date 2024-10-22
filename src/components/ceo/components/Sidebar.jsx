@@ -1,43 +1,49 @@
+// Sidebar.js
 import React, { useContext } from "react";
 import { Col, Nav, Row } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import img from "../../../assets/img/logo-png.png";
 import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
+import { LanguageContext } from "../../themes/LanguageContext"; // Importar el LanguageContext
+import translations from "../../themes/translations"; // Importar las traducciones
 
 const Sidebar = () => {
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
+
   const navs = [
     {
       id: 1,
-      name: "Mis datos",
+      name: t.myData,
       icon: "bi bi-person-vcard",
       url: "/ceo/datos",
       active: true,
     },
     {
       id: 2,
-      name: "ABM de usuarios",
+      name: t.userManagement,
       icon: "bi bi-person-fill-gear",
       url: "/ceo/users",
       active: false,
     },
     {
       id: 3,
-      name: "ABM de productos",
+      name: t.productManagement,
       icon: "bi bi-shop",
       url: "/ceo/products",
       active: false,
     },
     {
       id: 4,
-      name: "Estadísticas",
+      name: t.statistics,
       icon: "bi bi-graph-up-arrow",
       url: "/ceo/estadisticas",
       active: false,
     },
     {
       id: 5,
-      name: "Notificaciones",
+      name: t.notifications,
       icon: "bi bi-bell",
       url: "/ceo/notificaciones",
       active: false,
@@ -61,7 +67,7 @@ const Sidebar = () => {
           <Link to={"/"}>
             <img
               src={img}
-              alt="Logo nexufy"
+              alt={t.logoAlt} // Usamos la traducción para el texto alternativo
               style={{
                 width: "3rem",
                 height: "3rem",
@@ -75,6 +81,7 @@ const Sidebar = () => {
             <Row key={nav.id} className="py-2 justify-content-center">
               <Link
                 to={nav.url}
+                title={nav.name} // Añadimos el título para mostrar el nombre al pasar el cursor
                 className={`nav-link d-flex justify-content-center align-items-center text-center ${
                   location.pathname === nav.url
                     ? "fw-bold rounded-circle bg-primary"

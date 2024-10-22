@@ -1,16 +1,26 @@
+// Profile.js
 import { useEffect, useState, useContext } from "react";
-import { getCustomerById, updateCustomerProfile } from "../../../api/customerService";
+import {
+  getCustomerById,
+  updateCustomerProfile,
+} from "../../../api/customerService";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Navigate, useOutletContext } from "react-router-dom";
 import EditProfileFormUserAdmin from "../../AuthForm/EditProfileFormUserAdmin";
 import EditProfileFormSuperAdmin from "../../AuthForm/EditProfileFormSuperAdmin";
 import { ThemeContext } from "../../themes/ThemeContext"; // Importar ThemeContext
 import { AuthenticationContext } from "../../../services/authenticationContext/authentication.context"; // Importar contexto de autenticación
+import { LanguageContext } from "../../themes/LanguageContext"; // Importar LanguageContext
+import translations from "../../themes/translations"; // Importar las traducciones
+import moment from "moment";
+import "moment/locale/es"; // Importar locales de Moment.js si es necesario
 
 const Profile = () => {
   const { user } = useOutletContext();
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
   const { user: loggedInUser } = useContext(AuthenticationContext); // Obtener usuario autenticado
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones correspondientes
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,11 +63,13 @@ const Profile = () => {
   }
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <p>{t.loading}</p>;
   }
 
   if (error) {
-    return <p className="text-danger">{error.message}</p>;
+    return (
+      <p className="text-danger">{error.message || t.errorLoadingProfile}</p>
+    );
   }
 
   // Lógica para mostrar el formulario correspondiente
@@ -70,7 +82,7 @@ const Profile = () => {
       }`}
       style={{ borderRadius: "20px" }}
     >
-      <p className="fs-3 fw-semibold">Mi Perfil</p>
+      <p className="fs-3 fw-semibold">{t.myProfile}</p>
 
       <div
         className={`w-100 p-2 px-4 border rounded border-2 ${
@@ -97,11 +109,14 @@ const Profile = () => {
                     }`}
                     style={{ fontSize: ".9rem" }}
                   >
-                    Nombre
+                    {t.nameLabel}
                   </Form.Label>
-                  <span className={`fs-6 mb-4 ${
-                      darkMode ? "text-light" : "text-body-tertiary"}`}>
-                    {data.name || "Nombre no disponible"}
+                  <span
+                    className={`fs-6 mb-4 ${
+                      darkMode ? "text-light" : "text-body-tertiary"
+                    }`}
+                  >
+                    {data.name || t.nameNotAvailable}
                   </span>
                 </Row>
                 <Row>
@@ -111,11 +126,14 @@ const Profile = () => {
                     }`}
                     style={{ fontSize: ".9rem" }}
                   >
-                    Email
+                    {t.emailLabel}
                   </Form.Label>
-                  <span className={`fs-6 mb-4 ${
-                      darkMode ? "text-light" : "text-body-tertiary"}`}>
-                    {data.email || "Email no disponible"}
+                  <span
+                    className={`fs-6 mb-4 ${
+                      darkMode ? "text-light" : "text-body-tertiary"
+                    }`}
+                  >
+                    {data.email || t.emailNotAvailable}
                   </span>
                 </Row>
                 <Row>
@@ -125,11 +143,14 @@ const Profile = () => {
                     }`}
                     style={{ fontSize: ".9rem" }}
                   >
-                    Dirección
+                    {t.addressLabel}
                   </Form.Label>
-                  <span className={`fs-6 mb-4 ${
-                      darkMode ? "text-light" : "text-body-tertiary"}`}>
-                    {data.address || "Dirección no disponible"}
+                  <span
+                    className={`fs-6 mb-4 ${
+                      darkMode ? "text-light" : "text-body-tertiary"
+                    }`}
+                  >
+                    {data.address || t.addressNotAvailable}
                   </span>
                 </Row>
               </Col>
@@ -142,43 +163,50 @@ const Profile = () => {
                     }`}
                     style={{ fontSize: ".9rem" }}
                   >
-                    Apellido
-                  </Form.Label>
-                  <span className={`fs-6 mb-4 ${
-                      darkMode ? "text-light" : "text-body-tertiary"}`}>
-                    {data.lastname || "Apellido no disponible"}
-                  </span>
-                </Row>
-                <Row>
-                  <Form.Label
-                    className={`fw-semibold ${
-                      darkMode ? "text-light" : "text-body-tertiary"
-                    }`}
-                    style={{ fontSize: ".9rem" }}
-                  >
-                    Nombre de usuario
-                  </Form.Label>
-                  <span className={`fs-6 mb-4 ${
-                      darkMode ? "text-light" : "text-body-tertiary"}`}>
-                    {data.username || "Usuario no disponible"}
-                  </span>
-                </Row>
-                <Row>
-                  <Form.Label
-                    className={`fw-semibold ${
-                      darkMode ? "text-light" : "text-body-tertiary"
-                    }`}
-                    style={{ fontSize: ".9rem" }}
-                  >
-                    Fecha de nacimiento
+                    {t.lastnameLabel}
                   </Form.Label>
                   <span
                     className={`fs-6 mb-4 ${
-                      darkMode ? "text-light" : "text-body-tertiary"}`}
+                      darkMode ? "text-light" : "text-body-tertiary"
+                    }`}
+                  >
+                    {data.lastname || t.lastnameNotAvailable}
+                  </span>
+                </Row>
+                <Row>
+                  <Form.Label
+                    className={`fw-semibold ${
+                      darkMode ? "text-light" : "text-body-tertiary"
+                    }`}
+                    style={{ fontSize: ".9rem" }}
+                  >
+                    {t.usernameLabel}
+                  </Form.Label>
+                  <span
+                    className={`fs-6 mb-4 ${
+                      darkMode ? "text-light" : "text-body-tertiary"
+                    }`}
+                  >
+                    {data.username || t.usernameNotAvailable}
+                  </span>
+                </Row>
+                <Row>
+                  <Form.Label
+                    className={`fw-semibold ${
+                      darkMode ? "text-light" : "text-body-tertiary"
+                    }`}
+                    style={{ fontSize: ".9rem" }}
+                  >
+                    {t.birthdateLabel}
+                  </Form.Label>
+                  <span
+                    className={`fs-6 mb-4 ${
+                      darkMode ? "text-light" : "text-body-tertiary"
+                    }`}
                   >
                     {data.birthdate
-                      ? data.birthdate.split("T")[0]
-                      : "Fecha no disponible"}
+                      ? moment(data.birthdate).locale(language).format("LL")
+                      : t.birthdateNotAvailable}
                   </span>
                 </Row>
               </Col>
@@ -192,7 +220,7 @@ const Profile = () => {
                     className="border border-2 rounded-pill w-25 p-1 d-flex justify-content-center"
                   >
                     <span>
-                      Editar <i className="bi bi-pencil"></i>
+                      {t.editButton} <i className="bi bi-pencil"></i>
                     </span>
                   </Button>
                 </Row>
