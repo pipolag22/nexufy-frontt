@@ -40,20 +40,20 @@ const Publications = () => {
   }, [user]);
 
   const handleSave = async (newProduct) => {
-    const id = user.id;
+    const customerId = user.id;
     const productData = {
       ...newProduct,
-      customer: { id: id },
+      customerId: customerId,
     };
     const token = localStorage.getItem("token");
     try {
       console.log(productData);
-      await postProduct(productData, token);
+      await postProduct(productData, customerId, token);
       setOpenNewProduct(false);
       await fetchUserProducts();
     } catch (err) {
       console.error(err);
-      setError(err);
+      setError(err.message || "Error al guardar el producto.");
     }
   };
 

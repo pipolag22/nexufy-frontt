@@ -116,7 +116,7 @@ const CreateProductForm = ({ onSave }) => {
           <Col md={6}>
             <Form.Group controlId="urlImage">
               <Form.Label>Imágen</Form.Label>
-              <Form.Control type="text" name="image" onChange={handleChange} />
+              <Form.Control type="text" name="urlImage" onChange={handleChange} />
             </Form.Group>
           </Col>
         </Row>

@@ -103,8 +103,8 @@ const AbmUsers = () => {
     },
     {
       header: "Rol",
-      accessor: "roles",
-      render: (item) => item.roles[0]?.name.split("_")[1],
+      accessor: "role",
+      render: (item) => item.role[0]?.name.split("_")[1],
     },
   ];
 

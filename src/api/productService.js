@@ -21,7 +21,7 @@ export async function getProduct(productId) {
       image:data.urlImage,
       price: data.price,
       category: data.category,
-      customerId: data.customer.id
+      customerId: data.customerId
     };
   } catch (error) {
     console.error("Failed to fetch product:", error);
@@ -32,7 +32,7 @@ export async function getProduct(productId) {
 export async function getAllProducts(){
   try {
     const res = await fetch(
-      "http://localhost:8081/api/products/all",{
+      "http://localhost:8081/api/products",{
         headers:{
           accept:"application/json"
         }
@@ -49,10 +49,10 @@ export async function getAllProducts(){
   }
 }
 
-export async function postProduct(newProduct, token) {
+export async function postProduct(newProduct,customerId, token) {
   try {
     const response = await fetch(
-      "http://localhost:8081/api/products" ,
+      `http://localhost:8081/api/products/customer/${customerId}` ,
       {
         method: "POST",
         headers: {

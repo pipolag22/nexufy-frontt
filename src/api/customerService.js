@@ -70,7 +70,7 @@ export async function getAllCustomers(token) {
 export async function updateCustomerProfile(customerId, token, profileData) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/customer/profile/${customerId}`,
+      `http://localhost:8081/api/customer/${customerId}`,
       {
         method: "PUT",
         headers: {
