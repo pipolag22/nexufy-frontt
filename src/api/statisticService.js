@@ -1,7 +1,8 @@
 // api/statisticService.js
+
 export const fetchStats = async (token) => {
   const response = await fetch(
-    "http://localhost:8081/api/reports/customers/stats/details", // Ruta actualizada
+    "http://localhost:8081/api/reports/customers/stats/details",
     {
       method: "GET",
       headers: {
@@ -30,13 +31,39 @@ export const fetchStats = async (token) => {
   }
 };
 
+// Descargar reporte de clientes
 export const downloadCustomerReport = async (token) => {
   const response = await fetch(
-    "http://localhost:8081/api/reports/customers/download", // Esta ruta sigue igual
+    "http://localhost:8081/api/reports/customers/download",
     {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error("No autorizado. Por favor, inicia sesión nuevamente.");
+    } else {
+      const errorText = await response.text();
+      throw new Error(`Error del servidor: ${errorText}`);
+    }
+  }
+
+  const blob = await response.blob();
+  return blob;
+};
+
+// Descargar reporte de productos
+export const downloadProductReport = async (token) => {
+  const response = await fetch(
+    "http://localhost:8081/api/reports/products/download", // Endpoint correcto
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // Token de autorización
       },
     }
   );

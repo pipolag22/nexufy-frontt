@@ -1,17 +1,30 @@
-// EditProfileFormUserAdmin.js
 import { useState, useContext } from "react";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
-import { LanguageContext } from "../themes/LanguageContext"; // Importar el LanguageContext
-import translations from "../themes/translations"; // Importar las traducciones
+import { LanguageContext } from "../themes/LanguageContext";
+import translations from "../themes/translations";
+import { promoteToAdmin } from "../../api/customerService";
+import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
+import { useNavigate } from "react-router-dom";
 
 const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
-  const [formData, setFormData] = useState(initialData);
+  const { token: authToken } = useContext(AuthenticationContext);
+
+  const token = authToken || localStorage.getItem("token");
+
+  const [formData, setFormData] = useState({
+    ...initialData,
+    roles: initialData.roles || [],
+  });
+
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [promoteMessage, setPromoteMessage] = useState(null);
 
-  const { language } = useContext(LanguageContext); // Obtener el idioma actual
-  const t = translations[language]; // Obtener las traducciones correspondientes
+  const { language } = useContext(LanguageContext);
+  const t = translations[language];
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,6 +41,24 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
       setErrorMessage(error.message || t.errorUpdatingProfile);
     }
   };
+
+  const handlePromoteToAdmin = async () => {
+    setErrorMessage(null);
+    setPromoteMessage(null);
+    try {
+      await promoteToAdmin(formData.username, token);
+      setPromoteMessage(t.Promote);
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (error) {
+      setErrorMessage(error.message || t.errorPromotingUser);
+    }
+  };
+
+  // Verificar si el usuario tiene el rol de USER y no el de ADMIN
+  const isUser = formData.roles.includes("ROLE_USER");
+  const isAdmin = formData.roles.includes("ROLE_ADMIN");
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -98,10 +129,21 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
 
       {errorMessage && <p className="text-danger mt-3">{errorMessage}</p>}
       {successMessage && <p className="text-success mt-3">{successMessage}</p>}
+      {promoteMessage && <p className="text-success mt-3">{promoteMessage}</p>}
 
       <Button variant="primary" type="submit" className="mt-3">
         {t.saveChangesButton}
       </Button>
+
+      {isUser && !isAdmin && (
+        <Button
+          variant="warning"
+          onClick={handlePromoteToAdmin}
+          className="mt-3"
+        >
+          {t.promoteToAdminButton}
+        </Button>
+      )}
     </Form>
   );
 };
@@ -114,6 +156,7 @@ EditProfileFormUserAdmin.propTypes = {
     phone: PropTypes.string,
     lastname: PropTypes.string,
     username: PropTypes.string,
+    roles: PropTypes.arrayOf(PropTypes.string).isRequired,
     id: PropTypes.string.isRequired,
   }).isRequired,
   onSave: PropTypes.func.isRequired,

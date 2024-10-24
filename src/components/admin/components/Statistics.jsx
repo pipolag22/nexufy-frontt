@@ -3,11 +3,13 @@ import { Bar } from "react-chartjs-2";
 import {
   fetchStats,
   downloadCustomerReport,
+  downloadProductReport, // Importar la nueva función para productos
 } from "../../../api/statisticService";
-import "chart.js/auto"; // Importación necesaria para Chart.js
+import "chart.js/auto";
 
 const Statistics = () => {
   const [totalCustomers, setTotalCustomers] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
   const [customerRegistrationsByMonth, setCustomerRegistrationsByMonth] =
     useState({});
   const [productsByMonth, setProductsByMonth] = useState({});
@@ -21,6 +23,7 @@ const Statistics = () => {
 
         const data = await fetchStats(token);
         setTotalCustomers(data.totalCustomers);
+        setTotalProducts(data.totalProducts);
         setCustomerRegistrationsByMonth(data.customerRegistrationsByMonth);
         setProductsByMonth(data.productsByMonth);
       } catch (error) {
@@ -33,7 +36,7 @@ const Statistics = () => {
     fetchData();
   }, []);
 
-  const handleDownloadReport = async () => {
+  const handleDownloadCustomerReport = async () => {
     try {
       const token = localStorage.getItem("accessToken");
 
@@ -50,7 +53,23 @@ const Statistics = () => {
     }
   };
 
-  // Preparar datos para los gráficos de barras
+  const handleDownloadProductReport = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+
+      const blob = await downloadProductReport(token);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "product_report.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   const customerData = {
     labels: Object.keys(customerRegistrationsByMonth),
     datasets: [
@@ -86,21 +105,44 @@ const Statistics = () => {
     );
   }
 
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+          precision: 0,
+        },
+        min: 0,
+        max: Math.max(...Object.values(productsByMonth), 5),
+      },
+    },
+    barThickness: 40,
+    responsive: true,
+  };
+
   return (
     <div>
       <h2>Estadísticas</h2>
       <p>Total de clientes registrados: {totalCustomers}</p>
+      <p>Total de productos publicados: {totalProducts}</p>
 
-      {/* Gráfico de barras para clientes registrados */}
       <h3>Clientes Registrados por Mes</h3>
-      <Bar data={customerData} />
+      <div style={{ width: "600px", height: "400px", margin: "0 auto" }}>
+        <Bar data={customerData} options={options} />
+      </div>
 
-      {/* Gráfico de barras para productos publicados */}
       <h3>Productos Publicados por Mes</h3>
-      <Bar data={productData} />
+      <div style={{ width: "600px", height: "400px", margin: "0 auto" }}>
+        <Bar data={productData} options={options} />
+      </div>
 
-      <button onClick={handleDownloadReport}>
+      <button onClick={handleDownloadCustomerReport}>
         Descargar Reporte de Clientes
+      </button>
+
+      <button onClick={handleDownloadProductReport}>
+        Descargar Reporte de Productos
       </button>
     </div>
   );

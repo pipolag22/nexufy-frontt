@@ -227,6 +227,8 @@ const translations = {
     error: "Ocurrió un error",
     dashboard: "Panel de control",
     profilePhoto: "Foto de perfil",
+    promoteToAdminButton: "Promover a Admin",
+    Promote: "¡Fuiste promovido! Ya puedes publicar.",
 
     // Agrega más traducciones si es necesario
   },
@@ -454,6 +456,8 @@ const translations = {
     error: "An error occurred",
     dashboard: "Dashboard",
     profilePhoto: "Profile photo",
+    promoteToAdminButton: "Promote an administrator",
+    Promote: "¡You have been promoted! You can now post.",
   },
 };
 

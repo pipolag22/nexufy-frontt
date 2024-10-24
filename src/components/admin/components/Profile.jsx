@@ -1,4 +1,3 @@
-// Profile.js
 import { useEffect, useState, useContext } from "react";
 import {
   getCustomerById,
@@ -8,19 +7,19 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import { Navigate, useOutletContext } from "react-router-dom";
 import EditProfileFormUserAdmin from "../../AuthForm/EditProfileFormUserAdmin";
 import EditProfileFormSuperAdmin from "../../AuthForm/EditProfileFormSuperAdmin";
-import { ThemeContext } from "../../themes/ThemeContext"; // Importar ThemeContext
-import { AuthenticationContext } from "../../../services/authenticationContext/authentication.context"; // Importar contexto de autenticación
-import { LanguageContext } from "../../themes/LanguageContext"; // Importar LanguageContext
-import translations from "../../themes/translations"; // Importar las traducciones
+import { ThemeContext } from "../../themes/ThemeContext";
+import { AuthenticationContext } from "../../../services/authenticationContext/authentication.context";
+import { LanguageContext } from "../../themes/LanguageContext";
+import translations from "../../themes/translations";
 import moment from "moment";
-import "moment/locale/es"; // Importar locales de Moment.js si es necesario
+import "moment/locale/es";
 
 const Profile = () => {
   const { user } = useOutletContext();
-  const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
-  const { user: loggedInUser } = useContext(AuthenticationContext); // Obtener usuario autenticado
-  const { language } = useContext(LanguageContext); // Obtener el idioma actual
-  const t = translations[language]; // Obtener las traducciones correspondientes
+  const { darkMode } = useContext(ThemeContext);
+  const { user: loggedInUser } = useContext(AuthenticationContext);
+  const { language } = useContext(LanguageContext);
+  const t = translations[language];
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -32,6 +31,7 @@ const Profile = () => {
         try {
           const token = localStorage.getItem("token");
           const data = await getCustomerById(user.id, token);
+          console.log("Respuesta completa del backend:", data); // Verificar toda la respuesta
           setData(data);
         } catch (error) {
           setError(error);
@@ -71,6 +71,9 @@ const Profile = () => {
       <p className="text-danger">{error.message || t.errorLoadingProfile}</p>
     );
   }
+
+  // Verificación de los roles en la consola
+  console.log("Data en Profile:", data.roles);
 
   // Lógica para mostrar el formulario correspondiente
   const isSuperAdmin = loggedInUser.roles.includes("ROLE_SUPERADMIN");
