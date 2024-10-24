@@ -1,33 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ProductList from "../../components/Products/ProductList";
-import {getAllProducts} from "../../api/productService"
+import { useOutletContext } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 const AllProducts = () => {
+  const { filteredProducts, loading, filters, setFilters } = useOutletContext();
 
-  const [products, setProducts] = useState([]);
-  const [ loading, setLoading]= useState(true)
+  const removeFilter = (key) => {
+    setFilters((prevFilters) => {
+      const newFilters = { ...prevFilters };
+      delete newFilters[key]; // Eliminar el filtro especificado
+      return newFilters;
+    });
+  };
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getAllProducts();
-        setProducts(data); // Tomar solo los primeros 4 productos
-        setLoading(false); // Desactivar estado de carga
-      } catch (error) {
-        console.error(error);
-        setLoading(false); // Desactivar estado de carga en caso de error
-      }
-    };
-    fetchProducts();
-  }, []);
-
-  if(loading){
-    return  <div>Cargando todos los productos</div>
+  if (loading) {
+    return <div>Cargando todos los productos...</div>;
   }
 
   return (
     <>
-      <ProductList products={products} />
+      <div className="mx-5 mb-4">
+        {Object.entries(filters).map(([key, value]) => (
+          <>
+            <Button
+              key={key}
+              variant="outline-secondary"
+              onClick={() => removeFilter(key)}
+              className="mx-1"
+              size="sm"
+            >
+              {`${value} ✖`}
+            </Button>
+          </>
+        ))}
+      </div>
+      {filteredProducts.length < 1 ? (
+        <p className="fs-3 container">No hay productos con esas características</p>
+      ) : (
+        <ProductList products={filteredProducts} />
+      )}
     </>
   );
 };

@@ -34,6 +34,7 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
     setErrorMessage(null);
     try {
       await onSave(formData);
+      console.log(formData)
       setSuccessMessage(t.changesSavedSuccessfully);
     } catch (error) {
       setErrorMessage(error.message || t.errorUpdatingProfile);

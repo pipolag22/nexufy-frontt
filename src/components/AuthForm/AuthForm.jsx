@@ -28,7 +28,7 @@ const AuthForm = ({
 
   return (
     <div
-      className={`d-flex align-items-center vh-100 ${
+      className={`d-flex align-items-center vh-90 ${
         darkMode ? "bg-dark text-light" : "bg-light text-dark"
       }`}
     >
