@@ -1,3 +1,4 @@
+import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useContext } from "react";
 import { ThemeContext } from "../themes/ThemeContext"; // Importar el ThemeContext
@@ -96,4 +97,6 @@ function Footer() {
   );
 }
 
-export default Footer;
+const MemoizedFooter = React.memo(Footer);
+
+export default MemoizedFooter;

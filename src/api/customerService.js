@@ -93,21 +93,45 @@ export async function updateCustomerProfile(customerId, token, profileData) {
   }
 }
 
-export async function searchCustomers(searchQuery, token){
+export async function searchCustomers(searchQuery, token) {
   try {
-    const response = await fetch(`http://localhost:8081/api/customer/search?username=${searchQuery}`,{
-      headers:{
-        "Content-Type":"application/json",
-        Authorization: `Bearer ${token}`
+    const response = await fetch(
+      `http://localhost:8081/api/customer/search?username=${searchQuery}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
-    });
-    if(!response.ok){
+    );
+    if (!response.ok) {
       throw new Error("Error en la búsqueda de usuarios");
     }
     const data = await response.json();
     return data;
-  }catch(err){
-    console.error("Error al buscar productos!", err)
+  } catch (err) {
+    console.error("Error al buscar productos!", err);
     return [];
   }
 }
+
+import axios from "axios";
+
+export const promoteToAdmin = async (username, token) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:8081/api/user/promote/admin?username=${username}`, // Asegúrate de que este endpoint es correcto
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error al promover al usuario:", error);
+    throw new Error(error.response?.data?.message || "Error promoting user");
+  }
+};

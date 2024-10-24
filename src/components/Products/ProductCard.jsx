@@ -1,4 +1,3 @@
-// ProductCard.js
 import { useContext } from "react";
 import { Button } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
@@ -19,6 +18,7 @@ const ProductCard = ({
   price,
   category,
   loading,
+  categories, // Recibir las categorías como prop
 }) => {
   const { darkMode } = useContext(ThemeContext);
   const { language } = useContext(LanguageContext); // Obtener el idioma actual
@@ -40,12 +40,31 @@ const ProductCard = ({
     });
   };
 
+  // Buscar la categoría correspondiente en categories prop
+  const categoryObj = categories.find((cat) => cat.name === category);
+
+  // Determinar la URL de la imagen a mostrar
+  const imageUrl = image
+    ? image
+    : categoryObj
+    ? `/images/categories/${categoryObj.image}.jpg`
+    : "/images/categories/default-category.jpg"; // Ruta de la imagen predeterminada
+
+  // Opcional: Mensajes de advertencia para depuración
+  if (!category) {
+    console.warn(`El producto ${id} no tiene una categoría asignada.`);
+  }
+
+  if (!categoryObj) {
+    console.warn(`No se encontró la categoría "${category}" en category.json.`);
+  }
+
   return (
     <Card style={{ height: "28rem", border: "none" }} className="shadow mb-2">
       {loading ? (
         // Mostrar el skeleton mientras carga
         <>
-          <Card.Img variant="top" src={image} />
+          <Card.Img variant="top" src={imageUrl} alt={name} />
           <Card.Body
             className={`bg-secundario d-flex flex-column justify-content-around`}
           >
@@ -69,7 +88,16 @@ const ProductCard = ({
       ) : (
         // Mostrar el contenido real
         <>
-          <Card.Img variant="top" src={image} />
+          <Card.Img
+            variant="top"
+            src={imageUrl}
+            alt={name}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/images/categories/default-category.jpg";
+            }}
+            loading="lazy"
+          />
           <Card.Body
             className={`bg-secundario d-flex flex-column justify-content-around`}
           >
@@ -130,6 +158,34 @@ const ProductCard = ({
       )}
     </Card>
   );
+};
+
+// **Definir PropTypes para una mejor validación**
+import PropTypes from "prop-types";
+
+ProductCard.propTypes = {
+  id: PropTypes.string.isRequired,
+  image: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  category: PropTypes.string.isRequired,
+  loading: PropTypes.bool,
+  categories: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      image: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      description: PropTypes.string,
+      quantity: PropTypes.string,
+    })
+  ),
+};
+
+ProductCard.defaultProps = {
+  image: "/images/categories/default-category.jpg",
+  loading: false,
+  categories: [],
 };
 
 export default ProductCard;
