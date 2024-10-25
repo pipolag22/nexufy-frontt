@@ -1,3 +1,4 @@
+import React from "react";
 import NavbarHome from "../Navbar";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
@@ -10,9 +11,11 @@ const AdminLayout = () => {
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
   return (
     <>
-      <div className={`d-flex flex-column h-100 ${
+      <div
+        className={`d-flex flex-column h-100 ${
           darkMode ? "bg-dark text-light" : "bg-light text-dark"
-        }`}>
+        }`}
+      >
         <nav className="position-fixed w-100 top-0 z-3">
           <NavbarHome />
         </nav>
@@ -20,7 +23,10 @@ const AdminLayout = () => {
           <aside>
             <Sidebar />
           </aside>
-          <main className="flex-grow-1 me-4" style={{ marginLeft: "17rem", marginTop:"7rem" }}>
+          <main
+            className="flex-grow-1 me-4"
+            style={{ marginLeft: "17rem", marginTop: "7rem" }}
+          >
             {" "}
             {/* Ajusta el margen izquierdo */}
             <Outlet context={{ user }} />
@@ -31,4 +37,6 @@ const AdminLayout = () => {
   );
 };
 
-export default AdminLayout;
+const MemoizedFooter = React.memo(AdminLayout);
+
+export default MemoizedFooter;

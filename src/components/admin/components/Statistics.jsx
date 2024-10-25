@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   fetchStats,
   downloadCustomerReport,
-  downloadProductReport, // Importar la nueva función para productos
+  downloadProductReport,
 } from "../../../api/statisticService";
 import "chart.js/auto";
+import { LanguageContext } from "../../themes/LanguageContext";
+import translations from "../../themes/translations";
 
 const Statistics = () => {
   const [totalCustomers, setTotalCustomers] = useState(0);
@@ -15,6 +17,31 @@ const Statistics = () => {
   const [productsByMonth, setProductsByMonth] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { language } = useContext(LanguageContext);
+  const t = translations[language];
+
+  // Mapeo de los meses en inglés al idioma seleccionado
+  const monthMap = {
+    JANUARY: t.months.JANUARY,
+    FEBRUARY: t.months.FEBRUARY,
+    MARCH: t.months.MARCH,
+    APRIL: t.months.APRIL,
+    MAY: t.months.MAY,
+    JUNE: t.months.JUNE,
+    JULY: t.months.JULY,
+    AUGUST: t.months.AUGUST,
+    SEPTEMBER: t.months.SEPTEMBER,
+    OCTOBER: t.months.OCTOBER,
+    NOVEMBER: t.months.NOVEMBER,
+    DECEMBER: t.months.DECEMBER,
+  };
+
+  const defaultMonths = [
+    t.months.AUGUST,
+    t.months.SEPTEMBER,
+    t.months.OCTOBER,
+    t.months.NOVEMBER,
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,10 +49,28 @@ const Statistics = () => {
         const token = localStorage.getItem("accessToken");
 
         const data = await fetchStats(token);
-        setTotalCustomers(data.totalCustomers);
-        setTotalProducts(data.totalProducts);
-        setCustomerRegistrationsByMonth(data.customerRegistrationsByMonth);
-        setProductsByMonth(data.productsByMonth);
+        console.log("Datos recibidos:", data); // Verifica la estructura de los datos
+
+        setTotalCustomers(data.totalCustomers || 0);
+        setTotalProducts(data.totalProducts || 0);
+
+        // Mapea los meses de los registros de clientes
+        const filledCustomerData = defaultMonths.map(
+          (month) =>
+            data.customerRegistrationsByMonth?.[
+              Object.keys(monthMap).find((key) => monthMap[key] === month)
+            ] || 0
+        );
+        // Mapea los meses de los registros de productos
+        const filledProductData = defaultMonths.map(
+          (month) =>
+            data.productsByMonth?.[
+              Object.keys(monthMap).find((key) => monthMap[key] === month)
+            ] || 0
+        );
+
+        setCustomerRegistrationsByMonth(filledCustomerData);
+        setProductsByMonth(filledProductData);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -71,50 +116,88 @@ const Statistics = () => {
   };
 
   const customerData = {
-    labels: Object.keys(customerRegistrationsByMonth),
+    labels: defaultMonths, // Usamos los meses por defecto en el idioma seleccionado
     datasets: [
       {
-        label: "Clientes Registrados",
-        data: Object.values(customerRegistrationsByMonth),
+        label: t.clientsRegistered,
+        data: customerRegistrationsByMonth,
         backgroundColor: "rgba(75, 192, 192, 0.6)",
       },
     ],
   };
 
   const productData = {
-    labels: Object.keys(productsByMonth),
+    labels: defaultMonths, // Usamos los meses por defecto en el idioma seleccionado
     datasets: [
       {
-        label: "Productos Publicados",
-        data: Object.values(productsByMonth),
+        label: t.productsPublished,
+        data: productsByMonth,
         backgroundColor: "rgba(153, 102, 255, 0.6)",
       },
     ],
   };
 
   if (loading) {
-    return <p>Cargando estadísticas...</p>;
+    return <p>{t.loadingStatistics}</p>;
   }
 
   if (error) {
     return (
       <div>
-        <p>{`Error: ${error}`}</p>
-        <button onClick={() => window.location.reload()}>Reintentar</button>
+        <p>{`${t.error}: ${error}`}</p>
+        <button onClick={() => window.location.reload()}>{t.retry}</button>
       </div>
     );
   }
 
-  const options = {
+  // Opciones para el gráfico de clientes
+  const customerOptions = {
     scales: {
+      x: {
+        title: {
+          display: true,
+          text: t.monthsLabel,
+        },
+      },
       y: {
         beginAtZero: true,
         ticks: {
           stepSize: 1,
           precision: 0,
         },
+        title: {
+          display: true,
+          text: t.clientsRegistered,
+        },
         min: 0,
-        max: Math.max(...Object.values(productsByMonth), 5),
+        max: Math.max(...customerRegistrationsByMonth, 5),
+      },
+    },
+    barThickness: 40,
+    responsive: true,
+  };
+
+  // Opciones para el gráfico de productos
+  const productOptions = {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: t.monthsLabel,
+        },
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+          precision: 0,
+        },
+        title: {
+          display: true,
+          text: t.productsPublished,
+        },
+        min: 0,
+        max: Math.max(...productsByMonth, 5),
       },
     },
     barThickness: 40,
@@ -123,26 +206,30 @@ const Statistics = () => {
 
   return (
     <div>
-      <h2>Estadísticas</h2>
-      <p>Total de clientes registrados: {totalCustomers}</p>
-      <p>Total de productos publicados: {totalProducts}</p>
+      <h2>{t.statistics}</h2>
+      <p>
+        {t.totalRegisteredCustomers} {totalCustomers}
+      </p>
+      <p>
+        {t.totalPublishedProducts} {totalProducts}
+      </p>
 
-      <h3>Clientes Registrados por Mes</h3>
+      <h3>{t.customersRegisteredPerMonth}</h3>
       <div style={{ width: "600px", height: "400px", margin: "0 auto" }}>
-        <Bar data={customerData} options={options} />
+        <Bar data={customerData} options={customerOptions} />
       </div>
 
-      <h3>Productos Publicados por Mes</h3>
+      <h3>{t.productsPublishedPerMonth}</h3>
       <div style={{ width: "600px", height: "400px", margin: "0 auto" }}>
-        <Bar data={productData} options={options} />
+        <Bar data={productData} options={productOptions} />
       </div>
 
       <button onClick={handleDownloadCustomerReport}>
-        Descargar Reporte de Clientes
+        {t.downloadCustomerReport}
       </button>
 
       <button onClick={handleDownloadProductReport}>
-        Descargar Reporte de Productos
+        {t.downloadProductReport}
       </button>
     </div>
   );

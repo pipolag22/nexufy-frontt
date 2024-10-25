@@ -1,4 +1,4 @@
-// ProductSeller.js
+import React from "react";
 import { useContext, useEffect, useState } from "react";
 import img from "../../../assets/img/undraw_factory_dy0a-removebg-preview.png"; // Imagen del vendedor
 import { AuthenticationContext } from "../../../services/authenticationContext/authentication.context";
@@ -120,4 +120,6 @@ const ProductSeller = ({ customerId }) => {
   );
 };
 
-export default ProductSeller;
+const MemoizedFooter = React.memo(ProductSeller);
+
+export default MemoizedFooter;

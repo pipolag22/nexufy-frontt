@@ -3,7 +3,7 @@ import AuthForm from "../AuthForm/AuthForm";
 import img from "../../assets/img/nexufy-horizontal-png.png";
 import registerImage from "../../assets/img/undraw_online_ad_re_ol62-removebg-preview.png";
 import { registerService } from "../../api/authService";
-import { useState, useContext } from "react";
+import { useState, useContext, React } from "react";
 import Navbar from "react-bootstrap/Navbar";
 import ThemeToggle from "../themes/ThemeToggle";
 import { ThemeContext } from "../themes/ThemeContext";

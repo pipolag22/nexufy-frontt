@@ -46,10 +46,10 @@ function App() {
       element: <AllProductsLayout />,
       children: [
         {
-          path:"",
-          element: <AllProducts/>
+          path: "",
+          element: <AllProducts />,
         },
-      ]
+      ],
     },
     {
       path: "/admin",

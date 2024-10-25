@@ -28,7 +28,6 @@ const FeaturedProduct = () => {
     fetchProducts();
   }, []);
 
-  // Muestra un mensaje de carga mientras se obtienen los productos
   if (loading) {
     return <div>{t.loadingFeaturedProducts}</div>;
   }

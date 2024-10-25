@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, React } from "react";
 import { Button } from "react-bootstrap";
 import { Navigate, useNavigate, useOutletContext } from "react-router-dom";
 import { registerAdminUser } from "../../../api/adminService";
@@ -107,8 +107,11 @@ const AbmUsers = () => {
     },
     {
       header: t.role, // Texto traducido para "Rol"
-      accessor: "role",
-      render: (item) => item.role[0]?.name.split("_")[1],
+      accessor: "roles",
+      render: (item) =>
+        item.roles && Array.isArray(item.roles) && item.roles.length > 0
+          ? item.roles.map((role) => role.replace("ROLE_", "")).join(", ")
+          : t.noRole, // Muestra "Sin rol" si no existen roles
     },
   ];
 

@@ -1,4 +1,3 @@
-// Header.js
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import headerImage from "../../assets/img/home-removebg-preview.png";
@@ -6,7 +5,7 @@ import { AuthenticationContext } from "../../services/authenticationContext/auth
 import { ThemeContext } from "../themes/ThemeContext"; // Importar el ThemeContext
 import { LanguageContext } from "../themes/LanguageContext"; // Importar el LanguageContext
 import translations from "../themes/translations"; // Importar las traducciones
-import { useContext } from "react";
+import { useContext, React } from "react";
 
 const Header = () => {
   const { user } = useContext(AuthenticationContext);

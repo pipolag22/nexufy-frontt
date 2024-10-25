@@ -60,7 +60,7 @@ const CreateProductForm = ({ onSave }) => {
               <Form.Label>{t.categoryLabel}</Form.Label>
               <Form.Select name="category" onChange={handleChange} required>
                 <option value="">{t.selectCategory}</option>
-                {categories.map((cat) => (
+                {t.categoriess.map((cat) => (
                   <option key={cat.id} value={cat.name}>
                     {cat.name}
                   </option>
@@ -123,7 +123,11 @@ const CreateProductForm = ({ onSave }) => {
           <Col md={6}>
             <Form.Group controlId="urlImage">
               <Form.Label>{t.imageLabel}</Form.Label>
-              <Form.Control type="text" name="urlImage" onChange={handleChange} />
+              <Form.Control
+                type="text"
+                name="urlImage"
+                onChange={handleChange}
+              />
             </Form.Group>
           </Col>
         </Row>

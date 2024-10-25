@@ -1,4 +1,3 @@
-// CategoryList.js
 import { useContext } from "react";
 import { Col, Row } from "react-bootstrap";
 import { ThemeContext } from "../themes/ThemeContext"; // Importar ThemeContext
@@ -28,11 +27,10 @@ const imageMap = {
 };
 
 const CategoryList = () => {
-  const { darkMode } = useContext(ThemeContext); // Obtener el estado del tema
-  const { language } = useContext(LanguageContext); // Obtener el idioma actual
-  const t = translations[language]; // Obtener las traducciones correspondientes
+  const { darkMode } = useContext(ThemeContext);
+  const { language } = useContext(LanguageContext);
+  const t = translations[language];
 
-  // Obtener las categorías traducidas
   const categories = t.categoriess;
 
   return (

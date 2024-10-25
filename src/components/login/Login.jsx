@@ -1,4 +1,4 @@
-// Login.js
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import AuthForm from "../AuthForm/AuthForm";
@@ -134,4 +134,6 @@ const Login = () => {
   );
 };
 
-export default Login;
+const MemoizedFooter = React.memo(Login);
+
+export default MemoizedFooter;

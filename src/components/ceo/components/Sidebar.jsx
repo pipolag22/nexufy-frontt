@@ -121,4 +121,6 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+const MemoizedFooter = React.memo(Sidebar);
+
+export default MemoizedFooter;
