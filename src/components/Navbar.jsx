@@ -96,7 +96,7 @@ function NavbarHome() {
       <div className="container d-flex justify-content-between align-items-center">
         <Navbar.Brand>
           <Link to="/" style={{ color: "var(--color-text-primary)" }}>
-            <img src={img} alt="Nexufy Logo" style={{ width: "12vw" }} />
+            <img src={img} alt="Nexufy Logo" style={{ width: "7rem" }} />
           </Link>
         </Navbar.Brand>
 

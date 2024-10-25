@@ -111,7 +111,7 @@ const Login = () => {
     <div>
       <Navbar className="px-3 py-2">
         <Navbar.Brand onClick={handleGoHome} style={{ cursor: "pointer" }}>
-          <img src={img} alt="Nexufy Logo" style={{ height: "120px" }} />
+          <img src={img} alt="Nexufy Logo" style={{ height: "80px" }} />
         </Navbar.Brand>
 
         {/* Botones de cambio de idioma y tema */}

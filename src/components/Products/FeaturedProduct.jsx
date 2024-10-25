@@ -29,8 +29,12 @@ const FeaturedProduct = () => {
   }, []);
 
   if (loading) {
-    return <div>{t.loadingFeaturedProducts}</div>;
+    return <div className="w-100 d-flex justify-content-center fs-4 fw-bold">{t.loadingFeaturedProducts}</div>;
   }
+  
+  if(products.length === 0){
+    return <div className="w-100 d-flex justify-content-center fs-2 fw-bold">{t.unavailableProduct}</div>
+  } 
 
   return (
     <div className="container">

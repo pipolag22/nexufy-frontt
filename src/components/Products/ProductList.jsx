@@ -8,12 +8,17 @@ const ProductList = ({ products }) => {
   }
   return (
     <>
-      <Row xs={1} md={2} lg={4} className="g-4 mx-4 mb-6">
+      <Row
+        xs={1}
+        md={products.length === 1 ? 1 : 2}
+        lg={products.length === 1 ? 1 : 4}
+        className="g-4 mx-auto mb-6  justify-content-center"
+      >
         {products.map((productMock) => (
-          <Col key={productMock?.id}>
+          <Col key={productMock.id} className="d-flex justify-content-center">
             <ProductCard
               id={productMock.id}
-              image={productMock?.urlImage}
+              image={productMock.urlImage}
               name={productMock.name}
               description={productMock.description}
               price={productMock.price}

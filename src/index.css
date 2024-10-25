@@ -154,7 +154,7 @@ body {
   position: absolute;
   top: 100%;
   right: -10vw;
-  width: 90vw; /* Ancho completo de la pantalla */
+  width: 80vw; /* Ancho completo de la pantalla */
   background: var(--color-dropdown-bg); /* Fondo dropdown */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para el dropdown */
   z-index: 1000; /* Asegúrate de que esté sobre otros elementos */
@@ -213,6 +213,15 @@ body {
   font-weight: 600;
 }
 
-.boton-back{
+.boton-back, .options{
   cursor: pointer;  
+}
+
+.options:hover{
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.boton-filtro:hover{
+  background-color: #4b555e;
 }

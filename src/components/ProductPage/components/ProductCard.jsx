@@ -16,7 +16,7 @@ const ProductCard = ({ id, name, price, category, customerId, image }) => {
     <div className="container-fluid container-md">
       <Row className="flex-lg-row flex-column">
         <Col lg={7} className="mb-3 mb-lg-0">
-          <img className="rounded w-100" src={image} alt={t.productImageAlt} />
+          <img className="rounded w-100" style={{maxHeight: "25rem", objectFit:"contain"}} src={image} alt={t.productImageAlt} />
         </Col>
         <Col lg={5}>
           <Card.Body

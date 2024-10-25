@@ -5,6 +5,7 @@ import Placeholder from "react-bootstrap/Placeholder";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../themes/ThemeContext";
+import placeholder from "../../assets/img/placeholder.jpg"
 
 // **Importar el contexto de idioma y las traducciones**
 import { LanguageContext } from "../themes/LanguageContext";
@@ -60,11 +61,17 @@ const ProductCard = ({
   }
 
   return (
-    <Card style={{ height: "28rem", border: "none" }} className="shadow mb-2">
+    <Card
+      style={{ height: "28rem", width:"20rem", border: "none" }}
+      className="shadow mb-2 mx-auto"
+    >
       {loading ? (
         // Mostrar el skeleton mientras carga
         <>
-          <Card.Img variant="top" src={imageUrl} alt={name} />
+          <Card.Img
+            variant="top"
+            src={image}
+          />
           <Card.Body
             className={`bg-secundario d-flex flex-column justify-content-around`}
           >
@@ -88,16 +95,11 @@ const ProductCard = ({
       ) : (
         // Mostrar el contenido real
         <>
-          <Card.Img
-            variant="top"
-            src={imageUrl}
-            alt={name}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = "/images/categories/default-category.jpg";
-            }}
-            loading="lazy"
-          />
+          <Card.Img variant="top" src={image ? image : placeholder} alt="Imagen del producto publicado" style={{   
+            maxHeight:"12rem",
+              width: "100%",
+              objectFit: "cover", 
+            }} />
           <Card.Body
             className={`bg-secundario d-flex flex-column justify-content-around`}
           >
