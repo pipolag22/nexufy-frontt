@@ -20,12 +20,14 @@ import LanguageToggle from "../components/themes/LanguageToggle"; // Importar La
 import translations from "../components/themes/translations"; // Importar las traducciones
 import categories from "../data/category.json";
 import { AuthenticationContext } from "../services/authenticationContext/authentication.context";
+import { getProductCountsByCategory } from "../api/productService";
 
 function NavbarHome() {
   const [showCategories, setShowCategories] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [debounceTimeOut, setDebounceTimeOut] = useState(null);
+  const [productCounts, setProductCounts] = useState({});
 
   const navigate = useNavigate();
   const resultsRef = useRef(null);
@@ -68,6 +70,17 @@ function NavbarHome() {
       state: { category },
     });
   };
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const counts = await getProductCountsByCategory();
+        setProductCounts(counts);
+      } catch (error) {
+        console.error("Error al obtener el conteo de productos:", error);
+      }
+    };
+    fetchCounts();
+  }, []);
 
   const handleClickSearch = (producto) => {
     setSearchQuery("");
@@ -198,7 +211,7 @@ function NavbarHome() {
                       darkMode ? "bg-dark text-light" : "bg-light text-dark"
                     }`}
                   >
-                    {category.name} ({category.quantity})
+                    {category.name} ({productCounts[category.name] || 0})
                   </a>
                 ))}
               </div>
@@ -252,7 +265,7 @@ function NavbarHome() {
               className={`mx-2 d-flex align-items-center ${
                 darkMode ? "text-light" : "text-dark"
               }`}
-              style={{ paddingLeft: 0, whiteSpace: "nowrap" }} // Añadir whiteSpace para evitar saltos de línea
+              style={{ paddingLeft: 0, whiteSpace: "nowrap" }}
             >
               <FaUserCircle className="me-1" /> {t.login}
             </Nav.Link>
