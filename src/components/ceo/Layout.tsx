@@ -87,6 +87,4 @@ const CeoLayout = () => {
   );
 };
 
-const MemoizedFooter = React.memo(CeoLayout);
-
-export default MemoizedFooter;
+export default CeoLayout;

@@ -5,12 +5,12 @@ import { LanguageContext } from "../themes/LanguageContext";
 import translations from "../themes/translations";
 import { promoteToAdmin } from "../../api/customerService";
 import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Importar useNavigate
 
 const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
-  const { token: authToken } = useContext(AuthenticationContext);
-
-  const token = authToken || localStorage.getItem("token");
+  const { user, reloadUserData } = useContext(AuthenticationContext);
+  const token = user?.token || localStorage.getItem("token");
+  const navigate = useNavigate(); // Inicializa useNavigate
 
   const [formData, setFormData] = useState({
     ...initialData,
@@ -24,8 +24,6 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
   const { language } = useContext(LanguageContext);
   const t = translations[language];
 
-  const navigate = useNavigate();
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -37,6 +35,7 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
     try {
       await onSave(formData);
       setSuccessMessage(t.changesSavedSuccessfully);
+      await reloadUserData(); // Recargar el contexto del usuario después de guardar
     } catch (error) {
       setErrorMessage(error.message || t.errorUpdatingProfile);
     }
@@ -46,17 +45,20 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
     setErrorMessage(null);
     setPromoteMessage(null);
     try {
-      await promoteToAdmin(formData.username, token);
-      setPromoteMessage(t.Promote);
+      await promoteToAdmin(user.username, token);
+      setPromoteMessage(t.promoteSuccessMessage);
+      await reloadUserData(); // Recargar el contexto del usuario después de la promoción
+
+      // Espera 2 segundos y luego redirige a la página de inicio
       setTimeout(() => {
-        navigate("/");
+        navigate("/"); // Redirige a la URL de inicio
       }, 2000);
     } catch (error) {
       setErrorMessage(error.message || t.errorPromotingUser);
     }
   };
 
-  // Verificar si el usuario tiene el rol de USER y no el de ADMIN
+  // Verificación de roles
   const isUser = formData.roles.includes("ROLE_USER");
   const isAdmin = formData.roles.includes("ROLE_ADMIN");
 
