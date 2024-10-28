@@ -10,21 +10,27 @@ const ProductList = ({ products }) => {
     <>
       <Row
         xs={1}
-        md={products.length === 1 ? 1 : 2}
-        lg={products.length === 1 ? 1 : 4}
-        className="g-4 mx-auto mb-6  justify-content-center"
+        md={2}
+        lg={3}
+        className="g-4 mx-auto mb-6 justify-content-center"
       >
         {products.map((productMock) => (
           <Col key={productMock.id} className="d-flex justify-content-center">
-            <ProductCard
-              id={productMock.id}
-              image={productMock.urlImage}
-              name={productMock.name}
-              description={productMock.description}
-              price={productMock.price}
-              category={productMock.category}
-              categories={categories} // Pasar las categorías como prop
-            />
+            <div style={{ width: "20rem" }}>
+              {" "}
+              {/* Ancho fijo para las tarjetas */}
+              <ProductCard
+                id={productMock.id}
+                image={productMock.urlImage}
+                name={productMock.name}
+                description={productMock.description}
+                price={productMock.price}
+                category={productMock.category}
+                categories={categories} // Pasar las categorías como prop
+                isOwner={productMock.isOwner} // Asegúrate de pasar esta prop
+                isSuperAdmin={productMock.isSuperAdmin} // Asegúrate de pasar esta prop
+              />
+            </div>
           </Col>
         ))}
       </Row>

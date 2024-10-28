@@ -5,34 +5,29 @@ import EditProfileForm from "../../AuthForm/EditProfileFormSuperAdmin";
 import { updateCustomerProfile } from "../../../api/customerService";
 import Swal from "sweetalert2";
 import { deleteCustomer } from "../../../api/adminService";
-import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
+import { ThemeContext } from "../../themes/ThemeContext";
 
 const CustomTable = ({ columns, data, onEdit, onDelete }) => {
-  const { darkMode } = useContext(ThemeContext); // Acceder al estado del modo oscuro
-  const itemsPerPage = 5; // Número de elementos por página
-  const [currentPage, setCurrentPage] = useState(1); // Estado para la página actual
-  const [isEditing, setIsEditing] = useState(false); // Estado para saber si se está editando un usuario
-  const [userToEdit, setUserToEdit] = useState(null); // Estado para el usuario que se está editando
-  const [editingUserId, setEditingUserId] = useState(null);
+  const { darkMode } = useContext(ThemeContext);
+  const itemsPerPage = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isEditing, setIsEditing] = useState(false);
+  const [userToEdit, setUserToEdit] = useState(null);
   const [error, setError] = useState(null);
 
-  // Calcula la paginación
-  const totalPages = Math.ceil(data.length / itemsPerPage); // Total de páginas
-  const startIndex = (currentPage - 1) * itemsPerPage; // Índice inicial para la paginación
-  const paginatedData = data.slice(startIndex, startIndex + itemsPerPage); // Datos paginados
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = data.slice(startIndex, startIndex + itemsPerPage);
 
-  // Cambia la página actual
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  // Maneja el clic en editar
   const handleEditClick = (user) => {
     setUserToEdit(user);
     setIsEditing(true);
   };
 
-  // Maneja el clic en borrar
   const handleDeleteClick = async (user) => {
     const token = localStorage.getItem("token");
     const result = await Swal.fire({
@@ -49,7 +44,7 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
       try {
         await deleteCustomer(user.id, token);
         Swal.fire("¡Borrado!", "El usuario ha sido borrado.", "success");
-        onDelete(user.id); // Llama a la función de eliminación
+        onDelete(user.id);
       } catch (error) {
         console.error(error);
         Swal.fire("Error", "Hubo un problema al borrar el usuario.", "error");
@@ -57,19 +52,17 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
     }
   };
 
-  // Guarda los cambios de edición
   const handleSave = async (updatedData) => {
     const token = localStorage.getItem("token");
     try {
       await updateCustomerProfile(updatedData.id, token, updatedData);
-      onEdit(updatedData); // Llama a la función de edición pasada como prop
+      onEdit(updatedData);
       setIsEditing(false);
     } catch (error) {
-      console.error(error); // Manejo de errores
+      console.error(error);
     }
   };
 
-  // Renderiza el formulario de edición si se está editando
   if (isEditing && userToEdit) {
     return <EditProfileForm initialData={userToEdit} onSave={handleSave} />;
   }
@@ -80,7 +73,7 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
         striped
         bordered
         hover
-        variant={darkMode ? "dark" : "light"} // Cambiar el tema de la tabla
+        variant={darkMode ? "dark" : "light"}
         className={darkMode ? "bg-dark text-light" : "bg-light text-dark"}
       >
         <thead>
@@ -99,20 +92,20 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
               <td>
                 <Row className="d-flex justify-content-center gap-2">
                   <Button
-                    onClick={() => handleEditClick(item)} // Llama a la función de editar
+                    onClick={() => handleEditClick(item)}
                     variant={darkMode ? "outline-light" : "outline-secondary"}
                     size="sm"
                     className="w-25"
                   >
-                    <i className="bi bi-pencil"></i>
+                    <i className="bi bi-pencil"></i> {/* Icono de editar */}
                   </Button>
                   <Button
-                    onClick={() => handleDeleteClick(item)} // Llama a la función de borrar
+                    onClick={() => handleDeleteClick(item)}
                     variant="danger"
                     size="sm"
                     className="w-25"
                   >
-                    <i className="bi bi-eraser-fill"></i>
+                    <i className="bi bi-trash"></i> {/* Icono de eliminar */}
                   </Button>
                 </Row>
               </td>
@@ -152,9 +145,10 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
 };
 
 CustomTable.propTypes = {
-  columns: PropTypes.array.isRequired, // Estructura de las columnas
-  data: PropTypes.array.isRequired, // Datos a mostrar
-  onEdit: PropTypes.func.isRequired, // Función para manejar la edición
+  columns: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default CustomTable;

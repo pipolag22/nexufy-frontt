@@ -19,6 +19,7 @@ import { ThemeProvider } from "./components/themes/ThemeContext";
 import { LanguageProvider } from "./components/themes/LanguageContext";
 import AllProductsLayout from "./all-products/Layout";
 import AllProducts from "./all-products/components/AllProducts";
+import EditProduct from "./components/admin/components/EditProduct";
 
 function App() {
   const router = createBrowserRouter([
@@ -37,6 +38,10 @@ function App() {
         {
           path: "product/category/:id",
           element: <CategoryPage />,
+        },
+        {
+          path: "/edit-product/:id",
+          element: <EditProduct />,
         },
       ],
     },

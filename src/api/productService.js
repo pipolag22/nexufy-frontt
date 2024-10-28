@@ -173,3 +173,48 @@ export async function getProductCountsByCategory() {
     throw error;
   }
 }
+export async function updateProduct(productId, productData, token) {
+  try {
+    const response = await fetch(
+      `http://localhost:8081/api/products/${productId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(productData),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar el producto");
+    }
+
+    return await response.json(); // Devuelve el producto actualizado
+  } catch (error) {
+    console.error("Error al actualizar el producto:", error);
+    throw error;
+  }
+}
+export async function deleteProduct(productId) {
+  try {
+    const response = await fetch(
+      `http://localhost:8081/api/products/${productId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar el producto");
+    }
+  } catch (error) {
+    console.error("Error al eliminar el producto:", error);
+    throw error;
+  }
+}
