@@ -33,7 +33,7 @@ const FeaturedProduct = () => {
   }
   
   if(products.length === 0){
-    return <div className="w-100 d-flex justify-content-center fs-2 fw-bold">{t.unavailableProduct}</div>
+    return <div className={`w-100 d-flex justify-content-center fs-2 fw-bold ${darkMode ? "text-white": "text-dark"}`}>{t.unavailableProduct}</div>
   } 
 
   return (

@@ -1,4 +1,3 @@
-// App.jsx
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./components/home/Home";
 import Login from "./components/login/Login";
@@ -18,8 +17,10 @@ import AbmUsers from "./components/ceo/components/AbmUsers";
 import Notifications from "./components/ceo/components/Notifications";
 import { ThemeProvider } from "./components/themes/ThemeContext";
 import { LanguageProvider } from "./components/themes/LanguageContext";
-import AllProductsLayout from "./all-products/Layout";
-import AllProducts from "./all-products/components/AllProducts";
+import AllProducts from "./components/all-products/components/AllProducts";
+import AllProductsLayout from "./components/all-products/Layout";
+import ProtectedAdmin from "./components/routes/protected/ProtectedAdmin";
+import NotFound from "./components/routes/protected/NotFound";
 
 function App() {
   const router = createBrowserRouter([
@@ -27,29 +28,15 @@ function App() {
       path: "/",
       element: <Layout />,
       children: [
-        {
-          path: "/",
-          element: <Home />,
-        },
-        {
-          path: "product/:id",
-          element: <ProductItem />,
-        },
-        {
-          path: "product/category/:id",
-          element: <CategoryPage />,
-        },
+        { path: "/", element: <Home /> },
+        { path: "product/:id", element: <ProductItem /> },
+        { path: "product/category/:id", element: <CategoryPage /> },
       ],
     },
     {
       path: "/all",
       element: <AllProductsLayout />,
-      children: [
-        {
-          path: "",
-          element: <AllProducts />,
-        },
-      ],
+      children: [{ path: "", element: <AllProducts /> }],
     },
     {
       path: "/admin",
@@ -59,61 +46,38 @@ function App() {
           path: "",
           element: <AdminLayout />,
           children: [
-            {
-              path: "datos",
-              element: <Profile />,
-            },
-            {
-              path: "publicaciones",
-              element: <Publications />,
-            },
-            {
-              path: "estadisticas",
-              element: <Statistics />,
-            },
+            { path: "datos", element: <Profile /> },
+            { path: "publicaciones", element: <Publications /> },
+            { path: "estadisticas", element: <Statistics /> },
           ],
         },
       ],
     },
     {
       path: "/ceo",
-      element: <Protected />,
+      element: <ProtectedAdmin />,
       children: [
         {
           path: "",
           element: <CeoLayout />,
           children: [
-            {
-              path: "datos",
-              element: <Profile />,
-            },
-            {
-              path: "users",
-              element: <AbmUsers />,
-            },
-            {
-              path: "products",
-              element: <AbmShop />,
-            },
-            {
-              path: "estadisticas",
-              element: <Statistics />,
-            },
-            {
-              path: "notificaciones",
-              element: <Notifications />,
-            },
+            { path: "datos", element: <Profile /> },
+            { path: "users", element: <AbmUsers /> },
+            { path: "products", element: <AbmShop /> },
+            { path: "estadisticas", element: <Statistics /> },
+            { path: "notificaciones", element: <Notifications /> },
           ],
         },
       ],
     },
+    { path: "login", element: <Login /> },
+    { path: "register", element: <Register /> },
+    { path: "notFound", element: <NotFound /> },
+
+    // Wildcard route to catch all undefined paths
     {
-      path: "login",
-      element: <Login />,
-    },
-    {
-      path: "register",
-      element: <Register />,
+      path: "*",
+      element: <NotFound />,
     },
   ]);
 

@@ -446,6 +446,7 @@ const translations = {
 
     lastnameNotAvailable: "Last name not available",
 
+    unavailableProduct: "Products not available...",
     usernameNotAvailable: "Username not available",
     birthdateLabel: "Birthdate",
     birthdateNotAvailable: "Birthdate not available",
