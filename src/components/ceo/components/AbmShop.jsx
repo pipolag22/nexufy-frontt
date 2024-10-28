@@ -1,24 +1,34 @@
 import { useContext, useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
-import { Navigate, useOutletContext } from "react-router-dom";
-import { getAllProducts, searchProducts } from "../../../api/productService";
+import { Button, Modal } from "react-bootstrap"; // Importar Modal
+import { Navigate, useOutletContext, useNavigate } from "react-router-dom";
+import {
+  getAllProducts,
+  searchProducts,
+  deleteProduct,
+} from "../../../api/productService";
 import { ThemeContext } from "../../themes/ThemeContext";
 import { LanguageContext } from "../../themes/LanguageContext";
 import CustomTable from "./CustomTable";
 import SearchBar from "./SearchBar";
 import translations from "../../themes/translations"; // Importar traducciones
+import { FaEdit, FaTrash } from "react-icons/fa"; // Importar los íconos
 
 const AbmShop = () => {
   const { user } = useOutletContext();
   const { darkMode } = useContext(ThemeContext);
   const { language } = useContext(LanguageContext);
   const t = translations[language];
+  const navigate = useNavigate(); // Para redireccionar
 
   const [productos, setProductos] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Estado para el modal de confirmación
+  const [showModal, setShowModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -65,6 +75,26 @@ const AbmShop = () => {
     return <p className="text-danger">{error.message}</p>;
   }
 
+  const handleEdit = (id) => {
+    navigate(`/edit-product/${id}`); // Navegar a la página de edición
+  };
+
+  const confirmDeleteProduct = (id) => {
+    setProductToDelete(id);
+    setShowModal(true); // Mostrar el modal de confirmación
+  };
+
+  const handleConfirmDelete = async () => {
+    if (productToDelete) {
+      await deleteProduct(productToDelete);
+      setFilteredProducts(
+        filteredProducts.filter((product) => product.id !== productToDelete)
+      ); // Actualizar la lista de productos
+      setProductToDelete(null);
+      setShowModal(false); // Cerrar el modal
+    }
+  };
+
   const productColumns = [
     {
       header: t.productName,
@@ -85,13 +115,22 @@ const AbmShop = () => {
       header: t.actions,
       accessor: "actions",
       render: (item) => (
-        <Button
-          style={{ height: "22px", fontSize: "12px", textAlign: "center" }}
-          className="py-1"
-          variant={darkMode ? "outline-light" : "outline-primary"}
-        >
-          {t.edit}
-        </Button>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <Button
+            style={{ height: "22px", width: "22px", padding: "0" }}
+            variant="link" // Usar un estilo de botón de enlace para el ícono de editar
+            onClick={() => handleEdit(item.id)} // Editar producto
+          >
+            <FaEdit />
+          </Button>
+          <Button
+            style={{ height: "22px", width: "22px", padding: "0" }}
+            variant="link" // Usar un estilo de botón de enlace para el ícono de eliminar
+            onClick={() => confirmDeleteProduct(item.id)} // Eliminar producto
+          >
+            <FaTrash style={{ color: "red" }} />
+          </Button>
+        </div>
       ),
     },
   ];
@@ -113,6 +152,28 @@ const AbmShop = () => {
       </div>
 
       <CustomTable columns={productColumns} data={filteredProducts} />
+
+      {/* Modal de confirmación */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{t.confirmDeleteTitle}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{t.confirmDeleteMessage}</p>
+          <p>
+            <strong>{t.revertWarning}</strong>
+          </p>{" "}
+          {/* Mensaje adicional */}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            {t.cancel}
+          </Button>
+          <Button variant="danger" onClick={handleConfirmDelete}>
+            {t.delete}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

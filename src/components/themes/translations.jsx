@@ -257,6 +257,13 @@ const translations = {
     retry: "Reintentar",
     downloadCustomerReport: "Descargar reporte de clientes",
     downloadProductReport: "Descargar reporte de productos",
+
+    promoteSuccessMessage: "Te has promovido con éxito.",
+    needToBeAdminToPublishMessage:
+      "Necesitas ser administrador para publicar productos.",
+
+    errorPromotingUser: "Error al promover el usuario.",
+
     // Agrega más traducciones si es necesario
   },
   en: {
@@ -514,7 +521,21 @@ const translations = {
     retry: "Retry",
     downloadCustomerReport: "Download customer report",
     downloadProductReport: "Download product report",
+    promoteSuccessMessage: "You have been promoted successfully.",
+    needToBeAdminToPublishMessage:
+      "You need to be an admin to publish products.", // Traducción en inglés
+
+    errorPromotingUser: "Error promoting user.",
   },
+  productsPublishedByYou: "Products published by you",
+  publishNew: "Publish New",
+  noProductsPublished: "You have no published products.",
+  needToBeAdminToPublishMessage: "You need to be an admin to publish products.",
+  promoteSuccessMessage: "User successfully promoted to admin.",
+  errorFetchingProducts: "Error fetching products.",
+  errorSavingProduct: "Error saving product.",
+  errorPromotingUser: "Error promoting user.",
+  loading: "Loading...",
 };
 
 export default translations;

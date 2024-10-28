@@ -21,6 +21,7 @@ import AllProducts from "./components/all-products/components/AllProducts";
 import AllProductsLayout from "./components/all-products/Layout";
 import ProtectedAdmin from "./components/routes/protected/ProtectedAdmin";
 import NotFound from "./components/routes/protected/NotFound";
+import EditProduct from "./components/admin/components/EditProduct";
 
 function App() {
   const router = createBrowserRouter([
@@ -28,9 +29,22 @@ function App() {
       path: "/",
       element: <Layout />,
       children: [
-        { path: "/", element: <Home /> },
-        { path: "product/:id", element: <ProductItem /> },
-        { path: "product/category/:id", element: <CategoryPage /> },
+        {
+          path: "/",
+          element: <Home />,
+        },
+        {
+          path: "product/:id",
+          element: <ProductItem />,
+        },
+        {
+          path: "product/category/:id",
+          element: <CategoryPage />,
+        },
+        {
+          path: "/edit-product/:id",
+          element: <EditProduct />,
+        },
       ],
     },
     {

@@ -120,7 +120,7 @@ import axios from "axios";
 export const promoteToAdmin = async (username, token) => {
   try {
     const response = await axios.put(
-      `http://localhost:8081/api/user/promote/admin?username=${username}`, // Asegúrate de que este endpoint es correcto
+      `http://localhost:8081/api/user/promote/admin?username=${username}`, // Usa la URL directamente
       {},
       {
         headers: {
@@ -135,3 +135,48 @@ export const promoteToAdmin = async (username, token) => {
     throw new Error(error.response?.data?.message || "Error promoting user");
   }
 };
+export async function getUserData(customerId, token) {
+  try {
+    const response = await fetch(
+      `http://localhost:8081/api/customer/${customerId}`,
+      {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch user data:", error);
+    throw error;
+  }
+}
+export async function fetchUserData(customerId, token) {
+  try {
+    const response = await axios.get(
+      `http://localhost:8081/api/customer/${customerId}`,
+      {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.data) {
+      throw new Error("No se encontraron datos del usuario.");
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener los datos del usuario:", error);
+    throw error;
+  }
+}

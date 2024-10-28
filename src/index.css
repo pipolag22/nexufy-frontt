@@ -144,7 +144,7 @@ body {
     opacity: 1; /* Siempre visible en pantallas pequeñas */
   }
 }
-.item-menu:hover{
+.item-menu:hover {
   background-color: #7572729e;
   color: #fdfafa;
   font-weight: 600;
@@ -193,35 +193,34 @@ body {
   color: #6c757d; /* Color del placeholder para modo claro */
 }
 
-.search-results {  
+.search-results {
   position: absolute;
   top: 5rem;
-  width:80vw ; /* Ancho completo de la pantalla */
+  width: 80vw; /* Ancho completo de la pantalla */
   background: var(--color-dropdown-bg); /* Fondo dropdown */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para el dropdown */
   z-index: 1000; /* Asegúrate de que esté sobre otros elementos */
   gap: 1rem; /* Espacio entre las categorías */
   padding: 0.2rem; /* Espacio interno del dropdown */
   overflow-y: auto; /* Añade scroll si el contenido es muy largo */
-  max-height: 80vh; 
+  max-height: 80vh;
 }
-.search-result-item:hover{
-  background-color: var(
-    --color-dropdown-hover-bg
-  );
+.search-result-item:hover {
+  background-color: var(--color-dropdown-hover-bg);
   cursor: pointer;
   font-weight: 600;
 }
 
-.boton-back, .options{
-  cursor: pointer;  
+.boton-back,
+.options {
+  cursor: pointer;
 }
 
-.options:hover{
+.options:hover {
   font-weight: 600;
   text-decoration: underline;
 }
 
-.boton-filtro:hover{
+.boton-filtro:hover {
   background-color: #4b555e;
 }
