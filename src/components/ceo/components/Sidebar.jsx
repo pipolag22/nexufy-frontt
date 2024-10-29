@@ -41,13 +41,6 @@ const Sidebar = () => {
       url: "/ceo/estadisticas",
       active: false,
     },
-    {
-      id: 5,
-      name: t.notifications,
-      icon: "bi bi-bell",
-      url: "/ceo/notificaciones",
-      active: false,
-    },
   ];
 
   const location = useLocation();

@@ -218,3 +218,23 @@ export async function deleteProduct(productId) {
     throw error;
   }
 }
+export async function getProductsByCustomerId(customerId, token) {
+  try {
+    const response = await fetch(
+      `http://localhost:8081/api/products/customer/${customerId}`,
+      {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Error fetching user products");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error in getProductsByCustomerId:", error);
+    throw error;
+  }
+}

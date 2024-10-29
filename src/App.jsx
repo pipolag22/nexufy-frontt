@@ -14,7 +14,7 @@ import Statistics from "./components/admin/components/Statistics";
 import CeoLayout from "./components/ceo/Layout";
 import AbmShop from "./components/ceo/components/AbmShop";
 import AbmUsers from "./components/ceo/components/AbmUsers";
-import Notifications from "./components/ceo/components/Notifications";
+
 import { ThemeProvider } from "./components/themes/ThemeContext";
 import { LanguageProvider } from "./components/themes/LanguageContext";
 import AllProducts from "./components/all-products/components/AllProducts";
@@ -75,11 +75,26 @@ function App() {
           path: "",
           element: <CeoLayout />,
           children: [
+            {
+              path: "datos",
+              element: <Profile />,
+            },
+            {
+              path: "users",
+              element: <AbmUsers />,
+            },
+            {
+              path: "products",
+              element: <AbmShop />,
+            },
+            {
+              path: "estadisticas",
+              element: <Statistics />,
+            },
             { path: "datos", element: <Profile /> },
             { path: "users", element: <AbmUsers /> },
             { path: "products", element: <AbmShop /> },
             { path: "estadisticas", element: <Statistics /> },
-            { path: "notificaciones", element: <Notifications /> },
           ],
         },
       ],

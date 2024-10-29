@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { useOutletContext, useNavigate } from "react-router-dom"; // Importa useNavigate
+import { useOutletContext, useNavigate } from "react-router-dom";
 import ProductList from "../../Products/ProductList";
 import { getProductsByCustomerId } from "../../../api/customerService";
 import { Button, Alert } from "react-bootstrap";
@@ -10,8 +10,8 @@ import { LanguageContext } from "../../themes/LanguageContext";
 import translations from "../../themes/translations";
 
 const Publications = () => {
-  const { user, reloadUserData } = useOutletContext();
-  const navigate = useNavigate(); // Inicializa useNavigate
+  const { user } = useOutletContext();
+  const navigate = useNavigate();
   const { darkMode } = useContext(ThemeContext);
   const { language } = useContext(LanguageContext);
   const t = translations[language];
@@ -29,11 +29,13 @@ const Publications = () => {
 
   const fetchUserProducts = async () => {
     try {
+      setIsLoading(true);
       if (user && user.id) {
         const data = await getProductsByCustomerId(user.id, token);
         setProducts(data);
       }
     } catch (error) {
+      console.error("Error fetching user products:", error);
       setError(error.message || t.errorFetchingProducts);
     } finally {
       setIsLoading(false);
@@ -53,9 +55,9 @@ const Publications = () => {
     try {
       await postProduct(productData, customerId, token);
       setOpenNewProduct(false);
-      await fetchUserProducts(); // Vuelve a cargar los productos después de agregar uno nuevo
+      await fetchUserProducts();
     } catch (err) {
-      console.error(err);
+      console.error("Error saving product:", err);
       setError(err.message || t.errorSavingProduct);
     }
   };
@@ -63,11 +65,6 @@ const Publications = () => {
   const canPublish = user?.roles?.some((role) =>
     ["ROLE_ADMIN", "ROLE_SUPERADMIN"].includes(role.toUpperCase())
   );
-
-  useEffect(() => {
-    console.log("Roles del usuario (estructura completa):", user.roles);
-    console.log("Puede publicar:", canPublish);
-  }, [user]);
 
   if (isLoading) {
     return <p>{t.loading}</p>;
@@ -94,7 +91,7 @@ const Publications = () => {
           <CreateProductForm onSave={handleSave} />
         ) : (
           <>
-            <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="d-flex justify-content-between align-items-center mb-4">
               <h2>{t.productsPublishedByYou}</h2>
               <Button
                 variant="outline-primary"
@@ -103,9 +100,12 @@ const Publications = () => {
                 {t.publishNew}
               </Button>
             </div>
-            <div className="d-flex flex-wrap">
+            <div className="d-flex flex-wrap justify-content-start gap-4">
               {products.length > 0 ? (
-                <ProductList products={products} />
+                <ProductList
+                  products={products}
+                  fetchUserProducts={fetchUserProducts}
+                />
               ) : (
                 <p>{t.noProductsPublished}</p>
               )}
@@ -115,13 +115,10 @@ const Publications = () => {
       ) : (
         <Button
           variant="primary"
-          onClick={() => {
-            // Recarga los datos del usuario
-            navigate("/admin/datos"); // Redirige a la URL
-          }}
+          onClick={() => navigate("/admin/datos")}
           className="mt-3"
         >
-          Ir al perfil de administrador
+          {t.goToAdminProfile}
         </Button>
       )}
     </div>

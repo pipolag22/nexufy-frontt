@@ -1,9 +1,14 @@
 import { useContext } from "react";
 import { Col, Row } from "react-bootstrap";
 import { ThemeContext } from "../../themes/ThemeContext";
-import categories from "../../../data/category.json"
+import { LanguageContext } from "../../themes/LanguageContext"; // Importar LanguageContext
+import translations from "../../themes/translations"; // Importar las traducciones
+import categories from "../../../data/category.json";
+
 const FilterSidebar = ({ setFilters }) => {
   const { darkMode } = useContext(ThemeContext);
+  const { language } = useContext(LanguageContext); // Obtener el idioma actual
+  const t = translations[language]; // Obtener las traducciones para el idioma actual
 
   const handleFilterChange = (type, value) => {
     setFilters((prev) => ({ ...prev, [type]: value }));
@@ -12,14 +17,14 @@ const FilterSidebar = ({ setFilters }) => {
   const navs = [
     {
       id: 1,
-      name: "Por precio",
-      options: ["Menor a $10000", "Mayor a $10000", "Mayor a $25000"],
+      name: t.filterByPrice, // Texto traducido
+      options: [t.priceUnder10000, t.priceOver10000, t.priceOver25000],
       type: "price",
     },
     {
       id: 2,
-      name: "Por categoría",
-      options: categories.map((category) => category.name),
+      name: t.filterByCategory,
+      options: t.categoriess.map((category) => category.name),
       type: "category",
     },
   ];

@@ -1,6 +1,11 @@
 // themes/translations.js
 const translations = {
   es: {
+    filterByPrice: "Por precio",
+    priceUnder10000: "Menor a $10000",
+    priceOver10000: "Mayor a $10000",
+    priceOver25000: "Mayor a $25000",
+    filterByCategory: "Por categoría",
     nexufy: "Nexufy",
     solutions:
       "Soluciones innovadoras para la gestión de proyectos y desarrollo web.",
@@ -39,6 +44,7 @@ const translations = {
     viewAllProducts: "Ver todos los productos",
     productNotFound: "No se encontró el producto.",
     loadingProduct: "Cargando producto...",
+    loadingAllProduct: "Cargando todos los productos..",
     productComments: "Comentarios del producto",
     sellerInformation: "Información del vendedor",
     contactedTimes: "Lo han contactado {count} veces",
@@ -103,55 +109,55 @@ const translations = {
       {
         id: 1,
         image: "image1",
-        name: "Metales",
+        name: "Metales y Minerales",
         description: "Descripción de Metales",
       },
       {
         id: 2,
         image: "image2",
-        name: "Polímeros",
+        name: "Plásticos y Polímeros",
         description: "Descripción de Polímeros",
       },
       {
         id: 3,
         image: "image3",
-        name: "Químicos",
+        name: "Químicos y Reactivos",
         description: "Descripción de Químicos",
       },
       {
         id: 4,
         image: "image4",
-        name: "Textiles",
+        name: "Textiles y Fibras",
         description: "Descripción de Textiles",
       },
       {
         id: 5,
         image: "image5",
-        name: "Maderas",
+        name: "Maderas y Derivados",
         description: "Descripción de Maderas",
       },
       {
         id: 6,
         image: "image6",
-        name: "Alimentos",
+        name: "Alimentos e Ingredientes",
         description: "Descripción de Alimentos",
       },
       {
         id: 7,
         image: "image7",
-        name: "Electrónicos",
+        name: "Componentes Electrónicos",
         description: "Descripción de Electrónicos",
       },
       {
         id: 8,
         image: "image8",
-        name: "Construcción",
+        name: "Materiales de Construcción",
         description: "Descripción de Construcción",
       },
       {
         id: 9,
         image: "image9",
-        name: "Envases",
+        name: "Envases y Embalajes",
         description: "Descripción de Envases",
       },
     ],
@@ -264,9 +270,16 @@ const translations = {
 
     errorPromotingUser: "Error al promover el usuario.",
 
+    verMas: "ver mas",
+
     // Agrega más traducciones si es necesario
   },
   en: {
+    filterByPrice: "By price",
+    priceUnder10000: "Under $10000",
+    priceOver10000: "Over $10000",
+    priceOver25000: "Over $25000",
+    filterByCategory: "By category",
     nexufy: "Nexufy",
     solutions:
       "Innovative solutions for project management and web development.",
@@ -366,55 +379,55 @@ const translations = {
       {
         id: 1,
         image: "image1",
-        name: "Metals",
+        name: "Metals and Minerals",
         description: "Description of Metals",
       },
       {
         id: 2,
         image: "image2",
-        name: "Polymers",
+        name: "Plastics and Polymers",
         description: "Description of Polymers",
       },
       {
         id: 3,
         image: "image3",
-        name: "Chemicals",
+        name: "Chemicals and Reagents",
         description: "Description of Chemicals",
       },
       {
         id: 4,
         image: "image4",
-        name: "Textiles",
+        name: "Textiles and Fibers",
         description: "Description of Textiles",
       },
       {
         id: 5,
         image: "image5",
-        name: "Woods",
+        name: "Wood and Derivatives",
         description: "Description of Woods",
       },
       {
         id: 6,
         image: "image6",
-        name: "Food",
+        name: "Food and Ingredients",
         description: "Description of Food",
       },
       {
         id: 7,
         image: "image7",
-        name: "Electronics",
+        name: "Electronic Components",
         description: "Description of Electronics",
       },
       {
         id: 8,
         image: "image8",
-        name: "Construction",
+        name: "Construction Materials",
         description: "Description of Construction",
       },
       {
         id: 9,
         image: "image9",
-        name: "Packaging",
+        name: "Packaging and Packaging",
         description: "Description of Packaging",
       },
     ],
@@ -526,16 +539,10 @@ const translations = {
       "You need to be an admin to publish products.", // Traducción en inglés
 
     errorPromotingUser: "Error promoting user.",
+
+    verMas: "see more",
+    loadingAllProduct: "Loading all products..",
   },
-  productsPublishedByYou: "Products published by you",
-  publishNew: "Publish New",
-  noProductsPublished: "You have no published products.",
-  needToBeAdminToPublishMessage: "You need to be an admin to publish products.",
-  promoteSuccessMessage: "User successfully promoted to admin.",
-  errorFetchingProducts: "Error fetching products.",
-  errorSavingProduct: "Error saving product.",
-  errorPromotingUser: "Error promoting user.",
-  loading: "Loading...",
 };
 
 export default translations;

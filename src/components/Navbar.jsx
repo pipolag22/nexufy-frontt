@@ -1,5 +1,4 @@
-// NavbarHome.js
-import { useContext, useEffect, useRef, useState, React } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   Button,
   Dropdown,
@@ -64,12 +63,11 @@ function NavbarHome() {
 
   const handleLoginRedirect = () => navigate("/login");
 
-  const handleCategory = (category) => {
+  const handleCategoryClick = (category) => {
     setShowCategories(false);
-    navigate(`/product/category/${category.id}`, {
-      state: { category },
-    });
+    navigate("/all", { state: { category: category.name } });
   };
+
   useEffect(() => {
     const fetchCounts = async () => {
       try {
@@ -203,10 +201,10 @@ function NavbarHome() {
                   darkMode ? "bg-dark text-light" : "bg-light text-dark"
                 }`}
               >
-                {categories.map((category, index) => (
+                {t.categoriess.map((category, index) => (
                   <a
                     key={index}
-                    onClick={() => handleCategory(category)}
+                    onClick={() => handleCategoryClick(category)}
                     className={`dropdown-itemCategory ${
                       darkMode ? "bg-dark text-light" : "bg-light text-dark"
                     }`}
