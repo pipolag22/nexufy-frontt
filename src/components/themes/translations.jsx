@@ -223,6 +223,7 @@ const translations = {
     username: "Nombre de usuario",
     email: "Email",
     role: "Rol",
+    products:"Productos publicados",
     registeredUsers: "Usuarios registrados",
     addUser: "Agregar",
     userProducts: "Productos de usuarios",
@@ -365,6 +366,7 @@ const translations = {
     timeLabel: "Time",
     redirectingHomeIn: "Redirecting to home in",
     loginErrorMessage: "Error logging in. Please check your credentials.",
+    products:"Published products",
     headerTitle:
       "Simplify your supply chain with direct connections. Join Nexufy.",
     myData: "My Data",
