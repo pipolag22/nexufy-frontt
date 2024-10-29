@@ -89,26 +89,7 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
               {columns.map((col) => (
                 <td key={col.accessor}>{col.render(item)}</td>
               ))}
-              <td>
-                <Row className="d-flex justify-content-center gap-2">
-                  <Button
-                    onClick={() => handleEditClick(item)}
-                    variant={darkMode ? "outline-light" : "outline-secondary"}
-                    size="sm"
-                    className="w-25"
-                  >
-                    <i className="bi bi-pencil"></i> {/* Icono de editar */}
-                  </Button>
-                  <Button
-                    onClick={() => handleDeleteClick(item)}
-                    variant="danger"
-                    size="sm"
-                    className="w-25"
-                  >
-                    <i className="bi bi-trash"></i> {/* Icono de eliminar */}
-                  </Button>
-                </Row>
-              </td>
+              <td></td>
             </tr>
           ))}
         </tbody>

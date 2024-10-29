@@ -1,4 +1,3 @@
-// CreateUserForm.js
 import { useState, useContext } from "react";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
@@ -18,6 +17,7 @@ const CreateUserForm = ({ onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     onSave(formData);
   };
 

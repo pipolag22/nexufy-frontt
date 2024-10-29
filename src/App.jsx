@@ -14,7 +14,7 @@ import Statistics from "./components/admin/components/Statistics";
 import CeoLayout from "./components/ceo/Layout";
 import AbmShop from "./components/ceo/components/AbmShop";
 import AbmUsers from "./components/ceo/components/AbmUsers";
-import Notifications from "./components/ceo/components/Notifications";
+
 import { ThemeProvider } from "./components/themes/ThemeContext";
 import { LanguageProvider } from "./components/themes/LanguageContext";
 import AllProductsLayout from "./all-products/Layout";
@@ -102,10 +102,6 @@ function App() {
             {
               path: "estadisticas",
               element: <Statistics />,
-            },
-            {
-              path: "notificaciones",
-              element: <Notifications />,
             },
           ],
         },

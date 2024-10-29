@@ -28,7 +28,13 @@ const EditProduct = () => {
     const fetchProduct = async () => {
       try {
         const product = await getProduct(id);
-        setProductData(product);
+        setProductData({
+          name: product.name || "",
+          description: product.description || "",
+          price: product.price || 0,
+          category: product.category || "",
+          image: product.image || "",
+        });
       } catch (error) {
         setErrorMessage(error.message || t.errorFetchingProduct);
       }
