@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Modal } from "react-bootstrap"; // Importar Modal
+import { Button } from "react-bootstrap"; // Solo conservamos el Button
 import { Navigate, useOutletContext, useNavigate } from "react-router-dom";
 import {
   getAllProducts,
@@ -10,25 +10,22 @@ import { ThemeContext } from "../../themes/ThemeContext";
 import { LanguageContext } from "../../themes/LanguageContext";
 import CustomTable from "./CustomTable";
 import SearchBar from "./SearchBar";
-import translations from "../../themes/translations"; // Importar traducciones
-import { FaEdit, FaTrash } from "react-icons/fa"; // Importar los íconos
+import translations from "../../themes/translations"; 
+import { FaEdit, FaTrash } from "react-icons/fa";
+import Swal from "sweetalert2"; // Importar SweetAlert
 
 const AbmShop = () => {
   const { user } = useOutletContext();
   const { darkMode } = useContext(ThemeContext);
   const { language } = useContext(LanguageContext);
   const t = translations[language];
-  const navigate = useNavigate(); // Para redireccionar
+  const navigate = useNavigate();
 
   const [productos, setProductos] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-
-  // Estado para el modal de confirmación
-  const [showModal, setShowModal] = useState(false);
-  const [productToDelete, setProductToDelete] = useState(null);
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -39,7 +36,7 @@ const AbmShop = () => {
       try {
         const products = await getAllProducts();
         setProductos(products);
-        setFilteredProducts(products); // Inicializa los productos filtrados
+        setFilteredProducts(products);
       } catch (error) {
         setError(error);
       } finally {
@@ -48,7 +45,7 @@ const AbmShop = () => {
     };
 
     fetchAllProducts();
-  }, []); // Solo al montar
+  }, []);
 
   useEffect(() => {
     const fetchSearchedProducts = async () => {
@@ -60,7 +57,7 @@ const AbmShop = () => {
           setError(error);
         }
       } else {
-        setFilteredProducts(productos); // Restablece a todos los productos
+        setFilteredProducts(productos);
       }
     };
 
@@ -76,22 +73,35 @@ const AbmShop = () => {
   }
 
   const handleEdit = (id) => {
-    navigate(`/edit-product/${id}`); // Navegar a la página de edición
+    navigate(`/edit-product/${id}`);
   };
 
   const confirmDeleteProduct = (id) => {
-    setProductToDelete(id);
-    setShowModal(true); // Mostrar el modal de confirmación
+    Swal.fire({
+      title: t.confirmDeleteTitle,
+      text: t.confirmDeleteMessage,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: t.delete,
+      cancelButtonText: t.cancel,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await handleConfirmDelete(id);
+        Swal.fire(t.deleted, t.productDeletedMessage, "success");
+      }
+    });
   };
 
-  const handleConfirmDelete = async () => {
-    if (productToDelete) {
-      await deleteProduct(productToDelete);
+  const handleConfirmDelete = async (id) => {
+    try {
+      await deleteProduct(id);
       setFilteredProducts(
-        filteredProducts.filter((product) => product.id !== productToDelete)
-      ); // Actualizar la lista de productos
-      setProductToDelete(null);
-      setShowModal(false); // Cerrar el modal
+        filteredProducts.filter((product) => product.id !== id)
+      );
+    } catch (error) {
+      setError(error);
     }
   };
 
@@ -118,15 +128,15 @@ const AbmShop = () => {
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <Button
             style={{ height: "22px", width: "22px", padding: "0" }}
-            variant="link" // Usar un estilo de botón de enlace para el ícono de editar
-            onClick={() => handleEdit(item.id)} // Editar producto
+            variant="link"
+            onClick={() => handleEdit(item.id)}
           >
             <FaEdit />
           </Button>
           <Button
             style={{ height: "22px", width: "22px", padding: "0" }}
-            variant="link" // Usar un estilo de botón de enlace para el ícono de eliminar
-            onClick={() => confirmDeleteProduct(item.id)} // Eliminar producto
+            variant="link"
+            onClick={() => confirmDeleteProduct(item.id)}
           >
             <FaTrash style={{ color: "red" }} />
           </Button>
@@ -152,28 +162,6 @@ const AbmShop = () => {
       </div>
 
       <CustomTable columns={productColumns} data={filteredProducts} />
-
-      {/* Modal de confirmación */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{t.confirmDeleteTitle}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>{t.confirmDeleteMessage}</p>
-          <p>
-            <strong>{t.revertWarning}</strong>
-          </p>{" "}
-          {/* Mensaje adicional */}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            {t.cancel}
-          </Button>
-          <Button variant="danger" onClick={handleConfirmDelete}>
-            {t.delete}
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 };

@@ -1,21 +1,23 @@
-import { useContext, useEffect, useState, React } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Navigate, useNavigate, useOutletContext } from "react-router-dom";
-import { registerAdminUser } from "../../../api/adminService";
+import Swal from "sweetalert2";
+import { deleteCustomer, registerAdminUser } from "../../../api/adminService";
 import { getAllCustomers, searchCustomers } from "../../../api/customerService";
 import CreateUserForm from "../../AuthForm/CreateUserForm";
 import { ThemeContext } from "../../themes/ThemeContext";
-import { LanguageContext } from "../../themes/LanguageContext"; // Importar el contexto de idioma
+import { LanguageContext } from "../../themes/LanguageContext";
 import CustomTable from "./CustomTable";
 import SearchBar from "./SearchBar";
-import translations from "../../themes/translations"; // Importar las traducciones
+import translations from "../../themes/translations";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 const AbmUsers = () => {
   const { user } = useOutletContext();
   const navigate = useNavigate();
   const { darkMode } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext); // Acceder al idioma actual
-  const t = translations[language]; // Obtener las traducciones para el idioma actual
+  const { language } = useContext(LanguageContext);
+  const t = translations[language];
 
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -34,7 +36,7 @@ const AbmUsers = () => {
         const token = localStorage.getItem("token");
         const customers = await getAllCustomers(token);
         setUsers(customers);
-        setFilteredUsers(customers); // Inicializa usuarios filtrados
+        setFilteredUsers(customers);
       } catch (error) {
         setError(error);
       } finally {
@@ -47,7 +49,6 @@ const AbmUsers = () => {
     fetchAllCustomers();
   }, [user]);
 
-  // Efecto para manejar la búsqueda
   useEffect(() => {
     const token = localStorage.getItem("token");
     const fetchSearchedUsers = async () => {
@@ -59,11 +60,11 @@ const AbmUsers = () => {
           setError(err);
         }
       } else {
-        setFilteredUsers(users); // Restablece a todos los usuarios
+        setFilteredUsers(users);
       }
     };
 
-    fetchSearchedUsers(); // Ejecuta la búsqueda al cambiar el searchQuery
+    fetchSearchedUsers();
   }, [searchQuery, users]);
 
   const handleSave = async (newUser) => {
@@ -78,8 +79,46 @@ const AbmUsers = () => {
     }
   };
 
-  const handleDelete = (userId) => {
-    setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+  const handleEdit = (updatedUser) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((user) => (user.id === updatedUser.id ? updatedUser : user))
+    );
+    setFilteredUsers((prevFiltered) =>
+      prevFiltered.map((user) =>
+        user.id === updatedUser.id ? updatedUser : user
+      )
+    );
+  };
+
+  const confirmDeleteCustomer = (id) => {
+    Swal.fire({
+      title: t.confirmDeleteTitle,
+      text: t.confirmDeleteMessage,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: t.delete,
+      cancelButtonText: t.cancel,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await handleConfirmDelete(id);
+      }
+    });
+  };
+
+  const handleConfirmDelete = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      await deleteCustomer(id, token);
+      setFilteredUsers((prevUsers) =>
+        prevUsers.filter((user) => user.id !== id)
+      );
+      Swal.fire(t.deleted, t.successMessage, "success");
+    } catch (error) {
+      setError(error);
+      Swal.fire(t.error, error.message, "error");
+    }
   };
 
   if (!user) {
@@ -87,7 +126,7 @@ const AbmUsers = () => {
   }
 
   if (isLoading) {
-    return <p>{t.loading}</p>; // Texto traducido para "Loading..."
+    return <p>{t.loading}</p>;
   }
 
   if (error) {
@@ -96,30 +135,46 @@ const AbmUsers = () => {
 
   const userColumns = [
     {
-      header: t.username, // Texto traducido para "Nombre de usuario"
+      header: t.username,
       accessor: "username",
       render: (item) => item.username,
     },
     {
-      header: t.email, // Texto traducido para "Email"
+      header: t.email,
       accessor: "email",
       render: (item) => item.email,
     },
     {
-      header: t.role, // Texto traducido para "Rol"
+      header: t.role,
       accessor: "roles",
       render: (item) =>
         item.roles && Array.isArray(item.roles) && item.roles.length > 0
           ? item.roles.map((role) => role.replace("ROLE_", "")).join(", ")
-          : t.noRole, // Muestra "Sin rol" si no existen roles
+          : t.noRole,
+    },
+    {
+      header: t.actions,
+      accessor: "actions",
+      render: (item) => (
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <Button
+            style={{ height: "22px", width: "22px", padding: "0" }}
+            variant="link"
+            onClick={() => handleEdit(item)}
+          >
+            <FaEdit />
+          </Button>
+          <Button
+            style={{ height: "22px", width: "22px", padding: "0" }}
+            variant="link"
+            onClick={() => confirmDeleteCustomer(item.id)}
+          >
+            <FaTrash style={{ color: "red" }} />
+          </Button>
+        </div>
+      ),
     },
   ];
-
-  const handleEdit = (updatedUser) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((user) => (user.id === updatedUser.id ? updatedUser : user))
-    );
-  };
 
   return (
     <div
@@ -133,8 +188,7 @@ const AbmUsers = () => {
       ) : (
         <>
           <div className="d-flex justify-content-between align-items-center mb-2">
-            <p className="fs-4 fw-semibold">{t.registeredUsers}</p>{" "}
-            {/* Texto traducido para "Usuarios registrados" */}
+            <p className="fs-4 fw-semibold">{t.registeredUsers}</p>
             <div className="w-50 d-flex justify-content-around">
               <SearchBar
                 searchQuery={searchQuery}
@@ -148,14 +202,14 @@ const AbmUsers = () => {
               variant={darkMode ? "outline-light" : "outline-secondary"}
             >
               <i className="bi bi-plus" />
-              <span>{t.addUser}</span> {/* Texto traducido para "Agregar" */}
+              <span>{t.addUser}</span>
             </Button>
           </div>
           <CustomTable
             columns={userColumns}
-            data={filteredUsers} // Usa los usuarios filtrados aquí
+            data={filteredUsers}
             onEdit={handleEdit}
-            onDelete={handleDelete}
+            onDelete={confirmDeleteCustomer}
           />
         </>
       )}
@@ -164,3 +218,4 @@ const AbmUsers = () => {
 };
 
 export default AbmUsers;
+  

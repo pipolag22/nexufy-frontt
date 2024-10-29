@@ -3,8 +3,6 @@ import { Button } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../themes/ThemeContext";
-import { LanguageContext } from "../themes/LanguageContext";
-import translations from "../themes/translations";
 
 const ProductCard = ({
   id,
@@ -15,13 +13,9 @@ const ProductCard = ({
   category,
   isOwner,
   isSuperAdmin,
-  handleEdit,
-  confirmDelete,
 }) => {
   const { darkMode } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
-  const t = translations[language];
-  const navigate = useNavigate(); // Asegúrate de inicializar navigate
+  const navigate = useNavigate();
 
   const handleDetail = () => {
     navigate(`/product/${id}`, {
@@ -45,9 +39,9 @@ const ProductCard = ({
     >
       <Card.Img
         variant="top"
-        src={image || "/path/to/placeholder.jpg"} // Asegúrate de tener una imagen de placeholder
+        src={image}
         alt="Imagen del producto"
-        style={{ height: "12rem", objectFit: "cover" }}
+        style={{ height: "12rem", objectFit: "cover" }} // Ajuste de imagen
       />
       <Card.Body
         className={`bg-secundario d-flex flex-column justify-content-between`}
@@ -61,7 +55,7 @@ const ProductCard = ({
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
-            }}
+            }} // Ajustes de texto
           >
             {name}
           </Card.Title>
@@ -73,7 +67,7 @@ const ProductCard = ({
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
-            }}
+            }} // Ajustes de texto
           >
             {description}
           </Card.Text>
@@ -93,10 +87,14 @@ const ProductCard = ({
           </Card.Text>
         </div>
 
+        {/* Botones de editar y eliminar se mueven aquí */}
         {(isOwner || isSuperAdmin) && (
           <div className="d-flex justify-content-center gap-2 mt-3">
             <Button
-              onClick={() => handleEdit(id)}
+              onClick={() => {
+                // Lógica para editar
+                console.log(`Editando producto ${id}`);
+              }}
               variant={darkMode ? "outline-light" : "outline-secondary"}
               size="sm"
               className="w-25"
@@ -104,7 +102,10 @@ const ProductCard = ({
               <i className="bi bi-pencil"></i>
             </Button>
             <Button
-              onClick={() => confirmDelete(id)}
+              onClick={() => {
+                // Lógica para eliminar
+                console.log(`Eliminando producto ${id}`);
+              }}
               variant="danger"
               size="sm"
               className="w-25"
@@ -114,13 +115,14 @@ const ProductCard = ({
           </div>
         )}
 
+        {/* Botón de "Ver más" que ocupa todo el ancho de la tarjeta */}
         <div className="d-flex justify-content-center mt-3">
           <Button
             className="button-gradient border-0 shadow-lg"
             onClick={handleDetail}
             style={{ width: "100%" }}
           >
-            {t.verMas}
+            Ver más
           </Button>
         </div>
       </Card.Body>
