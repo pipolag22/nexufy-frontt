@@ -21,6 +21,7 @@ const ProductCard = ({
   const { darkMode } = useContext(ThemeContext);
   const { language } = useContext(LanguageContext);
   const t = translations[language];
+  const navigate = useNavigate(); // Asegúrate de inicializar navigate
 
   const handleDetail = () => {
     navigate(`/product/${id}`, {
@@ -44,7 +45,7 @@ const ProductCard = ({
     >
       <Card.Img
         variant="top"
-        src={image}
+        src={image || "/path/to/placeholder.jpg"} // Asegúrate de tener una imagen de placeholder
         alt="Imagen del producto"
         style={{ height: "12rem", objectFit: "cover" }}
       />
@@ -95,7 +96,7 @@ const ProductCard = ({
         {(isOwner || isSuperAdmin) && (
           <div className="d-flex justify-content-center gap-2 mt-3">
             <Button
-              onClick={() => handleEdit(id)} // Llamar a handleEdit con el id del producto
+              onClick={() => handleEdit(id)}
               variant={darkMode ? "outline-light" : "outline-secondary"}
               size="sm"
               className="w-25"
@@ -103,7 +104,7 @@ const ProductCard = ({
               <i className="bi bi-pencil"></i>
             </Button>
             <Button
-              onClick={() => confirmDelete(id)} // Llamar a confirmDelete con el id del producto
+              onClick={() => confirmDelete(id)}
               variant="danger"
               size="sm"
               className="w-25"

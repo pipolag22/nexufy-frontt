@@ -1,6 +1,11 @@
 // themes/translations.js
 const translations = {
   es: {
+    filterByPrice: "Por precio",
+    priceUnder10000: "Menor a $10000",
+    priceOver10000: "Mayor a $10000",
+    priceOver25000: "Mayor a $25000",
+    filterByCategory: "Por categoría",
     nexufy: "Nexufy",
     solutions:
       "Soluciones innovadoras para la gestión de proyectos y desarrollo web.",
@@ -39,6 +44,7 @@ const translations = {
     viewAllProducts: "Ver todos los productos",
     productNotFound: "No se encontró el producto.",
     loadingProduct: "Cargando producto...",
+    loadingAllProduct: "Cargando todos los productos..",
     productComments: "Comentarios del producto",
     sellerInformation: "Información del vendedor",
     contactedTimes: "Lo han contactado {count} veces",
@@ -263,11 +269,17 @@ const translations = {
       "Necesitas ser administrador para publicar productos.",
 
     errorPromotingUser: "Error al promover el usuario.",
+
     verMas: "ver mas",
 
     // Agrega más traducciones si es necesario
   },
   en: {
+    filterByPrice: "By price",
+    priceUnder10000: "Under $10000",
+    priceOver10000: "Over $10000",
+    priceOver25000: "Over $25000",
+    filterByCategory: "By category",
     nexufy: "Nexufy",
     solutions:
       "Innovative solutions for project management and web development.",
@@ -527,17 +539,10 @@ const translations = {
       "You need to be an admin to publish products.", // Traducción en inglés
 
     errorPromotingUser: "Error promoting user.",
+
+    verMas: "see more",
+    loadingAllProduct: "Loading all products..",
   },
-  productsPublishedByYou: "Products published by you",
-  publishNew: "Publish New",
-  noProductsPublished: "You have no published products.",
-  needToBeAdminToPublishMessage: "You need to be an admin to publish products.",
-  promoteSuccessMessage: "User successfully promoted to admin.",
-  errorFetchingProducts: "Error fetching products.",
-  errorSavingProduct: "Error saving product.",
-  errorPromotingUser: "Error promoting user.",
-  loading: "Loading...",
-  verMas: "see more",
 };
 
 export default translations;

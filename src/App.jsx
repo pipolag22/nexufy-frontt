@@ -95,7 +95,6 @@ function App() {
             { path: "users", element: <AbmUsers /> },
             { path: "products", element: <AbmShop /> },
             { path: "estadisticas", element: <Statistics /> },
-            { path: "notificaciones", element: <Notifications /> },
           ],
         },
       ],

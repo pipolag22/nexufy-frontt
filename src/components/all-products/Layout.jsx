@@ -1,10 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import FilterSidebar from "./components/FilterSidebar";
 import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
 import { getAllProducts } from "../../api/productService";
 import NavbarHome from "../Navbar";
 import { ThemeContext } from "../themes/ThemeContext";
+import { LanguageContext } from "../themes/LanguageContext";
+import translations from "../themes/translations";
 
 const AllProductsLayout = () => {
   const [filters, setFilters] = useState({});
@@ -12,6 +14,9 @@ const AllProductsLayout = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthenticationContext);
   const { darkMode } = useContext(ThemeContext);
+  const { language } = useContext(LanguageContext);
+  const location = useLocation();
+  const t = translations[language];
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -27,16 +32,26 @@ const AllProductsLayout = () => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    // Si hay una categoría en el estado de navegación, establecerla en los filtros
+    if (location.state?.category) {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        category: location.state.category,
+      }));
+    }
+  }, [location.state]);
+
   const applyFilters = () => {
     let filtered = [...products];
 
     if (filters.price) {
-      if (filters.price === "Menor a $10000") {
-        filtered = filtered.filter((p) => p.price < 10000.00);
-      } else if (filters.price === "Mayor a $10000") {
-        filtered = filtered.filter((p) => p.price >= 10000.00);
-      } else if (filters.price === "Mayor a $25000") {
-        filtered = filtered.filter((p) => p.price > 25000.00);
+      if (filters.price === t.priceUnder10000) {
+        filtered = filtered.filter((p) => p.price < 10000.0);
+      } else if (filters.price === t.priceOver10000) {
+        filtered = filtered.filter((p) => p.price >= 10000.0);
+      } else if (filters.price === t.priceOver25000) {
+        filtered = filtered.filter((p) => p.price > 25000.0);
       }
     }
 
@@ -67,13 +82,7 @@ const AllProductsLayout = () => {
           style={{ marginLeft: "17rem", marginTop: "7rem" }}
         >
           <Outlet
-            context={{
-              user,
-              filteredProducts,
-              loading,
-              filters,
-              setFilters, // Pasamos setFilters para manipular los filtros desde el hijo
-            }}
+            context={{ user, filteredProducts, loading, filters, setFilters }}
           />
         </main>
       </div>

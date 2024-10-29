@@ -22,7 +22,7 @@ const AllProducts = () => {
   };
 
   if (loading) {
-    return <div>Cargando todos los productos...</div>;
+    return <div>{t.loadingAllProduct}</div>;
   }
 
   return (
@@ -45,7 +45,7 @@ const AllProducts = () => {
       {filteredProducts.length < 1 ? (
         <p className="fs-3 container">{t.unavailableProduct}</p>
       ) : (
-        <div style={{height:"100vh"}}>
+        <div style={{ height: "100vh" }}>
           <ProductList products={filteredProducts} />
         </div>
       )}
