@@ -19,7 +19,7 @@ const Sidebar = () => {
     {
       id: 1,
       name: t.myData,
-      icon: "bi bi-person-vcard",
+      icon: "bi bi-person-square",
       url: "/admin/datos",
       active: true,
     },

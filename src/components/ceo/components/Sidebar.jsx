@@ -16,14 +16,14 @@ const Sidebar = () => {
     {
       id: 1,
       name: t.myData,
-      icon: "bi bi-person-vcard",
+      icon: "bi bi-person-square",
       url: "/ceo/datos",
       active: true,
     },
     {
       id: 2,
       name: t.userManagement,
-      icon: "bi bi-person-fill-gear",
+      icon: "bi bi-person-lines-fill",
       url: "/ceo/users",
       active: false,
     },
