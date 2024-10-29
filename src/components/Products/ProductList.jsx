@@ -7,6 +7,7 @@ import { AuthenticationContext } from "../../services/authenticationContext/auth
 import { deleteProduct } from "../../api/productService";
 import { LanguageContext } from "../themes/LanguageContext"; // Importar el LanguageContext
 import translations from "../themes/translations"; // Importar las traducciones
+import placeholder from "../../assets/img/placeholder.jpg";
 
 const ProductList = ({ products, fetchUserProducts }) => {
   const { user } = useContext(AuthenticationContext);
@@ -57,7 +58,9 @@ const ProductList = ({ products, fetchUserProducts }) => {
             <div style={{ width: "20rem", margin: "0 2rem" }}>
               <ProductCard
                 id={product.id}
-                image={product.urlImage}
+                image={
+                  product.urlImage?.length > 0 ? product.urlImage : placeholder
+                }
                 name={product.name}
                 description={product.description}
                 price={product.price}

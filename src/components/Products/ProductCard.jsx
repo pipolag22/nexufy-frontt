@@ -45,7 +45,7 @@ const ProductCard = ({
     >
       <Card.Img
         variant="top"
-        src={image || "/path/to/placeholder.jpg"} // Asegúrate de tener una imagen de placeholder
+        src={image || "../../assets/img/placeholder.jpg"} // Asegúrate de tener una imagen de placeholder
         alt="Imagen del producto"
         style={{ height: "12rem", objectFit: "cover" }}
       />
