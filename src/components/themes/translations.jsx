@@ -1,6 +1,7 @@
 // themes/translations.js
 const translations = {
   es: {
+    goToAdminProfile: "ir a promoverse a tu perfil",
     filterByPrice: "Por precio",
     priceUnder10000: "Menor a $10000",
     priceOver10000: "Mayor a $10000",
@@ -542,6 +543,7 @@ const translations = {
 
     verMas: "see more",
     loadingAllProduct: "Loading all products..",
+    goToAdminProfile: "Go to promote your profile",
   },
 };
 
