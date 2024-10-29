@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import PropTypes from "prop-types";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ThemeContext } from "../themes/ThemeContext";
 
 const AuthForm = ({
@@ -14,6 +14,32 @@ const AuthForm = ({
 }) => {
   const { darkMode } = useContext(ThemeContext);
 
+  // Estado para errores en los campos
+  const [errors, setErrors] = useState({});
+
+  // Validar cada campo en tiempo real
+  const validateInput = (name, value) => {
+    let error = "";
+
+    if (name === "username" && !/^[a-zA-Z0-9]{6,}$/.test(value)) {
+      error = "El nombre de usuario debe tener al menos 6 caracteres alfanuméricos.";
+    } else if (name === "password" && value.length < 6) {
+      error = "La contraseña debe tener al menos 6 caracteres.";
+    } else if (name === "email" && !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
+      error = "Ingrese un email válido.";
+    }
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
+    }));
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    validateInput(name, value);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -23,7 +49,11 @@ const AuthForm = ({
       data[key] = value;
     });
 
-    onSubmit(data);
+    // Validar que no haya errores antes de enviar
+    const hasErrors = Object.values(errors).some((error) => error);
+    if (!hasErrors) {
+      onSubmit(data);
+    }
   };
 
   return (
@@ -60,7 +90,11 @@ const AuthForm = ({
                     autoComplete={
                       field.type === "password" ? "current-password" : undefined
                     }
+                    onChange={handleInputChange}
                   />
+                  {errors[field.id] && (
+                    <div  style={{fontSize:"14px"}} className="text-danger mt-1">{errors[field.id]}</div>
+                  )}
                 </div>
               ))}
 

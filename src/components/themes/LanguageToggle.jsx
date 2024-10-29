@@ -7,8 +7,8 @@ const LanguageToggle = () => {
   const { language, toggleLanguage } = useContext(LanguageContext);
 
   return (
-    <button onClick={toggleLanguage} style={{border:"none"}} className="me-3">
-      {language === "es" ? <img src={spanish} alt="lenguaje español" style={{height:"30px"}} /> : <img src={english} alt="lenguaje inglés" style={{height:"30px"}} />}
+    <button onClick={toggleLanguage} style={{border:"none", backgroundColor:"transparent"}} className="me-3">
+      {language === "en" ? <img src={spanish} alt="lenguaje español" style={{height:"30px"}} /> : <img src={english} alt="lenguaje inglés" style={{height:"30px"}} />}
     </button>
   );
 };
