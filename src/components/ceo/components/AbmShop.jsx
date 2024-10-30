@@ -167,10 +167,10 @@ const AbmShop = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>
-            {t.cancel}
+            {t.confirmDeleteCancelButton}
           </Button>
           <Button variant="danger" onClick={handleConfirmDelete}>
-            {t.delete}
+            {t.confirmDeleteConfirmButton}
           </Button>
         </Modal.Footer>
       </Modal>

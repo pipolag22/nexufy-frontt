@@ -33,7 +33,7 @@ const translations = {
     registrationSuccess:
       "Te has registrado exitosamente. Redirigiendo al inicio de sesión...",
     registrationError:
-      "Error al registrarse. Por favor, verifica tus datos e intenta nuevamente.",
+      "Error al registrarse. Ya existe un usuario con ese nombre",
     createAccount: "Crea tu cuenta",
     registerButton: "Registrarme",
     loginLink: "Iniciar sesión",
@@ -207,6 +207,7 @@ const translations = {
     priceLabel: "Precio",
     stockLabel: "Stock disponible",
     stateLabel: "Selecciona el estado",
+    revertWarning: "¡No podrás revertir esto!",
     new: "Nuevo",
     used: "Usado",
     likeNew: "Como nuevo",
@@ -224,7 +225,7 @@ const translations = {
     username: "Nombre de usuario",
     email: "Email",
     role: "Rol",
-    products:"Productos publicados",
+    products: "Productos publicados",
     registeredUsers: "Usuarios registrados",
     addUser: "Agregar",
     userProducts: "Productos de usuarios",
@@ -305,10 +306,11 @@ const translations = {
     passwordLabel: "Password",
     passwordPlaceholder: "Enter your password",
     wellDone: "Well done!",
+    revertWarning: "You won't be able to revert this!",
     registrationSuccess:
       "You have successfully registered. Redirecting to login...",
     registrationError:
-      "Registration error. Please check your details and try again.",
+      "Error registering. A user with that name already exists.",
     createAccount: "Create your account",
     registerButton: "Register",
     loginLink: "Log in",
@@ -367,7 +369,7 @@ const translations = {
     timeLabel: "Time",
     redirectingHomeIn: "Redirecting to home in",
     loginErrorMessage: "Error logging in. Please check your credentials.",
-    products:"Published products",
+    products: "Published products",
     headerTitle:
       "Simplify your supply chain with direct connections. Join Nexufy.",
     myData: "My Data",
