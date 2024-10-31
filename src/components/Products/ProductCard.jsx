@@ -16,6 +16,7 @@ const ProductCard = ({
   category,
   isOwner,
   isSuperAdmin,
+  confirmDelete, // Recibir confirmDelete como prop
 }) => {
   const { darkMode } = useContext(ThemeContext);
   const { language } = useContext(LanguageContext);
@@ -56,21 +57,10 @@ const ProductCard = ({
       cancelButtonText: t.confirmDeleteCancelButton,
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(`Eliminando producto ${id}`);
-        Swal.fire(t.deletedSuccess, t.deletedMessage, "success");
+        confirmDelete(id); // Llamar a confirmDelete con el ID del producto
       }
     });
   };
-
-  // Obtener la traducción de la categoría usando map
-  const translatedCategory =
-    t.categoriess
-      .map((cat) => {
-        return cat.name.toLowerCase() === category.toLowerCase()
-          ? cat.name
-          : null;
-      })
-      .filter(Boolean)[0] || category;
 
   return (
     <Card
@@ -123,7 +113,7 @@ const ProductCard = ({
               darkMode ? "text-white" : "text-secondary"
             }`}
           >
-            {translatedCategory} {/* Mostrar la categoría traducida */}
+            {category}
           </Card.Text>
         </div>
 

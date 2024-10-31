@@ -1,18 +1,18 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Col, Row, Modal, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import categories from "../../data/category.json";
 import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
 import { deleteProduct } from "../../api/productService";
-import { LanguageContext } from "../themes/LanguageContext"; // Importar el LanguageContext
-import translations from "../themes/translations"; // Importar las traducciones
+import { LanguageContext } from "../themes/LanguageContext";
+import translations from "../themes/translations";
 import placeholder from "../../assets/img/placeholder.jpg";
 
 const ProductList = ({ products, fetchUserProducts }) => {
   const { user } = useContext(AuthenticationContext);
-  const { language } = useContext(LanguageContext); // Obtener el idioma actual
-  const t = translations[language]; // Obtener las traducciones correspondientes
+  const { language } = useContext(LanguageContext);
+  const t = translations[language];
 
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -33,15 +33,15 @@ const ProductList = ({ products, fetchUserProducts }) => {
         await deleteProduct(productToDelete);
         setProductToDelete(null);
         setShowModal(false);
-        await fetchUserProducts();
+        await fetchUserProducts(); // Actualizar la lista de productos después de eliminar
       } catch (error) {
-        console.error(t.errorFetchingProducts, error); // Uso de traducción
+        console.error(t.errorFetchingProducts, error);
       }
     }
   };
 
   if (!products || products.length === 0) {
-    return <p>{t.noProductsPublished}</p>; // Uso de traducción
+    return <p>{t.noProductsPublished}</p>;
   }
 
   return (
@@ -69,7 +69,7 @@ const ProductList = ({ products, fetchUserProducts }) => {
                 isOwner={user && user.id === product.customerId}
                 isSuperAdmin={user && user.roles.includes("ROLE_SUPERADMIN")}
                 handleEdit={handleEdit}
-                confirmDelete={confirmDeleteProduct}
+                confirmDelete={confirmDeleteProduct} // Pasar confirmDelete como prop
               />
             </div>
           </Col>
@@ -78,12 +78,12 @@ const ProductList = ({ products, fetchUserProducts }) => {
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>{t.confirmDeleteTitle}</Modal.Title>{" "}
+          <Modal.Title>{t.confirmDeleteTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>{t.confirmDeleteText}</p>
           <p>
-            <strong>{t.confirmDeleteWarning}</strong>{" "}
+            <strong>{t.confirmDeleteWarning}</strong>
           </p>
         </Modal.Body>
         <Modal.Footer>

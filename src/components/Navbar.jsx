@@ -17,7 +17,6 @@ import ThemeToggle from "../components/themes/ThemeToggle";
 import { LanguageContext } from "../components/themes/LanguageContext"; // Importar LanguageContext
 import LanguageToggle from "../components/themes/LanguageToggle"; // Importar LanguageToggle
 import translations from "../components/themes/translations"; // Importar las traducciones
-import categories from "../data/category.json";
 import { AuthenticationContext } from "../services/authenticationContext/authentication.context";
 import { getProductCountsByCategory } from "../api/productService";
 
@@ -216,7 +215,6 @@ function NavbarHome() {
             )}
           </Nav.Link>
 
-          {/* Botón de Iniciar Sesión con soporte para modo oscuro */}
           {user ? (
             <Dropdown>
               <Dropdown.Toggle

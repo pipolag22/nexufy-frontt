@@ -7,16 +7,18 @@ import { LanguageContext } from "../../themes/LanguageContext";
 import translations from "../../themes/translations";
 
 const AllProducts = () => {
-  const { filteredProducts, loading, filters, setFilters } = useOutletContext();
+  const { filteredProducts, loading, filters, setFilters, fetchAllProducts } =
+    useOutletContext();
+  // Añadido `fetchAllProducts` desde el contexto
 
   const { darkMode } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext); // Acceder al idioma actual
-  const t = translations[language]; // Obtener las traducciones para el idioma actual
+  const { language } = useContext(LanguageContext);
+  const t = translations[language];
 
   const removeFilter = (key) => {
     setFilters((prevFilters) => {
       const newFilters = { ...prevFilters };
-      delete newFilters[key]; // Eliminar el filtro especificado
+      delete newFilters[key];
       return newFilters;
     });
   };
@@ -29,24 +31,25 @@ const AllProducts = () => {
     <>
       <div className="mx-5 mb-4">
         {Object.entries(filters).map(([key, value]) => (
-          <>
-            <Button
-              key={key}
-              variant={darkMode ? "outline-light" : "outline-secondary"}
-              onClick={() => removeFilter(key)}
-              className="mx-1"
-              size="sm"
-            >
-              {`${value} ✖`}
-            </Button>
-          </>
+          <Button
+            key={key}
+            variant={darkMode ? "outline-light" : "outline-secondary"}
+            onClick={() => removeFilter(key)}
+            className="mx-1"
+            size="sm"
+          >
+            {`${value} ✖`}
+          </Button>
         ))}
       </div>
       {filteredProducts.length < 1 ? (
         <p className="fs-3 container">{t.unavailableProduct}</p>
       ) : (
         <div style={{ height: "100vh" }}>
-          <ProductList products={filteredProducts} />
+          <ProductList
+            products={filteredProducts}
+            fetchUserProducts={fetchAllProducts}
+          />
         </div>
       )}
     </>
