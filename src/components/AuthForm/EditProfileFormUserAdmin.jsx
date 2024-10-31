@@ -3,14 +3,15 @@ import { Form, Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { LanguageContext } from "../themes/LanguageContext";
 import translations from "../themes/translations";
-import { promoteToAdmin } from "../../api/customerService";
+import {
+  promoteToAdmin,
+  updateCustomerProfile,
+} from "../../api/customerService";
 import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
 
-const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
+const EditProfileFormUserAdmin = ({ initialData, onSave, onCancel }) => {
   const { user, reloadUserData } = useContext(AuthenticationContext);
   const token = user?.token || localStorage.getItem("token");
-  const navigate = useNavigate(); // Inicializa useNavigate
 
   const [formData, setFormData] = useState({
     ...initialData,
@@ -33,9 +34,10 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
     e.preventDefault();
     setErrorMessage(null);
     try {
-      await onSave(formData);
+      await updateCustomerProfile(formData.id, token, formData);
       setSuccessMessage(t.changesSavedSuccessfully);
-      await reloadUserData(); // Recargar el contexto del usuario después de guardar
+      await reloadUserData();
+      onSave(formData);
     } catch (error) {
       setErrorMessage(error.message || t.errorUpdatingProfile);
     }
@@ -47,18 +49,12 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
     try {
       await promoteToAdmin(user.username, token);
       setPromoteMessage(t.promoteSuccessMessage);
-      await reloadUserData(); // Recargar el contexto del usuario después de la promoción
-
-      // Espera 2 segundos y luego redirige a la página de inicio
-      setTimeout(() => {
-        navigate("/"); // Redirige a la URL de inicio
-      }, 2000);
+      await reloadUserData();
     } catch (error) {
       setErrorMessage(error.message || t.errorPromotingUser);
     }
   };
 
-  // Verificación de roles
   const isUser = formData.roles.includes("ROLE_USER");
   const isAdmin = formData.roles.includes("ROLE_ADMIN");
 
@@ -133,9 +129,16 @@ const EditProfileFormUserAdmin = ({ initialData, onSave }) => {
       {successMessage && <p className="text-success mt-3">{successMessage}</p>}
       {promoteMessage && <p className="text-success mt-3">{promoteMessage}</p>}
 
-      <Button variant="primary" type="submit" className="mt-3">
-        {t.saveChangesButton}
-      </Button>
+      <Row className="mt-3">
+        <Col>
+          <Button variant="primary" type="submit" className="me-2">
+            {t.saveChangesButton}
+          </Button>
+          <Button variant="secondary" onClick={onCancel}>
+            Cancelar
+          </Button>
+        </Col>
+      </Row>
 
       {isUser && !isAdmin && (
         <Button
@@ -162,6 +165,7 @@ EditProfileFormUserAdmin.propTypes = {
     id: PropTypes.string.isRequired,
   }).isRequired,
   onSave: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 export default EditProfileFormUserAdmin;

@@ -1,21 +1,21 @@
-// EditProfileFormSuperAdmin.js
 import { useState, useContext } from "react";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
+import { updateCustomerProfile } from "../../api/customerService";
 import {
   suspendCustomer,
   unsuspendCustomer,
   deleteCustomer,
 } from "../../api/adminService";
 import moment from "moment";
-import { AuthenticationContext } from "../../services/authenticationContext/authentication.context"; // Importar el contexto de autenticación
-import { LanguageContext } from "../themes/LanguageContext"; // Importar el LanguageContext
-import translations from "../themes/translations"; // Importar las traducciones
+import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
+import { LanguageContext } from "../themes/LanguageContext";
+import translations from "../themes/translations";
 
-const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
-  const { user } = useContext(AuthenticationContext); // Obtener el usuario autenticado
-  const { language } = useContext(LanguageContext); // Obtener el idioma actual
-  const t = translations[language]; // Obtener las traducciones correspondientes
+const EditProfileFormSuperAdmin = ({ initialData, onSave, onCancel }) => {
+  const { user } = useContext(AuthenticationContext);
+  const { language } = useContext(LanguageContext);
+  const t = translations[language];
 
   const [formData, setFormData] = useState(initialData);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -33,9 +33,10 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
     e.preventDefault();
     setErrorMessage(null);
     try {
-      await onSave(formData);
-      console.log(formData)
+      const token = user?.token || localStorage.getItem("token");
+      await updateCustomerProfile(formData.id, token, formData);
       setSuccessMessage(t.changesSavedSuccessfully);
+      onSave(formData);
     } catch (error) {
       setErrorMessage(error.message || t.errorUpdatingProfile);
     }
@@ -75,12 +76,12 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
       const token = localStorage.getItem("token");
       await deleteCustomer(formData.id, token);
       setSuccessMessage(t.userDeletedSuccessfully);
+      onCancel(); // Llamamos a onCancel para cerrar el formulario tras eliminar
     } catch (error) {
       setErrorMessage(error.message || t.errorDeletingUser);
     }
   };
 
-  // Verificar si el usuario actual es el mismo del perfil que se está editando
   const isOwnProfile = user && user.id === formData.id;
 
   return (
@@ -169,7 +170,6 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
         </Row>
       )}
 
-      {/* Solo mostrar los botones de suspensión y eliminación si no es el propio perfil */}
       {!isOwnProfile && (
         <Row className="mt-4">
           <Col>
@@ -208,9 +208,16 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave }) => {
       {errorMessage && <p className="text-danger mt-3">{errorMessage}</p>}
       {successMessage && <p className="text-success mt-3">{successMessage}</p>}
 
-      <Button variant="primary" type="submit" className="mt-3">
-        {t.saveChangesButton}
-      </Button>
+      <Row className="mt-3">
+        <Col>
+          <Button variant="primary" type="submit" className="me-2">
+            {t.saveChangesButton}
+          </Button>
+          <Button variant="secondary" onClick={onCancel}>
+            Cancelar
+          </Button>
+        </Col>
+      </Row>
     </Form>
   );
 };
@@ -228,6 +235,7 @@ EditProfileFormSuperAdmin.propTypes = {
     suspendedUntil: PropTypes.string,
   }).isRequired,
   onSave: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired, // Añadido PropType para onCancel
 };
 
 export default EditProfileFormSuperAdmin;

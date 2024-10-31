@@ -1,4 +1,3 @@
-// ProductCard.js
 import React, { useContext } from "react";
 import Card from "react-bootstrap/Card";
 import { Col, Row } from "react-bootstrap";
@@ -12,11 +11,22 @@ const ProductCard = ({ id, name, price, category, customerId, image }) => {
   const { language } = useContext(LanguageContext); // Obtener el idioma actual
   const t = translations[language]; // Obtener las traducciones correspondientes
 
+  // Mapear directamente las categorías para obtener la traducción sin efectos adicionales
+  const translatedCategory =
+    t.categoriess
+      .map((item) => (item.name === category ? item.name : null))
+      .filter(Boolean)[0] || category;
+
   return (
     <div className="container-fluid container-md">
       <Row className="flex-lg-row flex-column">
         <Col lg={7} className="mb-3 mb-lg-0">
-          <img className="rounded w-100" style={{maxHeight: "25rem", objectFit:"contain"}} src={image} alt={t.productImageAlt} />
+          <img
+            className="rounded w-100"
+            style={{ maxHeight: "25rem", objectFit: "contain" }}
+            src={image}
+            alt={t.productImageAlt}
+          />
         </Col>
         <Col lg={5}>
           <Card.Body
@@ -45,7 +55,7 @@ const ProductCard = ({ id, name, price, category, customerId, image }) => {
                   darkMode ? "text-light" : "text-secondary"
                 }`}
               >
-                {category}
+                {translatedCategory} {/* Usar la categoría traducida */}
               </Card.Subtitle>
               <hr />
             </div>

@@ -22,6 +22,7 @@ import AllProductsLayout from "./components/all-products/Layout";
 import ProtectedAdmin from "./components/routes/protected/ProtectedAdmin";
 import NotFound from "./components/routes/protected/NotFound";
 import EditProduct from "./components/admin/components/EditProduct";
+import EditProductCeo from "./components/ceo/components/EditProductCeo";
 
 function App() {
   const router = createBrowserRouter([
@@ -90,6 +91,10 @@ function App() {
             {
               path: "estadisticas",
               element: <Statistics />,
+            },
+            {
+              path: "/ceo/edit-product/:id",
+              element: <EditProductCeo />,
             },
             { path: "datos", element: <Profile /> },
             { path: "users", element: <AbmUsers /> },

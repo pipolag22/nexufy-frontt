@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../themes/ThemeContext";
 import { LanguageContext } from "../themes/LanguageContext";
 import translations from "../themes/translations";
+import Swal from "sweetalert2";
 
 const ProductCard = ({
   id,
@@ -15,13 +16,11 @@ const ProductCard = ({
   category,
   isOwner,
   isSuperAdmin,
-  handleEdit,
-  confirmDelete,
 }) => {
   const { darkMode } = useContext(ThemeContext);
   const { language } = useContext(LanguageContext);
   const t = translations[language];
-  const navigate = useNavigate(); // Asegúrate de inicializar navigate
+  const navigate = useNavigate();
 
   const handleDetail = () => {
     navigate(`/product/${id}`, {
@@ -38,6 +37,41 @@ const ProductCard = ({
     });
   };
 
+  const handleEdit = () => {
+    const editPath = isSuperAdmin
+      ? `/ceo/edit-product/${id}`
+      : `/edit-product/${id}`;
+    navigate(editPath);
+  };
+
+  const handleDelete = () => {
+    Swal.fire({
+      title: t.confirmDeleteTitle,
+      text: t.confirmDeleteText,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: t.confirmDeleteConfirmButton,
+      cancelButtonText: t.confirmDeleteCancelButton,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log(`Eliminando producto ${id}`);
+        Swal.fire(t.deletedSuccess, t.deletedMessage, "success");
+      }
+    });
+  };
+
+  // Obtener la traducción de la categoría usando map
+  const translatedCategory =
+    t.categoriess
+      .map((cat) => {
+        return cat.name.toLowerCase() === category.toLowerCase()
+          ? cat.name
+          : null;
+      })
+      .filter(Boolean)[0] || category;
+
   return (
     <Card
       style={{ height: "28rem", width: "20rem", border: "none" }}
@@ -45,8 +79,8 @@ const ProductCard = ({
     >
       <Card.Img
         variant="top"
-        src={image || "../../assets/img/placeholder.jpg"} // Asegúrate de tener una imagen de placeholder
-        alt="Imagen del producto"
+        src={image || "../../assets/img/placeholder.jpg"}
+        alt={t.imageLabel}
         style={{ height: "12rem", objectFit: "cover" }}
       />
       <Card.Body
@@ -89,14 +123,14 @@ const ProductCard = ({
               darkMode ? "text-white" : "text-secondary"
             }`}
           >
-            {category}
+            {translatedCategory} {/* Mostrar la categoría traducida */}
           </Card.Text>
         </div>
 
         {(isOwner || isSuperAdmin) && (
           <div className="d-flex justify-content-center gap-2 mt-3">
             <Button
-              onClick={() => handleEdit(id)}
+              onClick={handleEdit}
               variant={darkMode ? "outline-light" : "outline-secondary"}
               size="sm"
               className="w-25"
@@ -104,7 +138,7 @@ const ProductCard = ({
               <i className="bi bi-pencil"></i>
             </Button>
             <Button
-              onClick={() => confirmDelete(id)}
+              onClick={handleDelete}
               variant="danger"
               size="sm"
               className="w-25"
@@ -120,7 +154,7 @@ const ProductCard = ({
             onClick={handleDetail}
             style={{ width: "100%" }}
           >
-            {t.verMas}
+            {t.viewMore}
           </Button>
         </div>
       </Card.Body>

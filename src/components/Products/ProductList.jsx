@@ -55,7 +55,7 @@ const ProductList = ({ products, fetchUserProducts }) => {
       >
         {products.map((product) => (
           <Col key={product.id} className="d-flex justify-content-center">
-            <div style={{ width: "20rem", margin: "0 2rem" }}>
+            <div style={{ width: "auto", margin: "0 2rem" }}>
               <ProductCard
                 id={product.id}
                 image={

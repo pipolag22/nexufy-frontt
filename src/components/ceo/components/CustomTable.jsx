@@ -1,19 +1,12 @@
 import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
-import { Table, Button, Row, Pagination } from "react-bootstrap";
-import EditProfileForm from "../../AuthForm/EditProfileFormSuperAdmin";
-import { updateCustomerProfile } from "../../../api/customerService";
-import Swal from "sweetalert2";
-import { deleteCustomer } from "../../../api/adminService";
+import { Table, Pagination } from "react-bootstrap";
 import { ThemeContext } from "../../themes/ThemeContext";
 
-const CustomTable = ({ columns, data, onEdit, onDelete }) => {
+const CustomTable = ({ columns, data }) => {
   const { darkMode } = useContext(ThemeContext);
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
-  const [isEditing, setIsEditing] = useState(false);
-  const [userToEdit, setUserToEdit] = useState(null);
-  const [error, setError] = useState(null);
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -22,50 +15,6 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-
-  const handleEditClick = (user) => {
-    setUserToEdit(user);
-    setIsEditing(true);
-  };
-
-  const handleDeleteClick = async (user) => {
-    const token = localStorage.getItem("token");
-    const result = await Swal.fire({
-      title: "¿Estás seguro?",
-      text: "¡No podrás revertir esto!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, ¡bórralo!",
-    });
-
-    if (result.isConfirmed) {
-      try {
-        await deleteCustomer(user.id, token);
-        Swal.fire("¡Borrado!", "El usuario ha sido borrado.", "success");
-        onDelete(user.id);
-      } catch (error) {
-        console.error(error);
-        Swal.fire("Error", "Hubo un problema al borrar el usuario.", "error");
-      }
-    }
-  };
-
-  const handleSave = async (updatedData) => {
-    const token = localStorage.getItem("token");
-    try {
-      await updateCustomerProfile(updatedData.id, token, updatedData);
-      onEdit(updatedData);
-      setIsEditing(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  if (isEditing && userToEdit) {
-    return <EditProfileForm initialData={userToEdit} onSave={handleSave} />;
-  }
 
   return (
     <div className="container">
@@ -89,7 +38,6 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
               {columns.map((col) => (
                 <td key={col.accessor}>{col.render(item)}</td>
               ))}
-              <td></td>
             </tr>
           ))}
         </tbody>
@@ -128,8 +76,6 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
 CustomTable.propTypes = {
   columns: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
-  onEdit: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
 };
 
 export default CustomTable;

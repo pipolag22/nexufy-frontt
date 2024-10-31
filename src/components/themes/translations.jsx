@@ -1,6 +1,11 @@
 // themes/translations.js
 const translations = {
   es: {
+    confirmPasswordLabel: "Confirmar Contraseña",
+    confirmPasswordPlaceholder: "Confirma tu contraseña",
+    passwordMismatchError: "Las contraseñas no coinciden.",
+    allFieldsRequiredError: "Todos los campos son obligatorios.",
+    invalidEmailError: "El email no tiene un formato válido.",
     goToAdminProfile: "ir a promoverse a tu perfil",
     filterByPrice: "Por precio",
     priceUnder10000: "Menor a $10000",
@@ -275,9 +280,17 @@ const translations = {
 
     verMas: "ver mas",
 
+    passwordTooShortError: "La contraseña debe tener al menos 6 caracteres.",
+
     // Agrega más traducciones si es necesario
   },
   en: {
+    passwordTooShortError: "The password must be at least 6 characters long.",
+    confirmPasswordLabel: "Confirm Password",
+    confirmPasswordPlaceholder: "Confirm your password",
+    passwordMismatchError: "Passwords do not match.",
+    allFieldsRequiredError: "All fields are required.",
+    invalidEmailError: "The email format is invalid.",
     filterByPrice: "By price",
     priceUnder10000: "Under $10000",
     priceOver10000: "Over $10000",

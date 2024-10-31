@@ -1,21 +1,30 @@
-import { useContext, useEffect, useState, React } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import { Navigate, useNavigate, useOutletContext } from "react-router-dom";
-import { registerAdminUser } from "../../../api/adminService";
-import { getAllCustomers, searchCustomers } from "../../../api/customerService";
+import Swal from "sweetalert2";
+import { deleteCustomer, registerAdminUser } from "../../../api/adminService";
+import {
+  getAllCustomers,
+  searchCustomers,
+  updateCustomerProfile,
+} from "../../../api/customerService"; // Asegúrate de importar updateCustomerProfile aquí
 import CreateUserForm from "../../AuthForm/CreateUserForm";
 import { ThemeContext } from "../../themes/ThemeContext";
-import { LanguageContext } from "../../themes/LanguageContext"; // Importar el contexto de idioma
+import { LanguageContext } from "../../themes/LanguageContext";
 import CustomTable from "./CustomTable";
 import SearchBar from "./SearchBar";
-import translations from "../../themes/translations"; // Importar las traducciones
+import translations from "../../themes/translations";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import EditProfileFormUserAdmin from "../../AuthForm/EditProfileFormUserAdmin";
+import EditProfileFormSuperAdmin from "../../AuthForm/EditProfileFormSuperAdmin";
+import { AuthenticationContext } from "../../../services/authenticationContext/authentication.context";
+import { useNavigate } from "react-router-dom";
 
 const AbmUsers = () => {
-  const { user } = useOutletContext();
-  const navigate = useNavigate();
+  const { user } = useContext(AuthenticationContext);
   const { darkMode } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext); // Acceder al idioma actual
-  const t = translations[language]; // Obtener las traducciones para el idioma actual
+  const { language } = useContext(LanguageContext);
+  const t = translations[language];
+  const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -23,6 +32,8 @@ const AbmUsers = () => {
   const [error, setError] = useState(null);
   const [openNewUser, setOpenNewUser] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const handleCreateClick = () => {
     setOpenNewUser(true);
@@ -34,7 +45,7 @@ const AbmUsers = () => {
         const token = localStorage.getItem("token");
         const customers = await getAllCustomers(token);
         setUsers(customers);
-        setFilteredUsers(customers); // Inicializa usuarios filtrados
+        setFilteredUsers(customers);
       } catch (error) {
         setError(error);
       } finally {
@@ -47,7 +58,6 @@ const AbmUsers = () => {
     fetchAllCustomers();
   }, [user]);
 
-  // Efecto para manejar la búsqueda
   useEffect(() => {
     const token = localStorage.getItem("token");
     const fetchSearchedUsers = async () => {
@@ -59,11 +69,11 @@ const AbmUsers = () => {
           setError(err);
         }
       } else {
-        setFilteredUsers(users); // Restablece a todos los usuarios
+        setFilteredUsers(users);
       }
     };
 
-    fetchSearchedUsers(); // Ejecuta la búsqueda al cambiar el searchQuery
+    fetchSearchedUsers();
   }, [searchQuery, users]);
 
   const handleSave = async (newUser) => {
@@ -78,48 +88,80 @@ const AbmUsers = () => {
     }
   };
 
-  const handleDelete = (userId) => {
-    setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+  const handleEdit = (selectedUser) => {
+    setSelectedUser(selectedUser);
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = async (updatedData) => {
+    const token = localStorage.getItem("token");
+    try {
+      await updateCustomerProfile(selectedUser.id, token, updatedData);
+      setIsEditing(false);
+      setSelectedUser(null);
+      await fetchAllCustomers();
+
+      Swal.fire({
+        icon: "success",
+        title: t.changesSavedSuccessfully,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      setError(error);
+    }
+  };
+
+  // Nueva función para cancelar edición
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setSelectedUser(null);
+  };
+
+  const confirmDeleteCustomer = (id) => {
+    Swal.fire({
+      title: t.confirmDeleteTitle,
+      text: t.confirmDeleteMessage,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: t.delete,
+      cancelButtonText: t.confirmDeleteCancelButton,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await handleConfirmDelete(id);
+      }
+    });
+  };
+
+  const handleConfirmDelete = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      await deleteCustomer(id, token);
+      setFilteredUsers((prevUsers) =>
+        prevUsers.filter((user) => user.id !== id)
+      );
+      Swal.fire(t.deleted, t.successMessage, "success");
+    } catch (error) {
+      setError(error);
+      Swal.fire(t.error, error.message, "error");
+    }
   };
 
   if (!user) {
-    return <Navigate to="/login" />;
+    return <navigate to="/login" />;
   }
 
   if (isLoading) {
-    return <p>{t.loading}</p>; // Texto traducido para "Loading..."
+    return <p>{t.loading}</p>;
   }
 
   if (error) {
     return <p className="text-danger">{error.message}</p>;
   }
 
-  const userColumns = [
-    {
-      header: t.username, // Texto traducido para "Nombre de usuario"
-      accessor: "username",
-      render: (item) => item.username,
-    },
-    {
-      header: t.email, // Texto traducido para "Email"
-      accessor: "email",
-      render: (item) => item.email,
-    },
-    {
-      header: t.role, // Texto traducido para "Rol"
-      accessor: "roles",
-      render: (item) =>
-        item.roles && Array.isArray(item.roles) && item.roles.length > 0
-          ? item.roles.map((role) => role.replace("ROLE_", "")).join(", ")
-          : t.noRole, // Muestra "Sin rol" si no existen roles
-    },
-  ];
-
-  const handleEdit = (updatedUser) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((user) => (user.id === updatedUser.id ? updatedUser : user))
-    );
-  };
+  const isOwnProfile = selectedUser && selectedUser.id === user.id;
 
   return (
     <div
@@ -128,13 +170,26 @@ const AbmUsers = () => {
       }`}
       style={{ borderRadius: "20px" }}
     >
-      {openNewUser ? (
+      {isEditing ? (
+        isOwnProfile ? (
+          <EditProfileFormUserAdmin
+            initialData={selectedUser}
+            onSave={handleSaveEdit}
+            onCancel={handleCancelEdit} // Pasa la función de cancelar
+          />
+        ) : (
+          <EditProfileFormSuperAdmin
+            initialData={selectedUser}
+            onSave={handleSaveEdit}
+            onCancel={handleCancelEdit} // Pasa la función de cancelar
+          />
+        )
+      ) : openNewUser ? (
         <CreateUserForm onSave={handleSave} />
       ) : (
         <>
           <div className="d-flex justify-content-between align-items-center mb-2">
-            <p className="fs-4 fw-semibold">{t.registeredUsers}</p>{" "}
-            {/* Texto traducido para "Usuarios registrados" */}
+            <p className="fs-4 fw-semibold">{t.registeredUsers}</p>
             <div className="w-50 d-flex justify-content-around">
               <SearchBar
                 searchQuery={searchQuery}
@@ -148,14 +203,55 @@ const AbmUsers = () => {
               variant={darkMode ? "outline-light" : "outline-secondary"}
             >
               <i className="bi bi-plus" />
-              <span>{t.addUser}</span> {/* Texto traducido para "Agregar" */}
+              <span>{t.addUser}</span>
             </Button>
           </div>
           <CustomTable
-            columns={userColumns}
-            data={filteredUsers} // Usa los usuarios filtrados aquí
-            onEdit={handleEdit}
-            onDelete={handleDelete}
+            columns={[
+              {
+                header: t.username,
+                accessor: "username",
+                render: (item) => item.username || t.noData,
+              },
+              {
+                header: t.email,
+                accessor: "email",
+                render: (item) => item.email || t.noData,
+              },
+              {
+                header: t.role,
+                accessor: "roles",
+                render: (item) =>
+                  item.roles && Array.isArray(item.roles)
+                    ? item.roles
+                        .map((role) => role.replace("ROLE_", ""))
+                        .join(", ")
+                    : t.noRole,
+              },
+              {
+                header: t.actions,
+                accessor: "actions",
+                render: (item) => (
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <Button
+                      style={{ height: "22px", width: "22px", padding: "0" }}
+                      variant="link"
+                      onClick={() => handleEdit(item)}
+                    >
+                      <FaEdit />
+                    </Button>
+                    <Button
+                      style={{ height: "22px", width: "22px", padding: "0" }}
+                      variant="link"
+                      onClick={() => confirmDeleteCustomer(item.id)}
+                    >
+                      <FaTrash style={{ color: "red" }} />
+                    </Button>
+                  </div>
+                ),
+              },
+            ]}
+            data={filteredUsers}
           />
         </>
       )}
