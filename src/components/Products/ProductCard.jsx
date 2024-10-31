@@ -17,13 +17,14 @@ const ProductCard = ({
   category,
   isOwner,
   isSuperAdmin,
+  confirmDelete, // Recibir confirmDelete como prop
 }) => {
   const { darkMode } = useContext(ThemeContext);
   const { language } = useContext(LanguageContext);
   const t = translations[language];
   const navigate = useNavigate();
 
-  const [deleteSuccess, setDeleteSuccess] = useState(false)
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
 
   const handleDetail = () => {
     navigate(`/product/${id}`, {
@@ -63,7 +64,7 @@ const ProductCard = ({
       cancelButtonColor: "#3085d6",
       confirmButtonText: t.confirmDeleteConfirmButton,
       cancelButtonText: t.confirmDeleteCancelButton,
-    }).then(async(result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
         console.log(`Eliminando producto ${id}`);
         await deleteProduct(id);
@@ -72,16 +73,6 @@ const ProductCard = ({
       }
     });
   };
-
-  // Obtener la traducción de la categoría usando map
-  const translatedCategory =
-    t.categoriess
-      .map((cat) => {
-        return cat.name.toLowerCase() === category.toLowerCase()
-          ? cat.name
-          : null;
-      })
-      .filter(Boolean)[0] || category;
 
   return (
     <Card
@@ -134,7 +125,7 @@ const ProductCard = ({
               darkMode ? "text-white" : "text-secondary"
             }`}
           >
-            {translatedCategory} {/* Mostrar la categoría traducida */}
+            {category}
           </Card.Text>
         </div>
 

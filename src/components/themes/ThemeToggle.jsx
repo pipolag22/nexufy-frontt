@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { ThemeContext } from "./ThemeContext";
-import { FaSun, FaMoon } from "react-icons/fa"; // Importar íconos de sol y luna
+import { FaSun, FaMoon } from "react-icons/fa";
 
 const ThemeToggle = () => {
   const { darkMode, toggleTheme } = useContext(ThemeContext);

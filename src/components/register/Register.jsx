@@ -85,7 +85,6 @@ const Register = () => {
       confirmPassword: "",
     };
 
-    // Validación de campos vacíos y asignación de mensajes específicos
     if (!formData.username) {
       newFieldErrors.username = "Te faltó completar el usuario";
       hasErrors = true;
@@ -110,7 +109,6 @@ const Register = () => {
       return;
     }
 
-    // Validación de formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setErrorMessage(t.invalidEmailError);
@@ -123,20 +121,16 @@ const Register = () => {
       setIsRegistered(true);
       setSuccessMessage(
         "¡Registro exitoso! Serás redirigido al inicio de sesión."
-      ); // Mensaje de éxito
+      );
       setErrorMessage("");
       setTimeout(() => {
         navigate("/login");
-      }, 3000); // Espera 3 segundos antes de redirigir
+      }, 3000);
     } catch (error) {
       console.log("Error al registrarse: " + error.message);
       setErrorMessage(error.message || t.registrationError);
       setIsRegistered(false);
     }
-  };
-
-  const handleLoginRedirect = () => {
-    navigate("/login");
   };
 
   const handleGoHome = () => {
@@ -231,12 +225,10 @@ const Register = () => {
               <a href="/login">{t.loginLink}</a>
             </p>
 
-            {/* Mensaje de error general */}
             {errorMessage && (
               <p className="text-danger text-center">{errorMessage}</p>
             )}
 
-            {/* Mensaje de éxito */}
             {successMessage && (
               <p className="text-success text-center">{successMessage}</p>
             )}
