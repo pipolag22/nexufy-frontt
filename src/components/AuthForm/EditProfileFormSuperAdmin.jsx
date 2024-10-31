@@ -214,7 +214,7 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave, onCancel }) => {
             {t.saveChangesButton}
           </Button>
           <Button variant="secondary" onClick={onCancel}>
-            Cancelar
+            {t.confirmDeleteCancelButton}
           </Button>
         </Col>
       </Row>
@@ -235,7 +235,7 @@ EditProfileFormSuperAdmin.propTypes = {
     suspendedUntil: PropTypes.string,
   }).isRequired,
   onSave: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired, // Añadido PropType para onCancel
+  onCancel: PropTypes.func.isRequired,
 };
 
 export default EditProfileFormSuperAdmin;

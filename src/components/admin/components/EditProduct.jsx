@@ -41,7 +41,7 @@ const EditProduct = () => {
     };
 
     fetchProduct();
-  }, [id]);
+  }, [id, t]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,6 +57,10 @@ const EditProduct = () => {
     } catch (error) {
       setErrorMessage(error.message || t.errorUpdatingProduct);
     }
+  };
+
+  const handleCancel = () => {
+    navigate("/admin/publicaciones");
   };
 
   return (
@@ -118,9 +122,14 @@ const EditProduct = () => {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit">
-          {t.saveChangesButton}
-        </Button>
+        <div className="d-flex mt-3">
+          <Button variant="primary" type="submit" className="me-2">
+            {t.saveChangesButton}
+          </Button>
+          <Button variant="secondary" onClick={handleCancel}>
+            {t.confirmDeleteCancelButton}
+          </Button>
+        </div>
       </Form>
     </div>
   );

@@ -135,7 +135,7 @@ const EditProfileFormUserAdmin = ({ initialData, onSave, onCancel }) => {
             {t.saveChangesButton}
           </Button>
           <Button variant="secondary" onClick={onCancel}>
-            Cancelar
+            {t.confirmDeleteCancelButton}
           </Button>
         </Col>
       </Row>

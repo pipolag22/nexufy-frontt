@@ -127,7 +127,7 @@ const EditProduct = () => {
             {t.saveChangesButton}
           </Button>
           <Button variant="secondary" onClick={handleCancel}>
-            {t.cancelButton || "Cancelar"} {/* Mensaje de cancelar */}
+            {t.confirmDeleteCancelButton}
           </Button>
         </div>
       </Form>
