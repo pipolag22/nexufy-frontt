@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import { ThemeContext } from "../themes/ThemeContext";
 import { LanguageContext } from "../themes/LanguageContext";
 import translations from "../themes/translations";
 import Swal from "sweetalert2";
+import { deleteProduct } from "../../api/productService";
 
 const ProductCard = ({
   id,
@@ -22,6 +23,8 @@ const ProductCard = ({
   const t = translations[language];
   const navigate = useNavigate();
 
+  const [deleteSuccess, setDeleteSuccess] = useState(false)
+
   const handleDetail = () => {
     navigate(`/product/${id}`, {
       state: {
@@ -36,6 +39,12 @@ const ProductCard = ({
       },
     });
   };
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      window.location.reload();
+    }
+  }, [deleteSuccess]);
 
   const handleEdit = () => {
     const editPath = isSuperAdmin
@@ -54,10 +63,12 @@ const ProductCard = ({
       cancelButtonColor: "#3085d6",
       confirmButtonText: t.confirmDeleteConfirmButton,
       cancelButtonText: t.confirmDeleteCancelButton,
-    }).then((result) => {
+    }).then(async(result) => {
       if (result.isConfirmed) {
         console.log(`Eliminando producto ${id}`);
-        Swal.fire(t.deletedSuccess, t.deletedMessage, "success");
+        await deleteProduct(id);
+        setDeleteSuccess(true);
+        Swal.fire(t.deletedSuccess, t.deletedProductMessage, "success");
       }
     });
   };
