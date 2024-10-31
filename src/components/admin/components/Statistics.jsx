@@ -205,32 +205,56 @@ const Statistics = () => {
   };
 
   return (
-    <div>
-      <h2>{t.statistics}</h2>
-      <p>
-        {t.totalRegisteredCustomers} {totalCustomers}
-      </p>
-      <p>
-        {t.totalPublishedProducts} {totalProducts}
-      </p>
-
-      <h3>{t.customersRegisteredPerMonth}</h3>
-      <div style={{ width: "600px", height: "400px", margin: "0 auto" }}>
-        <Bar data={customerData} options={customerOptions} />
+    <div className="container mx-3 h-100 mb-0">
+      <h2 className="text-body-tertiary fs-4">{t.statistics}</h2>
+      <div className="w-100  p-3 py-2 d-flex justify-content-around bg-dark-subtle text-dark-emphasis rounded">
+        <div className="d-flex flex-column w-50 align-items-start ms-2">
+          <p className="fw-semibold text-body-tertiary">
+            {t.totalRegisteredCustomers}
+          </p>
+          <p className="fs-1">{totalCustomers}</p>
+        </div>
+        <div className="d-flex w-50 flex-column align-items-start">
+          <p className="fw-semibold text-body-tertiary">
+            {t.totalPublishedProducts}
+          </p>
+          <p className="fs-1">{totalProducts}</p>
+        </div>
       </div>
-
-      <h3>{t.productsPublishedPerMonth}</h3>
-      <div style={{ width: "600px", height: "400px", margin: "0 auto" }}>
-        <Bar data={productData} options={productOptions} />
+      <div className=" w-100 mt-2 d-flex">
+        <div className=" w-50 bg-light rounded p-3 me-1">
+          <h3 className="fs-4 text-body-tertiary">
+            {t.customersRegisteredPerMonth}
+          </h3>
+          <div className="w-100 h-100 pe-4">
+            <Bar data={customerData} options={customerOptions} />
+            <div className="d-flex justify-content-end">
+              <button
+                className="btn btn-outline-secondary btn-sm"
+                onClick={handleDownloadCustomerReport}
+              >
+                {t.downloadCustomerReport}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="w-50 bg-light rounded p-3">
+          <h3 className="fs-4 text-body-tertiary">
+            {t.productsPublishedPerMonth}
+          </h3>
+          <div className="w-100 h-100">
+            <Bar data={productData} options={productOptions} />
+            <div className="d-flex justify-content-end">
+              <button
+                className="btn btn-outline-secondary btn-sm "
+                onClick={handleDownloadProductReport}
+              >
+                {t.downloadProductReport}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <button onClick={handleDownloadCustomerReport}>
-        {t.downloadCustomerReport}
-      </button>
-
-      <button onClick={handleDownloadProductReport}>
-        {t.downloadProductReport}
-      </button>
     </div>
   );
 };
