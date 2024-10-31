@@ -6,7 +6,7 @@ import {
   getAllCustomers,
   searchCustomers,
   updateCustomerProfile,
-} from "../../../api/customerService"; // Asegúrate de importar updateCustomerProfile aquí
+} from "../../../api/customerService";
 import CreateUserForm from "../../AuthForm/CreateUserForm";
 import { ThemeContext } from "../../themes/ThemeContext";
 import { LanguageContext } from "../../themes/LanguageContext";
@@ -18,6 +18,7 @@ import EditProfileFormUserAdmin from "../../AuthForm/EditProfileFormUserAdmin";
 import EditProfileFormSuperAdmin from "../../AuthForm/EditProfileFormSuperAdmin";
 import { AuthenticationContext } from "../../../services/authenticationContext/authentication.context";
 import { useNavigate } from "react-router-dom";
+import useSearch from "../../../hooks/useSearch";
 
 const AbmUsers = () => {
   const { user } = useContext(AuthenticationContext);
@@ -29,11 +30,13 @@ const AbmUsers = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [openNewUser, setOpenNewUser] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [error, setError] = useState(null); // Agrega el estado de error aquí
+
+  const token = localStorage.getItem("token"); // Declara el token aquí
+  const { searchQuery, setSearchQuery, filteredSearch } = useSearch("", users, token, "customers");
 
   const handleCreateClick = () => {
     setOpenNewUser(true);
@@ -42,7 +45,6 @@ const AbmUsers = () => {
   const fetchAllCustomers = async () => {
     if (user && user.id) {
       try {
-        const token = localStorage.getItem("token");
         const customers = await getAllCustomers(token);
         setUsers(customers);
         setFilteredUsers(customers);
@@ -58,26 +60,7 @@ const AbmUsers = () => {
     fetchAllCustomers();
   }, [user]);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const fetchSearchedUsers = async () => {
-      if (searchQuery) {
-        try {
-          const results = await searchCustomers(searchQuery, token);
-          setFilteredUsers(results);
-        } catch (err) {
-          setError(err);
-        }
-      } else {
-        setFilteredUsers(users);
-      }
-    };
-
-    fetchSearchedUsers();
-  }, [searchQuery, users]);
-
   const handleSave = async (newUser) => {
-    const token = localStorage.getItem("token");
     try {
       await registerAdminUser(newUser, token);
       setOpenNewUser(false);
@@ -94,7 +77,6 @@ const AbmUsers = () => {
   };
 
   const handleSaveEdit = async (updatedData) => {
-    const token = localStorage.getItem("token");
     try {
       await updateCustomerProfile(selectedUser.id, token, updatedData);
       setIsEditing(false);
@@ -112,7 +94,6 @@ const AbmUsers = () => {
     }
   };
 
-  // Nueva función para cancelar edición
   const handleCancelEdit = () => {
     setIsEditing(false);
     setSelectedUser(null);
@@ -137,7 +118,6 @@ const AbmUsers = () => {
 
   const handleConfirmDelete = async (id) => {
     try {
-      const token = localStorage.getItem("token");
       await deleteCustomer(id, token);
       setFilteredUsers((prevUsers) =>
         prevUsers.filter((user) => user.id !== id)
@@ -149,9 +129,11 @@ const AbmUsers = () => {
     }
   };
 
-  if (!user) {
-    return <navigate to="/login" />;
-  }
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
   if (isLoading) {
     return <p>{t.loading}</p>;
@@ -175,13 +157,13 @@ const AbmUsers = () => {
           <EditProfileFormUserAdmin
             initialData={selectedUser}
             onSave={handleSaveEdit}
-            onCancel={handleCancelEdit} // Pasa la función de cancelar
+            onCancel={handleCancelEdit}
           />
         ) : (
           <EditProfileFormSuperAdmin
             initialData={selectedUser}
             onSave={handleSaveEdit}
-            onCancel={handleCancelEdit} // Pasa la función de cancelar
+            onCancel={handleCancelEdit}
           />
         )
       ) : openNewUser ? (
@@ -251,7 +233,7 @@ const AbmUsers = () => {
                 ),
               },
             ]}
-            data={filteredUsers}
+            data={filteredSearch}
           />
         </>
       )}
