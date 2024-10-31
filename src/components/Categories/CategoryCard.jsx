@@ -6,22 +6,15 @@ const CategoryCard = ({ id, image, name, description }) => {
   const { darkMode } = useContext(ThemeContext); // Obtener el estado del tema
   const navigate = useNavigate();
 
-  const handleDetail = () => {
-    navigate(`/product/category/${id}`, {
-      state: {
-        category: {
-          id: id,
-          name: name,
-          description: description,
-        },
-      },
-    });
+  const handleCategoryClick = (name) => {
+    navigate("/all", { state: { category: name } });
   };
+  
 
   return (
     <div
       className="custom-card rounded-5"
-      onClick={handleDetail}
+      onClick={() => handleCategoryClick(name)}
       style={{ cursor: "pointer" }}
     >
       <img
