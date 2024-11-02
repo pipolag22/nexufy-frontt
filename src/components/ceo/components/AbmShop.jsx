@@ -1,17 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Navigate, useOutletContext, useNavigate } from "react-router-dom";
-import {
-  getAllProducts,
-  searchProducts,
-  deleteProduct,
-} from "../../../api/productService";
+import { getAllProducts, deleteProduct } from "../../../api/productService";
 import { ThemeContext } from "../../themes/ThemeContext";
 import useLanguage from "../../themes/useLanguage"; // Utilizar el hook useLanguage
 import CustomTable from "./CustomTable";
 import SearchBar from "./SearchBar";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
+import useSearch from "../../../hooks/useSearch";
 
 const AbmShop = () => {
   const { user } = useOutletContext();
@@ -20,10 +17,9 @@ const AbmShop = () => {
   const navigate = useNavigate();
 
   const [productos, setProductos] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const { searchQuery, setSearchQuery, filteredSearch, error } = useSearch("", productos, null, "products");
+
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -34,33 +30,14 @@ const AbmShop = () => {
       try {
         const products = await getAllProducts();
         setProductos(products);
-        setFilteredProducts(products);
       } catch (error) {
-        setError(error);
+        console.error(error);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchAllProducts();
   }, []);
-
-  useEffect(() => {
-    const fetchSearchedProducts = async () => {
-      if (searchQuery) {
-        try {
-          const results = await searchProducts(searchQuery);
-          setFilteredProducts(results);
-        } catch (error) {
-          setError(error);
-        }
-      } else {
-        setFilteredProducts(productos);
-      }
-    };
-
-    fetchSearchedProducts();
-  }, [searchQuery, productos]);
 
   const handleEdit = (id) => {
     const editPath = user.roles.includes("ROLE_SUPERADMIN")
@@ -90,11 +67,9 @@ const AbmShop = () => {
   const handleConfirmDelete = async (id) => {
     try {
       await deleteProduct(id);
-      setFilteredProducts(
-        filteredProducts.filter((product) => product.id !== id)
-      );
+      setProductos(prevProductos => prevProductos.filter(product => product.id !== id));
     } catch (error) {
-      setError(error);
+      console.error(error);
     }
   };
 
@@ -153,8 +128,7 @@ const AbmShop = () => {
           darkMode={darkMode}
         />
       </div>
-
-      <CustomTable columns={productColumns} data={filteredProducts} />
+      <CustomTable columns={productColumns} data={filteredSearch} />
     </div>
   );
 };
