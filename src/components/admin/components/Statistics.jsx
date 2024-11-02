@@ -12,9 +12,13 @@ import {
 import useLanguage from "../../themes/useLanguage"; // Importar el hook useLanguage
 import { ThemeContext } from "../../themes/ThemeContext"; // Importar ThemeContext
 
+// Importar herramientas para tooltips
+import { useTooltip, TooltipWithBounds, defaultStyles } from "@visx/tooltip";
+import { localPoint } from "@visx/event";
+
 const Statistics = () => {
   const { darkMode } = useContext(ThemeContext);
-  const { t, language } = useLanguage(); // Obtener las traducciones correspondientes usando el hook
+  const { t } = useLanguage(); // Obtener las traducciones correspondientes usando el hook
 
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
@@ -23,6 +27,26 @@ const Statistics = () => {
   const [productsByMonth, setProductsByMonth] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Estado para tooltips de clientes
+  const {
+    tooltipOpen: tooltipOpenCustomers,
+    tooltipLeft: tooltipLeftCustomers,
+    tooltipTop: tooltipTopCustomers,
+    tooltipData: tooltipDataCustomers,
+    showTooltip: showTooltipCustomers,
+    hideTooltip: hideTooltipCustomers,
+  } = useTooltip();
+
+  // Estado para tooltips de productos
+  const {
+    tooltipOpen: tooltipOpenProducts,
+    tooltipLeft: tooltipLeftProducts,
+    tooltipTop: tooltipTopProducts,
+    tooltipData: tooltipDataProducts,
+    showTooltip: showTooltipProducts,
+    hideTooltip: hideTooltipProducts,
+  } = useTooltip();
 
   // Memorizar monthMap para evitar recreación en cada render
   const monthMap = useMemo(
@@ -114,8 +138,12 @@ const Statistics = () => {
   };
 
   // Configuración de las dimensiones y escalas para VisX
+  const margin = { top: 20, right: 20, bottom: 40, left: 60 };
   const xMax = 300;
   const yMax = 200;
+  const width = xMax + margin.left + margin.right;
+  const height = yMax + margin.top + margin.bottom;
+
   const maxCustomers = useMemo(
     () => Math.max(...customerRegistrationsByMonth, 1),
     [customerRegistrationsByMonth]
@@ -230,6 +258,7 @@ const Statistics = () => {
           className={`w-100 ${
             darkMode ? "bg-dark text-white" : "bg-light text-dark"
           } rounded p-3 me-md-1 mb-3 mb-md-0`}
+          style={{ position: "relative" }}
         >
           <h3
             className={`fs-4 mb-3 ${
@@ -238,8 +267,8 @@ const Statistics = () => {
           >
             {t.customersRegisteredPerMonth}
           </h3>
-          <svg width={xMax + 100} height={yMax + 100}>
-            <Group top={20} left={60}>
+          <svg width={width} height={height}>
+            <Group top={margin.top} left={margin.left}>
               {customerRegistrationsByMonth.map((d, i) => (
                 <React.Fragment key={`bar-customer-${i}`}>
                   <Bar
@@ -252,6 +281,22 @@ const Statistics = () => {
                         ? "rgba(75, 192, 192, 0.8)"
                         : "rgba(75, 192, 192, 0.6)"
                     }
+                    onMouseMove={(event) => {
+                      const coords = localPoint(
+                        event.target.ownerSVGElement,
+                        event
+                      );
+                      const tooltipLeft = coords.x + margin.left;
+                      const tooltipTop = coords.y + margin.top;
+                      showTooltipCustomers({
+                        tooltipData: { month: defaultMonths[i], value: d },
+                        tooltipLeft,
+                        tooltipTop,
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      hideTooltipCustomers();
+                    }}
                   />
                   {/* Valor dentro de la barra */}
                   <Text
@@ -287,6 +332,25 @@ const Statistics = () => {
               />
             </Group>
           </svg>
+          {/* Tooltip para Clientes */}
+          {tooltipOpenCustomers && (
+            <TooltipWithBounds
+              top={tooltipTopCustomers}
+              left={tooltipLeftCustomers}
+              style={{
+                ...defaultStyles,
+                backgroundColor: "rgba(0,0,0,0.9)",
+                color: "white",
+              }}
+            >
+              <div>
+                <strong>{tooltipDataCustomers.month}</strong>
+              </div>
+              <div>
+                {t.clientsRegistered}: {tooltipDataCustomers.value}
+              </div>
+            </TooltipWithBounds>
+          )}
           <div className="d-flex justify-content-end mt-2">
             <button
               className={`btn btn-outline-${
@@ -304,6 +368,7 @@ const Statistics = () => {
           className={`w-100 ${
             darkMode ? "bg-dark text-white" : "bg-light text-dark"
           } rounded p-3`}
+          style={{ position: "relative" }}
         >
           <h3
             className={`fs-4 mb-3 ${
@@ -312,8 +377,8 @@ const Statistics = () => {
           >
             {t.productsPublishedPerMonth}
           </h3>
-          <svg width={xMax + 100} height={yMax + 100}>
-            <Group top={20} left={60}>
+          <svg width={width} height={height}>
+            <Group top={margin.top} left={margin.left}>
               {productsByMonth.map((d, i) => (
                 <React.Fragment key={`bar-product-${i}`}>
                   <Bar
@@ -326,6 +391,22 @@ const Statistics = () => {
                         ? "rgba(153, 102, 255, 0.8)"
                         : "rgba(153, 102, 255, 0.6)"
                     }
+                    onMouseMove={(event) => {
+                      const coords = localPoint(
+                        event.target.ownerSVGElement,
+                        event
+                      );
+                      const tooltipLeft = coords.x + margin.left;
+                      const tooltipTop = coords.y + margin.top;
+                      showTooltipProducts({
+                        tooltipData: { month: defaultMonths[i], value: d },
+                        tooltipLeft,
+                        tooltipTop,
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      hideTooltipProducts();
+                    }}
                   />
                   {/* Valor dentro de la barra */}
                   <Text
@@ -361,6 +442,25 @@ const Statistics = () => {
               />
             </Group>
           </svg>
+          {/* Tooltip para Productos */}
+          {tooltipOpenProducts && (
+            <TooltipWithBounds
+              top={tooltipTopProducts}
+              left={tooltipLeftProducts}
+              style={{
+                ...defaultStyles,
+                backgroundColor: "rgba(0,0,0,0.9)",
+                color: "white",
+              }}
+            >
+              <div>
+                <strong>{tooltipDataProducts.month}</strong>
+              </div>
+              <div>
+                {t.productsPublished}: {tooltipDataProducts.value}
+              </div>
+            </TooltipWithBounds>
+          )}
           <div className="d-flex justify-content-end mt-2">
             <button
               className={`btn btn-outline-${
