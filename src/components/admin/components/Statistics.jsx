@@ -9,8 +9,8 @@ import {
   downloadCustomerReport,
   downloadProductReport,
 } from "../../../api/statisticService";
-import useLanguage from "../../themes/useLanguage"; // Importar el hook useLanguage
-import { ThemeContext } from "../../themes/ThemeContext"; // Importar ThemeContext
+import useLanguage from "../../themes/useLanguage";
+import { ThemeContext } from "../../themes/ThemeContext";
 
 // Importar herramientas para tooltips
 import { useTooltip, TooltipWithBounds, defaultStyles } from "@visx/tooltip";
@@ -18,7 +18,7 @@ import { localPoint } from "@visx/event";
 
 const Statistics = () => {
   const { darkMode } = useContext(ThemeContext);
-  const { t } = useLanguage(); // Obtener las traducciones correspondientes usando el hook
+  const { t } = useLanguage();
 
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
@@ -28,7 +28,6 @@ const Statistics = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estado para tooltips de clientes
   const {
     tooltipOpen: tooltipOpenCustomers,
     tooltipLeft: tooltipLeftCustomers,
@@ -38,7 +37,6 @@ const Statistics = () => {
     hideTooltip: hideTooltipCustomers,
   } = useTooltip();
 
-  // Estado para tooltips de productos
   const {
     tooltipOpen: tooltipOpenProducts,
     tooltipLeft: tooltipLeftProducts,
@@ -48,7 +46,6 @@ const Statistics = () => {
     hideTooltip: hideTooltipProducts,
   } = useTooltip();
 
-  // Memorizar monthMap para evitar recreación en cada render
   const monthMap = useMemo(
     () => ({
       JANUARY: t.months.JANUARY,
@@ -67,7 +64,6 @@ const Statistics = () => {
     [t]
   );
 
-  // Definir los meses predeterminados basados en las traducciones
   const defaultMonths = useMemo(
     () => [
       t.months.AUGUST,
@@ -137,7 +133,6 @@ const Statistics = () => {
     }
   };
 
-  // Configuración de las dimensiones y escalas para VisX
   const margin = { top: 20, right: 20, bottom: 40, left: 60 };
   const xMax = 300;
   const yMax = 200;
@@ -153,7 +148,6 @@ const Statistics = () => {
     [productsByMonth]
   );
 
-  // Función para generar ticks de enteros
   const generateTicks = (maxValue) => {
     const ticks = [];
     for (let i = 1; i <= maxValue; i++) {
@@ -214,7 +208,6 @@ const Statistics = () => {
         darkMode ? "bg-dark" : "bg-light"
       }`}
     >
-      {/* Título "Statistics" */}
       <h2
         className={`fs-4 mb-4 ${
           darkMode ? "text-white" : "text-body-tertiary"
@@ -223,7 +216,6 @@ const Statistics = () => {
         {t.statistics}
       </h2>
 
-      {/* Contenedor de Totales */}
       <div
         className={`w-100 p-3 py-2 d-flex justify-content-around ${
           darkMode ? "bg-dark text-white" : "bg-light text-dark"
@@ -251,9 +243,7 @@ const Statistics = () => {
         </div>
       </div>
 
-      {/* Contenedor de Gráficos */}
       <div className="w-100 d-flex flex-column flex-md-row">
-        {/* Gráfico de Clientes */}
         <div
           className={`w-100 ${
             darkMode ? "bg-dark text-white" : "bg-light text-dark"
@@ -298,7 +288,7 @@ const Statistics = () => {
                       hideTooltipCustomers();
                     }}
                   />
-                  {/* Valor dentro de la barra */}
+
                   <Text
                     x={xScale(defaultMonths[i]) + xScale.bandwidth() / 2}
                     y={yScaleCustomer(d) + 15}
@@ -363,7 +353,6 @@ const Statistics = () => {
           </div>
         </div>
 
-        {/* Gráfico de Productos */}
         <div
           className={`w-100 ${
             darkMode ? "bg-dark text-white" : "bg-light text-dark"
@@ -408,7 +397,7 @@ const Statistics = () => {
                       hideTooltipProducts();
                     }}
                   />
-                  {/* Valor dentro de la barra */}
+
                   <Text
                     x={xScale(defaultMonths[i]) + xScale.bandwidth() / 2}
                     y={yScaleProduct(d) + 15}
@@ -442,7 +431,7 @@ const Statistics = () => {
               />
             </Group>
           </svg>
-          {/* Tooltip para Productos */}
+
           {tooltipOpenProducts && (
             <TooltipWithBounds
               top={tooltipTopProducts}
