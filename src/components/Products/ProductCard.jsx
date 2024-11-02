@@ -1,11 +1,15 @@
+// ProductCard.jsx
+
 import React, { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../themes/ThemeContext";
-import useLanguage from "../themes/useLanguage"; // Importar el hook personalizado
+import { LanguageContext } from "../themes/LanguageContext";
+import translations, { categoryNameToIdMapping } from "../themes/translations";
 import Swal from "sweetalert2";
 import { deleteProduct } from "../../api/productService";
+import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
 
 const ProductCard = ({
   id,
@@ -14,15 +18,33 @@ const ProductCard = ({
   description,
   price,
   category,
-  isOwner,
-  isSuperAdmin,
-  confirmDelete, // Recibir confirmDelete como prop
+  // ownerId, // Eliminado ya que asumimos que los productos son del usuario actual
+  showActions, // Controla la visualización de los botones
 }) => {
   const { darkMode } = useContext(ThemeContext);
-  const { t } = useLanguage(); // Usar el hook para obtener las traducciones
+  const { language } = useContext(LanguageContext);
+  const { user } = useContext(AuthenticationContext);
+  const t = translations[language];
   const navigate = useNavigate();
 
+  // Obtener el ID de la categoría usando el nombre
+  const categoryId = categoryNameToIdMapping[category];
+
+  // Obtener el nombre de la categoría en el idioma actual
+  const categoryData = t.categoriess.find((cat) => cat.id === categoryId);
+  const categoryNameInCurrentLanguage = categoryData
+    ? categoryData.name
+    : category;
+
   const [deleteSuccess, setDeleteSuccess] = useState(false);
+
+  // Determinar si el usuario es superadministrador (si es necesario)
+  const isSuperAdmin = user?.roles?.includes("ROLE_SUPERADMIN");
+
+  // Agrega logs para depuración
+  console.log("User in ProductCard:", user);
+  console.log("User ID in ProductCard:", user?.id);
+  console.log("showActions:", showActions);
 
   const handleDetail = () => {
     navigate(`/product/${id}`, {
@@ -46,10 +68,7 @@ const ProductCard = ({
   }, [deleteSuccess]);
 
   const handleEdit = () => {
-    const editPath = isSuperAdmin
-      ? `/ceo/edit-product/${id}`
-      : `/edit-product/${id}`;
-    navigate(editPath);
+    navigate(`/admin/edit-product/${id}`);
   };
 
   const handleDelete = () => {
@@ -64,10 +83,14 @@ const ProductCard = ({
       cancelButtonText: t.confirmDeleteCancelButton,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        console.log(`Eliminando producto ${id}`);
-        await deleteProduct(id);
-        setDeleteSuccess(true);
-        Swal.fire(t.deletedSuccess, t.deletedProductMessage, "success");
+        try {
+          await deleteProduct(id);
+          setDeleteSuccess(true);
+          Swal.fire(t.deletedSuccess, t.deletedProductMessage, "success");
+        } catch (error) {
+          console.error("Error eliminando el producto:", error);
+          Swal.fire(t.errorDelete, error.message, "error");
+        }
       }
     });
   };
@@ -123,11 +146,12 @@ const ProductCard = ({
               darkMode ? "text-white" : "text-secondary"
             }`}
           >
-            {category}
+            {categoryNameInCurrentLanguage}
           </Card.Text>
         </div>
 
-        {(isOwner || isSuperAdmin) && (
+        {/* Mostrar botones solo si showActions es true */}
+        {showActions && (
           <div className="d-flex justify-content-center gap-2 mt-3">
             <Button
               onClick={handleEdit}

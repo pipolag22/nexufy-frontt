@@ -1,3 +1,4 @@
+// Profile.jsx
 import { useEffect, useState, useContext } from "react";
 import {
   getCustomerById,
@@ -22,6 +23,7 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null); // Añadido para manejar el usuario seleccionado
 
   useEffect(() => {
     const fetchCustomer = async () => {
@@ -44,17 +46,48 @@ const Profile = () => {
     fetchCustomer();
   }, [user]);
 
-  const handleSave = async (updatedData) => {
+  const handleSaveEdit = async (updatedData) => {
     const token = localStorage.getItem("token");
 
     try {
-      await updateCustomerProfile(user.id, token, updatedData);
+      await updateCustomerProfile(selectedUser.id, token, updatedData);
       setData(updatedData);
       setIsEditing(false);
+      setSelectedUser(null);
+      console.log("Perfil actualizado correctamente");
     } catch (error) {
       setError(error);
+      console.error("Error al actualizar el perfil:", error);
+      Swal.fire(t.error, error.message, "error");
     }
   };
+
+  const handleCancelEdit = () => {
+    console.log("handleCancelEdit ejecutado");
+    setIsEditing(false);
+    setSelectedUser(null);
+  };
+
+  const handleEdit = (selectedUser) => {
+    // Verificar si el usuario actual está intentando editar su propio perfil
+    const isEditingOwnProfile = selectedUser.id === user.id;
+
+    // Si el usuario no es Super Admin y está intentando editar a otro usuario, mostrar error
+    if (!isSuperAdmin && !isEditingOwnProfile) {
+      Swal.fire({
+        icon: "error",
+        title: t.permissionDeniedTitle, // Asegúrate de tener esta clave
+        text: t.permissionDeniedMessage, // Asegúrate de tener esta clave
+      });
+      return;
+    }
+
+    console.log("Editing user:", selectedUser); // Verifica qué usuario se está editando
+    setSelectedUser(selectedUser);
+    setIsEditing(true);
+  };
+
+  const isSuperAdmin = loggedInUser.roles.includes("ROLE_SUPERADMIN");
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -73,9 +106,6 @@ const Profile = () => {
   // Verificación de los roles en la consola
   console.log("Data en Profile:", data.roles);
 
-  // Lógica para mostrar el formulario correspondiente
-  const isSuperAdmin = loggedInUser.roles.includes("ROLE_SUPERADMIN");
-
   return (
     <div
       className={`container shadow p-4 mb-3 mx-2 d-flex flex-column align-items-start ${
@@ -93,10 +123,18 @@ const Profile = () => {
         }`}
       >
         {isEditing ? (
-          isSuperAdmin ? (
-            <EditProfileFormSuperAdmin initialData={data} onSave={handleSave} />
+          isSuperAdmin && selectedUser.id !== user.id ? (
+            <EditProfileFormSuperAdmin
+              initialData={selectedUser}
+              onSave={handleSaveEdit}
+              onCancel={handleCancelEdit}
+            />
           ) : (
-            <EditProfileFormUserAdmin initialData={data} onSave={handleSave} />
+            <EditProfileFormUserAdmin
+              initialData={selectedUser}
+              onSave={handleSaveEdit}
+              onCancel={handleCancelEdit}
+            />
           )
         ) : (
           <>
@@ -215,7 +253,7 @@ const Profile = () => {
               <Col xs={12} md={4}>
                 <Row className="justify-content-end me-4">
                   <Button
-                    onClick={() => setIsEditing(true)}
+                    onClick={() => handleEdit(user)} // Llamar a handleEdit con el usuario actual
                     variant="outline-secondary"
                     size="sm"
                     className="border border-2 rounded-pill w-25 p-1 d-flex justify-content-center"

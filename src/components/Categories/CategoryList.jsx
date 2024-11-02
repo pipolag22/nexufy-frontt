@@ -1,3 +1,5 @@
+// CategoryList.jsx
+
 import { useContext } from "react";
 import { Col, Row } from "react-bootstrap";
 import { ThemeContext } from "../themes/ThemeContext"; // Importar ThemeContext
@@ -27,12 +29,13 @@ const imageMap = {
 
 const CategoryList = () => {
   const { darkMode } = useContext(ThemeContext);
-  const { language, t } = useLanguage(); // Usar el hook para obtener el idioma y las traducciones
+  const { t, language } = useLanguage(); // Usar el hook para obtener el idioma y las traducciones
 
   const categories = t.categoriess;
 
   return (
     <div className="mb-3">
+      {/* Título que cambia de color según el tema */}
       <p
         className={`fs-3 text-center fw-bold ${
           darkMode ? "text-light" : "text-dark"

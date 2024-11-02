@@ -13,13 +13,17 @@ import useSearch from "../../../hooks/useSearch";
 const AbmShop = () => {
   const { user } = useOutletContext();
   const { darkMode } = useContext(ThemeContext);
-  const { t } = useLanguage(); // Obtener las traducciones usando el hook
+  const { t, language } = useLanguage(); // Obtener las traducciones usando el hook
   const navigate = useNavigate();
 
   const [productos, setProductos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { searchQuery, setSearchQuery, filteredSearch, error } = useSearch("", productos, null, "products");
-
+  const { searchQuery, setSearchQuery, filteredSearch, error } = useSearch(
+    "",
+    productos,
+    null,
+    "products"
+  );
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -67,7 +71,9 @@ const AbmShop = () => {
   const handleConfirmDelete = async (id) => {
     try {
       await deleteProduct(id);
-      setProductos(prevProductos => prevProductos.filter(product => product.id !== id));
+      setProductos((prevProductos) =>
+        prevProductos.filter((product) => product.id !== id)
+      );
     } catch (error) {
       console.error(error);
     }

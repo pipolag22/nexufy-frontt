@@ -5,7 +5,8 @@ import { AuthenticationContext } from "../../services/authenticationContext/auth
 import { getAllProducts } from "../../api/productService";
 import NavbarHome from "../Navbar";
 import { ThemeContext } from "../themes/ThemeContext";
-import useLanguage from "../themes/useLanguage"; // Importar el hook useLanguage
+import useLanguage from "../themes/useLanguage";
+import { categoryNameToIdMapping } from "../themes/translations";
 
 const AllProductsLayout = () => {
   const [filters, setFilters] = useState({});
@@ -14,7 +15,7 @@ const AllProductsLayout = () => {
   const { user } = useContext(AuthenticationContext);
   const { darkMode } = useContext(ThemeContext);
   const location = useLocation();
-  const t = useLanguage(); // Obtener las traducciones correspondientes usando el hook
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -31,11 +32,10 @@ const AllProductsLayout = () => {
   }, []);
 
   useEffect(() => {
-    // Si hay una categoría en el estado de navegación, establecerla en los filtros
-    if (location.state?.category) {
+    if (location.state?.categoryId) {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        category: location.state.category,
+        category: { id: location.state.categoryId },
       }));
     }
   }, [location.state]);
@@ -44,17 +44,21 @@ const AllProductsLayout = () => {
     let filtered = [...products];
 
     if (filters.price) {
-      if (filters.price === t.priceUnder10000) {
+      if (filters.price.id === "under10000") {
         filtered = filtered.filter((p) => p.price < 10000.0);
-      } else if (filters.price === t.priceOver10000) {
+      } else if (filters.price.id === "over10000") {
         filtered = filtered.filter((p) => p.price >= 10000.0);
-      } else if (filters.price === t.priceOver25000) {
+      } else if (filters.price.id === "over25000") {
         filtered = filtered.filter((p) => p.price > 25000.0);
       }
     }
 
     if (filters.category) {
-      filtered = filtered.filter((p) => p.category === filters.category);
+      const categoryId = filters.category.id;
+      filtered = filtered.filter((p) => {
+        const productCategoryId = categoryNameToIdMapping[p.category];
+        return productCategoryId === categoryId;
+      });
     }
 
     return filtered;

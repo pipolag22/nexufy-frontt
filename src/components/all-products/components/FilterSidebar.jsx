@@ -1,12 +1,11 @@
-// FilterSidebar.jsx
 import React, { useContext } from "react";
 import { Col, Row } from "react-bootstrap";
 import { ThemeContext } from "../../themes/ThemeContext";
-import useLanguage from "../../themes/useLanguage"; // Importar el hook useLanguage
+import useLanguage from "../../themes/useLanguage";
 
 const FilterSidebar = ({ setFilters }) => {
   const { darkMode } = useContext(ThemeContext);
-  const { t } = useLanguage(); // Desestructurar para obtener solo 't'
+  const { t } = useLanguage();
 
   const handleFilterChange = (type, value) => {
     setFilters((prev) => ({ ...prev, [type]: value }));
@@ -15,14 +14,21 @@ const FilterSidebar = ({ setFilters }) => {
   const navs = [
     {
       id: 1,
-      name: t.filterByPrice, // Texto traducido
-      options: [t.priceUnder10000, t.priceOver10000, t.priceOver25000],
+      name: t.filterByPrice,
+      options: [
+        { id: "under10000", name: t.priceUnder10000 },
+        { id: "over10000", name: t.priceOver10000 },
+        { id: "over25000", name: t.priceOver25000 },
+      ],
       type: "price",
     },
     {
       id: 2,
       name: t.filterByCategory,
-      options: t.categoriess.map((category) => category.name),
+      options: t.categoriess.map((category) => ({
+        id: category.id,
+        name: category.name,
+      })),
       type: "category",
     },
   ];
@@ -50,14 +56,14 @@ const FilterSidebar = ({ setFilters }) => {
             >
               {nav.name}
             </h3>
-            {nav.options.map((opt, index) => (
+            {nav.options.map((opt) => (
               <p
-                key={index}
+                key={opt.id}
                 className="options"
                 onClick={() => handleFilterChange(nav.type, opt)}
                 style={{ cursor: "pointer" }}
               >
-                {opt}
+                {opt.name}
               </p>
             ))}
           </Row>

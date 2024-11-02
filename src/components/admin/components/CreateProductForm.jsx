@@ -1,11 +1,13 @@
+// CreateProductForm.jsx
+
 import { useState } from "react";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 import useLanguage from "../../themes/useLanguage"; // Importar el hook useLanguage
 
-const CreateProductForm = ({ onSave }) => {
+const CreateProductForm = ({ onSave, onCancel }) => {
   const [formData, setFormData] = useState({});
-  const t = useLanguage(); // Usar el hook useLanguage para obtener las traducciones
+  const { t } = useLanguage(); // Usar el hook useLanguage para obtener las traducciones
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,9 +24,20 @@ const CreateProductForm = ({ onSave }) => {
     onSave(formattedData);
   };
 
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel();
+    }
+  };
+
   return (
     <div>
-      <div className="boton-back mb-4 d-flex align-items-center">
+      {/* Botón de "Atrás" */}
+      <div
+        className="boton-back mb-4 d-flex align-items-center"
+        style={{ cursor: "pointer" }}
+        onClick={handleCancel}
+      >
         <i className="bi bi-arrow-left text-body-tertiary" />
         <span className="fw-semibold text-body-tertiary mx-1">{t.back}</span>
       </div>
@@ -136,6 +149,7 @@ const CreateProductForm = ({ onSave }) => {
 
 CreateProductForm.propTypes = {
   onSave: PropTypes.func.isRequired,
+  onCancel: PropTypes.func, // Añadido onCancel
 };
 
 export default CreateProductForm;

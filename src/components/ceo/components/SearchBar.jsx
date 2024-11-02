@@ -4,7 +4,7 @@ import useLanguage from "../../themes/useLanguage"; // Importar el hook useLangu
 
 const SearchBar = ({ searchQuery, setSearchQuery, darkMode }) => {
   const [debounceTimeOut, setDebounceTimeOut] = useState(null);
-  const { t } = useLanguage(); // Obtener las traducciones directamente con el hook
+  const { t, language } = useLanguage(); // Obtener las traducciones directamente con el hook
 
   const handleInputSearch = (event) => {
     const value = event.target.value;

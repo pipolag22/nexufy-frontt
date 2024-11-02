@@ -9,7 +9,7 @@ const EditProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useContext(AuthenticationContext);
-  const { t } = useLanguage(); // Obtener las traducciones directamente con el hook
+  const { t, language } = useLanguage(); // Obtener las traducciones directamente con el hook
 
   const [productData, setProductData] = useState({
     name: "",

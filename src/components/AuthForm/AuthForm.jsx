@@ -14,7 +14,7 @@ const AuthForm = ({
   errorMessage,
 }) => {
   const { darkMode } = useContext(ThemeContext);
-  const t = useLanguage(); // Obtener las traducciones correspondientes usando el hook
+  const { t, language } = useLanguage(); // Obtener las traducciones correspondientes usando el hook
 
   // Estado para errores en los campos
   const [errors, setErrors] = useState({});

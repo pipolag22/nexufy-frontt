@@ -2,12 +2,12 @@ import React, { useContext } from "react";
 import { Col, Nav, Row } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import img from "../../../assets/img/logo-png.png";
-import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
-import useLanguage from "../../themes/useLanguage"; // Importar el hook useLanguage
+import { ThemeContext } from "../../themes/ThemeContext";
+import useLanguage from "../../themes/useLanguage";
 
 const Sidebar = () => {
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
-  const { t } = useLanguage(); // Obtener las traducciones utilizando el hook
+  const { t, language } = useLanguage(); // Desestructurar t y language desde useLanguage
 
   const navs = [
     {
@@ -111,6 +111,4 @@ const Sidebar = () => {
   );
 };
 
-const MemoizedSidebar = React.memo(Sidebar);
-
-export default MemoizedSidebar;
+export default Sidebar;

@@ -1,3 +1,5 @@
+// Publications.jsx
+
 import { useEffect, useState, useContext } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import ProductList from "../../Products/ProductList";
@@ -12,7 +14,7 @@ const Publications = () => {
   const { user } = useOutletContext();
   const navigate = useNavigate();
   const { darkMode } = useContext(ThemeContext);
-  const t = useLanguage(); // Usar el hook useLanguage para obtener las traducciones
+  const { t } = useLanguage(); // Usar el hook useLanguage para obtener las traducciones
 
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
@@ -23,6 +25,10 @@ const Publications = () => {
 
   const handleCreatePublication = () => {
     setOpenNewProduct(true);
+  };
+
+  const handleCancelCreation = () => {
+    setOpenNewProduct(false);
   };
 
   const fetchUserProducts = async () => {
@@ -86,7 +92,10 @@ const Publications = () => {
 
       {canPublish ? (
         openNewProduct ? (
-          <CreateProductForm onSave={handleSave} />
+          <CreateProductForm
+            onSave={handleSave}
+            onCancel={handleCancelCreation}
+          />
         ) : (
           <>
             <div className="d-flex justify-content-between align-items-center mb-4">

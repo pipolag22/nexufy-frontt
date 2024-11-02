@@ -10,7 +10,7 @@ import useLanguage from "../themes/useLanguage"; // Importar el hook de idioma
 const CeoLayout = () => {
   const navigate = useNavigate();
   const { darkMode } = useContext(ThemeContext);
-  const { t } = useLanguage(); // Usar el hook para obtener las traducciones
+  const { t, language } = useLanguage(); // Usar el hook para obtener las traducciones
   const { user } = useContext(AuthenticationContext);
 
   const closeSession = () => {
