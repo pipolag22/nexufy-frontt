@@ -5,8 +5,7 @@ import { AuthenticationContext } from "../../services/authenticationContext/auth
 import { getAllProducts } from "../../api/productService";
 import NavbarHome from "../Navbar";
 import { ThemeContext } from "../themes/ThemeContext";
-import { LanguageContext } from "../themes/LanguageContext";
-import translations from "../themes/translations";
+import useLanguage from "../themes/useLanguage"; // Importar el hook useLanguage
 
 const AllProductsLayout = () => {
   const [filters, setFilters] = useState({});
@@ -14,9 +13,8 @@ const AllProductsLayout = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthenticationContext);
   const { darkMode } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
   const location = useLocation();
-  const t = translations[language];
+  const t = useLanguage(); // Obtener las traducciones correspondientes usando el hook
 
   useEffect(() => {
     const fetchProducts = async () => {

@@ -3,8 +3,7 @@ import { Button } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../themes/ThemeContext";
-import { LanguageContext } from "../themes/LanguageContext";
-import translations from "../themes/translations";
+import useLanguage from "../themes/useLanguage"; // Importar el hook personalizado
 import Swal from "sweetalert2";
 import { deleteProduct } from "../../api/productService";
 
@@ -20,8 +19,7 @@ const ProductCard = ({
   confirmDelete, // Recibir confirmDelete como prop
 }) => {
   const { darkMode } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
-  const t = translations[language];
+  const { t } = useLanguage(); // Usar el hook para obtener las traducciones
   const navigate = useNavigate();
 
   const [deleteSuccess, setDeleteSuccess] = useState(false);

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Bar } from "@visx/shape";
 import { Group } from "@visx/group";
 import { Text } from "@visx/text";
@@ -9,8 +9,7 @@ import {
   downloadCustomerReport,
   downloadProductReport,
 } from "../../../api/statisticService";
-import { LanguageContext } from "../../themes/LanguageContext";
-import translations from "../../themes/translations";
+import useLanguage from "../../themes/useLanguage"; // Importar el hook useLanguage
 
 const Statistics = () => {
   const [totalCustomers, setTotalCustomers] = useState(0);
@@ -20,8 +19,7 @@ const Statistics = () => {
   const [productsByMonth, setProductsByMonth] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { language } = useContext(LanguageContext);
-  const t = translations[language];
+  const { t, language } = useLanguage(); // Desestructurar t y language desde useLanguage
 
   const monthMap = {
     JANUARY: t.months.JANUARY,
@@ -76,7 +74,7 @@ const Statistics = () => {
     };
 
     fetchData();
-  }, []);
+  }, [monthMap, defaultMonths]);
 
   const handleDownloadCustomerReport = async () => {
     try {
@@ -113,8 +111,8 @@ const Statistics = () => {
   // Configuración de las dimensiones y escalas para VisX
   const xMax = 300;
   const yMax = 200;
-  const maxCustomers = Math.max(...customerRegistrationsByMonth, 1); // Máximo dinámico para eje Y
-  const maxProducts = Math.max(...productsByMonth, 1); // Máximo dinámico para eje Y
+  const maxCustomers = Math.max(...customerRegistrationsByMonth, 1);
+  const maxProducts = Math.max(...productsByMonth, 1);
 
   // Función para generar ticks de enteros
   const generateTicks = (maxValue) => {
@@ -207,7 +205,7 @@ const Statistics = () => {
               <AxisLeft
                 scale={yScaleCustomer}
                 label={t.clientsRegistered}
-                tickValues={generateTicks(maxCustomers)} // Valores específicos para ticks en el eje Y
+                tickValues={generateTicks(maxCustomers)}
                 tickLabelProps={() => ({
                   fill: "#333",
                   fontSize: 12,
@@ -267,7 +265,7 @@ const Statistics = () => {
               <AxisLeft
                 scale={yScaleProduct}
                 label={t.productsPublished}
-                tickValues={generateTicks(maxProducts)} // Valores específicos para ticks en el eje Y
+                tickValues={generateTicks(maxProducts)}
                 tickLabelProps={() => ({
                   fill: "#333",
                   fontSize: 12,

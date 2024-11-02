@@ -3,15 +3,13 @@ import { Form, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProduct, updateProduct } from "../../../api/productService";
 import { AuthenticationContext } from "../../../services/authenticationContext/authentication.context";
-import { LanguageContext } from "../../themes/LanguageContext";
-import translations from "../../themes/translations";
+import useLanguage from "../../themes/useLanguage"; // Importar el hook useLanguage
 
 const EditProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useContext(AuthenticationContext);
-  const { language } = useContext(LanguageContext);
-  const t = translations[language];
+  const { t } = useLanguage(); // Obtener las traducciones directamente con el hook
 
   const [productData, setProductData] = useState({
     name: "",
@@ -41,7 +39,7 @@ const EditProduct = () => {
     };
 
     fetchProduct();
-  }, [id]);
+  }, [id, t.errorFetchingProduct]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

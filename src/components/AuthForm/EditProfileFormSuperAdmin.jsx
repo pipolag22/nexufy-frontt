@@ -1,28 +1,26 @@
 import { useState, useContext } from "react";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
-import { updateCustomerProfile } from "../../api/customerService";
+import useLanguage from "../themes/useLanguage"; // Importar el hook useLanguage
 import {
-  suspendCustomer,
-  unsuspendCustomer,
-  deleteCustomer,
-} from "../../api/adminService";
-import moment from "moment";
+  promoteToAdmin,
+  updateCustomerProfile,
+} from "../../api/customerService";
 import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
-import { LanguageContext } from "../themes/LanguageContext";
-import translations from "../themes/translations";
 
-const EditProfileFormSuperAdmin = ({ initialData, onSave, onCancel }) => {
-  const { user } = useContext(AuthenticationContext);
-  const { language } = useContext(LanguageContext);
-  const t = translations[language];
+const EditProfileFormUserAdmin = ({ initialData, onSave, onCancel }) => {
+  const { t, language } = useLanguage(); // Desestructurar t y language desde useLanguage
+  const { user, reloadUserData } = useContext(AuthenticationContext);
+  const token = user?.token || localStorage.getItem("token");
 
-  const [formData, setFormData] = useState(initialData);
+  const [formData, setFormData] = useState({
+    ...initialData,
+    roles: initialData.roles || [],
+  });
+
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-  const [suspensionEndDate, setSuspensionEndDate] = useState(
-    formData.suspendedUntil ? new Date(formData.suspendedUntil) : null
-  );
+  const [promoteMessage, setPromoteMessage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,56 +31,29 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave, onCancel }) => {
     e.preventDefault();
     setErrorMessage(null);
     try {
-      const token = user?.token || localStorage.getItem("token");
       await updateCustomerProfile(formData.id, token, formData);
       setSuccessMessage(t.changesSavedSuccessfully);
+      await reloadUserData();
       onSave(formData);
     } catch (error) {
       setErrorMessage(error.message || t.errorUpdatingProfile);
     }
   };
 
-  const handleSuspend = async (days) => {
+  const handlePromoteToAdmin = async () => {
+    setErrorMessage(null);
+    setPromoteMessage(null);
     try {
-      const token = localStorage.getItem("token");
-      const newSuspensionEndDate = moment().add(days, "days").toDate();
-      await suspendCustomer(formData.id, days, token);
-      setFormData({
-        ...formData,
-        suspended: true,
-        suspendedUntil: newSuspensionEndDate,
-      });
-      setSuspensionEndDate(newSuspensionEndDate);
-      setSuccessMessage(t.suspendedUserForDays.replace("{days}", days));
+      await promoteToAdmin(user.username, token);
+      setPromoteMessage(t.promoteSuccessMessage);
+      await reloadUserData();
     } catch (error) {
-      setErrorMessage(error.message || t.errorSuspendingUser);
+      setErrorMessage(error.message || t.errorPromotingUser);
     }
   };
 
-  const handleUnsuspend = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      await unsuspendCustomer(formData.id, token);
-      setFormData({ ...formData, suspended: false, suspendedUntil: null });
-      setSuspensionEndDate(null);
-      setSuccessMessage(t.suspensionLifted);
-    } catch (error) {
-      setErrorMessage(error.message || t.errorLiftingSuspension);
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      await deleteCustomer(formData.id, token);
-      setSuccessMessage(t.userDeletedSuccessfully);
-      onCancel(); // Llamamos a onCancel para cerrar el formulario tras eliminar
-    } catch (error) {
-      setErrorMessage(error.message || t.errorDeletingUser);
-    }
-  };
-
-  const isOwnProfile = user && user.id === formData.id;
+  const isUser = formData.roles.includes("ROLE_USER");
+  const isAdmin = formData.roles.includes("ROLE_ADMIN");
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -144,69 +115,16 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave, onCancel }) => {
 
           <Form.Group controlId="formUsername">
             <Form.Label>{t.usernameLabel}</Form.Label>
-            <Form.Text
-              className="form-control"
-              style={{
-                backgroundColor: "#e9ecef",
-                border: "1px solid #ced4da",
-              }}
-            >
+            <Form.Text className="form-control">
               {formData.username || ""}
             </Form.Text>
           </Form.Group>
         </Col>
       </Row>
 
-      {formData.suspended && suspensionEndDate && (
-        <Row className="mt-3">
-          <Col>
-            <p className="text-warning">
-              {t.userSuspendedUntil.replace(
-                "{date}",
-                moment(suspensionEndDate).locale(language).format("L LT")
-              )}
-            </p>
-          </Col>
-        </Row>
-      )}
-
-      {!isOwnProfile && (
-        <Row className="mt-4">
-          <Col>
-            <Button
-              variant="danger"
-              onClick={() => handleSuspend(7)}
-              className="me-2"
-            >
-              {t.suspendForDays.replace("{days}", 7)}
-            </Button>
-            <Button
-              variant="danger"
-              onClick={() => handleSuspend(30)}
-              className="me-2"
-            >
-              {t.suspendForDays.replace("{days}", 30)}
-            </Button>
-
-            {formData.suspended && (
-              <Button
-                variant="success"
-                onClick={handleUnsuspend}
-                className="me-2"
-              >
-                {t.liftSuspension}
-              </Button>
-            )}
-
-            <Button variant="outline-danger" onClick={handleDelete}>
-              {t.deleteUser}
-            </Button>
-          </Col>
-        </Row>
-      )}
-
       {errorMessage && <p className="text-danger mt-3">{errorMessage}</p>}
       {successMessage && <p className="text-success mt-3">{successMessage}</p>}
+      {promoteMessage && <p className="text-success mt-3">{promoteMessage}</p>}
 
       <Row className="mt-3">
         <Col>
@@ -218,11 +136,21 @@ const EditProfileFormSuperAdmin = ({ initialData, onSave, onCancel }) => {
           </Button>
         </Col>
       </Row>
+
+      {isUser && !isAdmin && (
+        <Button
+          variant="warning"
+          onClick={handlePromoteToAdmin}
+          className="mt-3"
+        >
+          {t.promoteToAdminButton}
+        </Button>
+      )}
     </Form>
   );
 };
 
-EditProfileFormSuperAdmin.propTypes = {
+EditProfileFormUserAdmin.propTypes = {
   initialData: PropTypes.shape({
     name: PropTypes.string,
     email: PropTypes.string,
@@ -230,12 +158,11 @@ EditProfileFormSuperAdmin.propTypes = {
     phone: PropTypes.string,
     lastname: PropTypes.string,
     username: PropTypes.string,
+    roles: PropTypes.arrayOf(PropTypes.string).isRequired,
     id: PropTypes.string.isRequired,
-    suspended: PropTypes.bool,
-    suspendedUntil: PropTypes.string,
   }).isRequired,
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };
 
-export default EditProfileFormSuperAdmin;
+export default EditProfileFormUserAdmin;

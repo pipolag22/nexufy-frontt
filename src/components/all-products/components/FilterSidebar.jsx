@@ -1,14 +1,12 @@
-import { useContext } from "react";
+// FilterSidebar.jsx
+import React, { useContext } from "react";
 import { Col, Row } from "react-bootstrap";
 import { ThemeContext } from "../../themes/ThemeContext";
-import { LanguageContext } from "../../themes/LanguageContext"; // Importar LanguageContext
-import translations from "../../themes/translations"; // Importar las traducciones
-import categories from "../../../data/category.json";
+import useLanguage from "../../themes/useLanguage"; // Importar el hook useLanguage
 
 const FilterSidebar = ({ setFilters }) => {
   const { darkMode } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext); // Obtener el idioma actual
-  const t = translations[language]; // Obtener las traducciones para el idioma actual
+  const { t } = useLanguage(); // Desestructurar para obtener solo 't'
 
   const handleFilterChange = (type, value) => {
     setFilters((prev) => ({ ...prev, [type]: value }));

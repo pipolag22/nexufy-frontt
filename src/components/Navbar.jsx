@@ -1,4 +1,5 @@
-import { useContext, useEffect, useRef, useState } from "react";
+// NavbarHome.jsx
+import React, { useEffect, useRef, useState, useContext } from "react"; // Asegúrate de importar useContext
 import {
   Button,
   Dropdown,
@@ -10,15 +11,16 @@ import {
 } from "react-bootstrap";
 import { FaBars, FaSearch, FaUserCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { searchProducts } from "../api/productService";
+import {
+  searchProducts,
+  getProductCountsByCategory,
+} from "../api/productService";
 import img from "../assets/img/nexufy-horizontal-png.png";
 import { ThemeContext } from "../components/themes/ThemeContext";
 import ThemeToggle from "../components/themes/ThemeToggle";
-import { LanguageContext } from "../components/themes/LanguageContext"; // Importar LanguageContext
-import LanguageToggle from "../components/themes/LanguageToggle"; // Importar LanguageToggle
-import translations from "../components/themes/translations"; // Importar las traducciones
+import LanguageToggle from "../components/themes/LanguageToggle";
+import useLanguage from "../components/themes/useLanguage"; // Importar el hook personalizado
 import { AuthenticationContext } from "../services/authenticationContext/authentication.context";
-import { getProductCountsByCategory } from "../api/productService";
 
 function NavbarHome() {
   const [showCategories, setShowCategories] = useState(false);
@@ -32,8 +34,7 @@ function NavbarHome() {
 
   const { user, handleLogout } = useContext(AuthenticationContext);
   const { darkMode } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext); // Acceder al idioma actual
-  const t = translations[language]; // Obtener las traducciones para el idioma actual
+  const { t } = useLanguage(); // Destructurar para obtener solo 't'
 
   const handleSearch = async (event) => {
     event.preventDefault();

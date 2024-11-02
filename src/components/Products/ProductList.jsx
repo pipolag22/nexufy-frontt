@@ -5,14 +5,12 @@ import ProductCard from "./ProductCard";
 import categories from "../../data/category.json";
 import { AuthenticationContext } from "../../services/authenticationContext/authentication.context";
 import { deleteProduct } from "../../api/productService";
-import { LanguageContext } from "../themes/LanguageContext";
-import translations from "../themes/translations";
+import useLanguage from "../themes/useLanguage"; // Importar el hook personalizado
 import placeholder from "../../assets/img/placeholder.jpg";
 
 const ProductList = ({ products, fetchUserProducts }) => {
   const { user } = useContext(AuthenticationContext);
-  const { language } = useContext(LanguageContext);
-  const t = translations[language];
+  const { t } = useLanguage(); // Usar el hook para obtener las traducciones
 
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -83,7 +81,7 @@ const ProductList = ({ products, fetchUserProducts }) => {
         <Modal.Body>
           <p>{t.confirmDeleteText}</p>
           <p>
-            <strong>{t.confirmDeleteWarning}</strong>
+            <strong>{t.revertWarning}</strong>
           </p>
         </Modal.Body>
         <Modal.Footer>

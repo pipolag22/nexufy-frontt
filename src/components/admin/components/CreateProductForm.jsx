@@ -1,16 +1,11 @@
-// CreateProductForm.js
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
-import categories from "../../../data/category.json";
-import { LanguageContext } from "../../themes/LanguageContext"; // Importar el LanguageContext
-import translations from "../../themes/translations"; // Importar las traducciones
+import useLanguage from "../../themes/useLanguage"; // Importar el hook useLanguage
 
 const CreateProductForm = ({ onSave }) => {
   const [formData, setFormData] = useState({});
-
-  const { language } = useContext(LanguageContext); // Obtener el idioma actual
-  const t = translations[language]; // Obtener las traducciones correspondientes
+  const t = useLanguage(); // Usar el hook useLanguage para obtener las traducciones
 
   const handleChange = (e) => {
     const { name, value } = e.target;

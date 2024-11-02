@@ -1,19 +1,17 @@
+// AllProducts.jsx
 import React, { useContext } from "react";
 import { useOutletContext } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import ProductList from "../../Products/ProductList";
 import { ThemeContext } from "../../themes/ThemeContext";
-import { LanguageContext } from "../../themes/LanguageContext";
-import translations from "../../themes/translations";
+import useLanguage from "../../themes/useLanguage"; // Importar el hook useLanguage
 
 const AllProducts = () => {
   const { filteredProducts, loading, filters, setFilters, fetchAllProducts } =
     useOutletContext();
-  // Añadido `fetchAllProducts` desde el contexto
 
   const { darkMode } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
-  const t = translations[language];
+  const { t } = useLanguage(); // Desestructurar para obtener solo 't'
 
   const removeFilter = (key) => {
     setFilters((prevFilters) => {

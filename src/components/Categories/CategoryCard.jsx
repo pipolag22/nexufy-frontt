@@ -9,7 +9,6 @@ const CategoryCard = ({ id, image, name, description }) => {
   const handleCategoryClick = (name) => {
     navigate("/all", { state: { category: name } });
   };
-  
 
   return (
     <div
@@ -24,17 +23,17 @@ const CategoryCard = ({ id, image, name, description }) => {
       />
       <div
         className={`overlay text-card-custom d-flex flex-column justify-content-center align-items-start ${
-          darkMode ? " text-light" : " text-dark"
+          darkMode ? "text-light" : "text-dark"
         }`} // Cambiar el color según el tema
       >
         <p
           className={`fs-3 fw-semibold ${
-            darkMode ?"text-dark" : "text-light" 
+            darkMode ? "text-light" : "text-dark"
           }`}
         >
           {name}
         </p>
-        <p className={`fs-6 ${darkMode ? "text-dark" : "text-light"}`}>
+        <p className={`fs-6 ${darkMode ? "text-light" : "text-dark"}`}>
           {description}
         </p>
       </div>

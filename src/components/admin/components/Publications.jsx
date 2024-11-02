@@ -6,15 +6,13 @@ import { Button, Alert } from "react-bootstrap";
 import CreateProductForm from "./CreateProductForm";
 import { postProduct } from "../../../api/productService";
 import { ThemeContext } from "../../themes/ThemeContext";
-import { LanguageContext } from "../../themes/LanguageContext";
-import translations from "../../themes/translations";
+import useLanguage from "../../themes/useLanguage"; // Importar el hook useLanguage
 
 const Publications = () => {
   const { user } = useOutletContext();
   const navigate = useNavigate();
   const { darkMode } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
-  const t = translations[language];
+  const t = useLanguage(); // Usar el hook useLanguage para obtener las traducciones
 
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);

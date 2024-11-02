@@ -6,13 +6,12 @@ import {
   getAllCustomers,
   searchCustomers,
   updateCustomerProfile,
-} from "../../../api/customerService"; // Asegúrate de importar updateCustomerProfile aquí
+} from "../../../api/customerService";
 import CreateUserForm from "../../AuthForm/CreateUserForm";
 import { ThemeContext } from "../../themes/ThemeContext";
-import { LanguageContext } from "../../themes/LanguageContext";
+import useLanguage from "../../themes/useLanguage"; // Importa el hook useLanguage
 import CustomTable from "./CustomTable";
 import SearchBar from "./SearchBar";
-import translations from "../../themes/translations";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import EditProfileFormUserAdmin from "../../AuthForm/EditProfileFormUserAdmin";
 import EditProfileFormSuperAdmin from "../../AuthForm/EditProfileFormSuperAdmin";
@@ -22,8 +21,7 @@ import { useNavigate } from "react-router-dom";
 const AbmUsers = () => {
   const { user } = useContext(AuthenticationContext);
   const { darkMode } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
-  const t = translations[language];
+  const { t } = useLanguage(); // Obtener las traducciones directamente con el hook
   const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
@@ -112,7 +110,6 @@ const AbmUsers = () => {
     }
   };
 
-  // Nueva función para cancelar edición
   const handleCancelEdit = () => {
     setIsEditing(false);
     setSelectedUser(null);
@@ -175,13 +172,13 @@ const AbmUsers = () => {
           <EditProfileFormUserAdmin
             initialData={selectedUser}
             onSave={handleSaveEdit}
-            onCancel={handleCancelEdit} // Pasa la función de cancelar
+            onCancel={handleCancelEdit}
           />
         ) : (
           <EditProfileFormSuperAdmin
             initialData={selectedUser}
             onSave={handleSaveEdit}
-            onCancel={handleCancelEdit} // Pasa la función de cancelar
+            onCancel={handleCancelEdit}
           />
         )
       ) : openNewUser ? (

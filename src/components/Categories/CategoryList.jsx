@@ -1,8 +1,7 @@
 import { useContext } from "react";
 import { Col, Row } from "react-bootstrap";
 import { ThemeContext } from "../themes/ThemeContext"; // Importar ThemeContext
-import { LanguageContext } from "../themes/LanguageContext"; // Importar LanguageContext
-import translations from "../themes/translations"; // Importar las traducciones
+import useLanguage from "../themes/useLanguage"; // Importar el hook personalizado
 import CategoryCard from "./CategoryCard";
 import Image1 from "../../assets/img/metales.jpg";
 import Image2 from "../../assets/img/polimeros.png";
@@ -28,8 +27,7 @@ const imageMap = {
 
 const CategoryList = () => {
   const { darkMode } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
-  const t = translations[language];
+  const { language, t } = useLanguage(); // Usar el hook para obtener el idioma y las traducciones
 
   const categories = t.categoriess;
 

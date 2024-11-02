@@ -9,8 +9,7 @@ import EditProfileFormUserAdmin from "../../AuthForm/EditProfileFormUserAdmin";
 import EditProfileFormSuperAdmin from "../../AuthForm/EditProfileFormSuperAdmin";
 import { ThemeContext } from "../../themes/ThemeContext";
 import { AuthenticationContext } from "../../../services/authenticationContext/authentication.context";
-import { LanguageContext } from "../../themes/LanguageContext";
-import translations from "../../themes/translations";
+import useLanguage from "../../themes/useLanguage"; // Importar el hook useLanguage
 import moment from "moment";
 import "moment/locale/es";
 
@@ -18,8 +17,7 @@ const Profile = () => {
   const { user } = useOutletContext();
   const { darkMode } = useContext(ThemeContext);
   const { user: loggedInUser } = useContext(AuthenticationContext);
-  const { language } = useContext(LanguageContext);
-  const t = translations[language];
+  const { t, language } = useLanguage(); // Desestructurar t y language desde useLanguage
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);

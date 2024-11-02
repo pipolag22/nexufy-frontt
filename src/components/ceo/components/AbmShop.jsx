@@ -7,18 +7,16 @@ import {
   deleteProduct,
 } from "../../../api/productService";
 import { ThemeContext } from "../../themes/ThemeContext";
-import { LanguageContext } from "../../themes/LanguageContext";
+import useLanguage from "../../themes/useLanguage"; // Utilizar el hook useLanguage
 import CustomTable from "./CustomTable";
 import SearchBar from "./SearchBar";
-import translations from "../../themes/translations";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const AbmShop = () => {
   const { user } = useOutletContext();
   const { darkMode } = useContext(ThemeContext);
-  const { language } = useContext(LanguageContext);
-  const t = translations[language];
+  const { t } = useLanguage(); // Obtener las traducciones usando el hook
   const navigate = useNavigate();
 
   const [productos, setProductos] = useState([]);
@@ -65,7 +63,6 @@ const AbmShop = () => {
   }, [searchQuery, productos]);
 
   const handleEdit = (id) => {
-    // Redirigir a EditProduct o EditProductCeo según el rol del usuario
     const editPath = user.roles.includes("ROLE_SUPERADMIN")
       ? `/ceo/edit-product/${id}`
       : `/edit-product/${id}`;

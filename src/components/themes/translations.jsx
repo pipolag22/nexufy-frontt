@@ -17,6 +17,7 @@ const translations = {
       "Soluciones innovadoras para la gestión de proyectos y desarrollo web.",
     usefulLinks: "Enlaces Útiles",
     aboutUs: "Sobre Nosotros",
+
     services: "Servicios",
     contact: "Contacto",
     faq: "Preguntas Frecuentes",
@@ -312,6 +313,7 @@ const translations = {
     ceoProfile: "CEO Profile",
     logout: "Log Out",
     login: "Log In",
+    deletedProductMessage: "Product has been deleted.",
     categories: "Categories",
     usernameLabel: "Username",
     usernamePlaceholder: "Enter your username",

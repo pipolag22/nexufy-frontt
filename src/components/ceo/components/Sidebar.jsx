@@ -1,16 +1,13 @@
-// Sidebar.js
 import React, { useContext } from "react";
 import { Col, Nav, Row } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import img from "../../../assets/img/logo-png.png";
 import { ThemeContext } from "../../themes/ThemeContext"; // Importar el ThemeContext
-import { LanguageContext } from "../../themes/LanguageContext"; // Importar el LanguageContext
-import translations from "../../themes/translations"; // Importar las traducciones
+import useLanguage from "../../themes/useLanguage"; // Importar el hook useLanguage
 
 const Sidebar = () => {
   const { darkMode } = useContext(ThemeContext); // Acceder al estado del tema
-  const { language } = useContext(LanguageContext); // Obtener el idioma actual
-  const t = translations[language]; // Obtener las traducciones correspondientes
+  const { t } = useLanguage(); // Obtener las traducciones utilizando el hook
 
   const navs = [
     {
@@ -114,6 +111,6 @@ const Sidebar = () => {
   );
 };
 
-const MemoizedFooter = React.memo(Sidebar);
+const MemoizedSidebar = React.memo(Sidebar);
 
-export default MemoizedFooter;
+export default MemoizedSidebar;
