@@ -1,7 +1,7 @@
 export async function registerAdminUser(formData, token) {
   try {
     const response = await fetch(
-      "http://localhost:8081/api/superadmin/customers/create",
+      "https://nexufy-2.onrender.com/api/superadmin/customers/create",
       {
         method: "POST",
         headers: {
@@ -26,7 +26,7 @@ export async function registerAdminUser(formData, token) {
 export async function suspendCustomer(id, days, token) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/superadmin/customers/suspend/${id}?days=${days}`,
+      `https://nexufy-2.onrender.com/api/superadmin/customers/suspend/${id}?days=${days}`,
       {
         method: "PUT",
         headers: {
@@ -48,7 +48,7 @@ export async function suspendCustomer(id, days, token) {
 export async function unsuspendCustomer(id, token) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/superadmin/customers/unsuspend/${id}`,
+      `https://nexufy-2.onrender.com/api/superadmin/customers/unsuspend/${id}`,
       {
         method: "PUT",
         headers: {
@@ -74,7 +74,7 @@ export async function unsuspendCustomer(id, token) {
 export async function deleteCustomer(id, token) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/superadmin/customers/delete/${id}`,
+      `https://nexufy-2.onrender.com/api/superadmin/customers/delete/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -98,7 +98,7 @@ export async function deleteCustomer(id, token) {
 
 export async function searchData(searchQuery, token, table){
   try{
-    const response = await fetch(`http://localhost:8081/api/admin/${table}/search?name=${searchQuery}`,{
+    const response = await fetch(`https://nexufy-2.onrender.com/api/admin/${table}/search?name=${searchQuery}`,{
       headers:{
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
@@ -114,3 +114,4 @@ export async function searchData(searchQuery, token, table){
     return [];
   }
 }
+
