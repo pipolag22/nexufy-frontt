@@ -1,10 +1,7 @@
-// const env = import.meta.env.VITE_API_HOST;
-
-// Product services
 export async function getProduct(productId) {
   try {
     const response = await fetch(
-      "http://localhost:8081/api/products/" + productId,
+      "https://nexufy-2.onrender.com/api/products/" + productId,
       {
         headers: {
           accept: "application/json",
@@ -31,7 +28,7 @@ export async function getProduct(productId) {
 
 export async function getAllProducts() {
   try {
-    const res = await fetch("http://localhost:8081/api/products", {
+    const res = await fetch("https://nexufy-2.onrender.com/api/products", {
       headers: {
         accept: "application/json",
       },
@@ -50,7 +47,7 @@ export async function getAllProducts() {
 export async function postProduct(newProduct, customerId, token) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/products/customer/${customerId}`,
+      `https://nexufy-2.onrender.com/api/products/customer/${customerId}`,
       {
         method: "POST",
         headers: {
@@ -68,10 +65,11 @@ export async function postProduct(newProduct, customerId, token) {
     throw error;
   }
 }
+
 export async function getSellerContact(customerId, token) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/customer/${customerId}/contact`,
+      `https://nexufy-2.onrender.com/api/customer/${customerId}/contact`,
       {
         headers: {
           accept: "application/json",
@@ -94,7 +92,7 @@ export async function getSellerContact(customerId, token) {
 export async function getComments(productId) {
   try {
     const response = await fetch(
-      "http://localhost:8081/api/rating-comments/product/" + productId,
+      "https://nexufy-2.onrender.com/api/rating-comments/product/" + productId,
       {
         headers: {
           accept: "application/json",
@@ -114,7 +112,7 @@ export async function getComments(productId) {
 
 export async function postComments(commentData) {
   try {
-    const response = await fetch("http://localhost:8081/api/rating-comments", {
+    const response = await fetch("https://nexufy-2.onrender.com/api/rating-comments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -133,7 +131,7 @@ export async function postComments(commentData) {
 export async function searchProducts(searchQuery) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/products/search?name=${searchQuery}`,
+      `https://nexufy-2.onrender.com/api/products/search?name=${searchQuery}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -150,10 +148,11 @@ export async function searchProducts(searchQuery) {
     return [];
   }
 }
+
 export async function getProductCountsByCategory() {
   try {
     const response = await fetch(
-      "http://localhost:8081/api/products/categories/counts",
+      "https://nexufy-2.onrender.com/api/products/categories/counts",
       {
         headers: {
           accept: "application/json",
@@ -164,7 +163,7 @@ export async function getProductCountsByCategory() {
       throw new Error("Error al obtener el conteo de productos por categoría");
     }
     const data = await response.json();
-    return data; // Devuelve un objeto { "Categoría1": conteo1, "Categoría2": conteo2, ... }
+    return data;
   } catch (error) {
     console.error(
       "Error al obtener el conteo de productos por categoría:",
@@ -173,10 +172,11 @@ export async function getProductCountsByCategory() {
     throw error;
   }
 }
+
 export async function updateProduct(productId, productData, token) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/products/${productId}`,
+      `https://nexufy-2.onrender.com/api/products/${productId}`,
       {
         method: "PUT",
         headers: {
@@ -191,16 +191,17 @@ export async function updateProduct(productId, productData, token) {
       throw new Error("Error al actualizar el producto");
     }
 
-    return await response.json(); // Devuelve el producto actualizado
+    return await response.json();
   } catch (error) {
     console.error("Error al actualizar el producto:", error);
     throw error;
   }
 }
+
 export async function deleteProduct(productId) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/products/${productId}`,
+      `https://nexufy-2.onrender.com/api/products/${productId}`,
       {
         method: "DELETE",
         headers: {
@@ -218,10 +219,11 @@ export async function deleteProduct(productId) {
     throw error;
   }
 }
+
 export async function getProductsByCustomerId(customerId, token) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/products/customer/${customerId}`,
+      `https://nexufy-2.onrender.com/api/products/customer/${customerId}`,
       {
         headers: {
           accept: "application/json",
@@ -238,3 +240,4 @@ export async function getProductsByCustomerId(customerId, token) {
     throw error;
   }
 }
+
