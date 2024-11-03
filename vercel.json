@@ -4,5 +4,7 @@
       "source": "/api/:path*",
       "destination": "https://nexufy-2.onrender.com/api/:path*"
     }
-  ]
+  ],
+  "redirects": [],
+  "headers": []
 }
