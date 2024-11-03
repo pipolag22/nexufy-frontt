@@ -1,8 +1,6 @@
-// api/statisticService.js
-
 export const fetchStats = async (token) => {
   const response = await fetch(
-    "http://localhost:8081/api/reports/customers/stats/details",
+    "https://nexufy-2.onrender.com/api/reports/customers/stats/details",
     {
       method: "GET",
       headers: {
@@ -34,7 +32,7 @@ export const fetchStats = async (token) => {
 // Descargar reporte de clientes
 export const downloadCustomerReport = async (token) => {
   const response = await fetch(
-    "http://localhost:8081/api/reports/customers/download",
+    "https://nexufy-2.onrender.com/api/reports/customers/download",
     {
       method: "GET",
       headers: {
@@ -59,11 +57,11 @@ export const downloadCustomerReport = async (token) => {
 // Descargar reporte de productos
 export const downloadProductReport = async (token) => {
   const response = await fetch(
-    "http://localhost:8081/api/reports/products/download", // Endpoint correcto
+    "https://nexufy-2.onrender.com/api/reports/products/download",
     {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Token de autorización
+        Authorization: `Bearer ${token}`,
       },
     }
   );
