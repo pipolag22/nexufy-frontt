@@ -1,8 +1,7 @@
-// get products by customer service
 export async function getProductsByCustomerId(customerId, token) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/customer/${customerId}/products`,
+      `https://nexufy-2.onrender.com/api/customer/${customerId}/products`,
       {
         headers: {
           accept: "application/json",
@@ -26,7 +25,7 @@ export async function getProductsByCustomerId(customerId, token) {
 export async function getCustomerById(customerId, token) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/customer/${customerId}`,
+      `https://nexufy-2.onrender.com/api/customer/${customerId}`,
       {
         headers: {
           accept: "application/json",
@@ -49,7 +48,7 @@ export async function getCustomerById(customerId, token) {
 
 export async function getAllCustomers(token) {
   try {
-    const response = await fetch("http://localhost:8081/api/customer/all", {
+    const response = await fetch("https://nexufy-2.onrender.com/api/customer/all", {
       headers: {
         accept: "application/json",
         Authorization: `Bearer ${token}`,
@@ -67,10 +66,11 @@ export async function getAllCustomers(token) {
     throw error;
   }
 }
+
 export async function updateCustomerProfile(customerId, token, profileData) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/customer/${customerId}`,
+      `https://nexufy-2.onrender.com/api/customer/${customerId}`,
       {
         method: "PUT",
         headers: {
@@ -96,7 +96,7 @@ export async function updateCustomerProfile(customerId, token, profileData) {
 export async function searchCustomers(searchQuery, token) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/customer/search?username=${searchQuery}`,
+      `https://nexufy-2.onrender.com/api/customer/search?username=${searchQuery}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -120,7 +120,7 @@ import axios from "axios";
 export const promoteToAdmin = async (username, token) => {
   try {
     const response = await axios.put(
-      `http://localhost:8081/api/user/promote/admin?username=${username}`, // Usa la URL directamente
+      `https://nexufy-2.onrender.com/api/user/promote/admin?username=${username}`,
       {},
       {
         headers: {
@@ -135,10 +135,11 @@ export const promoteToAdmin = async (username, token) => {
     throw new Error(error.response?.data?.message || "Error promoting user");
   }
 };
+
 export async function getUserData(customerId, token) {
   try {
     const response = await fetch(
-      `http://localhost:8081/api/customer/${customerId}`,
+      `https://nexufy-2.onrender.com/api/customer/${customerId}`,
       {
         headers: {
           accept: "application/json",
@@ -158,10 +159,11 @@ export async function getUserData(customerId, token) {
     throw error;
   }
 }
+
 export async function fetchUserData(customerId, token) {
   try {
     const response = await axios.get(
-      `http://localhost:8081/api/customer/${customerId}`,
+      `https://nexufy-2.onrender.com/api/customer/${customerId}`,
       {
         headers: {
           accept: "application/json",
@@ -180,3 +182,4 @@ export async function fetchUserData(customerId, token) {
     throw error;
   }
 }
+
